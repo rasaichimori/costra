@@ -41,4 +41,6 @@ export function getTotalRecipeCost(recipeCosts: Record<string, number>): number 
  * Get available ingredients for a recipe (excluding those already in recipe and optionally excluded ones)
  */
 export const getAvailableIngredients = (recipe: RecipeDoc, costs: Record<string, IngredientDoc>) =>
-	Object.values(costs).filter((ingredient) => !(ingredient.id in recipe));
+	Object.values(costs).filter((ingredient) => 
+		!recipe.ingredients.some(recipeIngredient => recipeIngredient.id === ingredient.id)
+	);

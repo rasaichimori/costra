@@ -46,8 +46,8 @@
 			Save Changes
 		</button>
 	</div>
-	{#each Object.values(recipes) as recipe, i}
-		<CostCalculator {recipe} {costs} unit={'cup'} />
+	{#each Object.entries(recipes) as [id, recipe]}
+		<CostCalculator bind:recipe={recipes[id]} {costs} unit={'cup'} />
 	{/each}
 
 	<IngredientCostGrid bind:costs />

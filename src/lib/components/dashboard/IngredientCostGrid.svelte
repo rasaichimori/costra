@@ -12,18 +12,30 @@
 		costs: Record<string, IngredientDoc>;
 	} = $props();
 
+	let selectedFilters = $state<string[]>([]);
+	let newlyCreatedIngredients = $state<Set<string>>(new Set());
+	const filteredIngredients = $derived.by(() => {
+		const allIds = Object.values(costs).map((d) => d.id);
+		let filtered: string[];
+		if (selectedFilters.length === 0) {
+			filtered = allIds;
+		} else {
+			filtered = allIds.filter((ingredientId) => {
+				const ingredient = costs[ingredientId];
+				return ingredient && selectedFilters.includes(ingredient.category);
+			});
+		}
+		return filtered;
+	});
+
 	const categories = $derived(
 		[...new Set(Object.values(costs).map((d) => d.category))].filter(
 			(value) => value !== undefined && value !== ''
 		)
 	);
-
 	const getCategoryCount = $derived((category: string) => {
 		return Object.values(costs).filter((ingredient) => ingredient.category === category).length;
 	});
-
-	let selectedFilters = $state<string[]>([]);
-	let newlyCreatedIngredients = $state<Set<string>>(new Set());
 
 	const toggleFilter = (filterType: string) => {
 		if (selectedFilters.includes(filterType)) {
@@ -31,10 +43,6 @@
 		} else {
 			selectedFilters = [...selectedFilters, filterType];
 		}
-	};
-
-	const clearAllFilters = () => {
-		selectedFilters = [];
 	};
 
 	const updateCategory = (ingredientId: string, newCategory: string) => {
@@ -104,20 +112,6 @@
 		// Save to localStorage
 		localStorage.setItem('ingredient-costs', JSON.stringify(costs));
 	};
-
-	const filteredIngredients = $derived.by(() => {
-		const allIds = Object.values(costs).map((d) => d.id);
-		let filtered: string[];
-		if (selectedFilters.length === 0) {
-			filtered = allIds;
-		} else {
-			filtered = allIds.filter((ingredientId) => {
-				const ingredient = costs[ingredientId];
-				return ingredient && selectedFilters.includes(ingredient.category);
-			});
-		}
-		return filtered;
-	});
 </script>
 
 <div class="ingredient-cost-section">
@@ -138,7 +132,9 @@
 			<ModernButton
 				variant="danger"
 				size="small"
-				onclick={clearAllFilters}
+				onclick={() => {
+					selectedFilters = [];
+				}}
 				style="width: fit-content;"
 			>
 				<i class="fa-solid fa-times"></i>
@@ -191,7 +187,6 @@
 								<div class="cost-input-container">
 									<span class="currency">¥</span>
 									<TextInput
-										type="number"
 										bind:value={costs[ingredientId].product.cost}
 										size="small"
 										variant="inline"
@@ -201,7 +196,6 @@
 							</td>
 							<td class="amount-cell">
 								<TextInput
-									type="number"
 									bind:value={costs[ingredientId].product.amount}
 									size="small"
 									variant="inline"
@@ -212,7 +206,7 @@
 							<td class="unit-cell">
 								<SelectInput
 									bind:value={costs[ingredientId].product.unit}
-									options={Array.from(units)}
+									options={[...units]}
 									placeholder="Select unit..."
 									size="small"
 									searchable={false}

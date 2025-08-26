@@ -1,7 +1,6 @@
-<script lang="ts">
-	interface Props {
-		value?: string | number;
-		type?: 'text' | 'number' | 'email' | 'password';
+<script lang="ts" generics="T extends string | number">
+	interface Props<T> {
+		value?: T;
 		placeholder?: string;
 		disabled?: boolean;
 		readonly?: boolean;
@@ -14,8 +13,9 @@
 		error?: string;
 		required?: boolean;
 		ariaLabel?: string;
-		onchange?: (value: string | number) => void;
-		oninput?: (value: string | number) => void;
+		spinner?: boolean;
+		onchange?: (value: T) => void;
+		oninput?: (value: T) => void;
 		onfocus?: (event: FocusEvent) => void;
 		onblur?: (event: FocusEvent) => void;
 		onkeydown?: (event: KeyboardEvent) => void;
@@ -23,7 +23,6 @@
 
 	let {
 		value = $bindable(),
-		type = 'text',
 		placeholder,
 		disabled = false,
 		readonly = false,
@@ -36,24 +35,25 @@
 		error,
 		required = false,
 		ariaLabel,
+		spinner = false,
 		onchange,
 		oninput,
 		onkeydown,
 		onfocus,
 		onblur
-	}: Props = $props();
+	}: Props<T> = $props();
 
 	const handleInput = (e: Event) => {
 		const target = e.target as HTMLInputElement;
-		const newValue = type === 'number' ? parseFloat(target.value) || 0 : target.value;
-		value = newValue;
-		oninput?.(newValue);
+		const newValue = typeof value === 'number' ? parseFloat(target.value) || 0 : target.value;
+		value = newValue as T;
+		oninput?.(newValue as T);
 	};
 
 	const handleChange = (e: Event) => {
 		const target = e.target as HTMLInputElement;
-		const newValue = type === 'number' ? parseFloat(target.value) || 0 : target.value;
-		onchange?.(newValue);
+		const newValue = typeof value === 'number' ? parseFloat(target.value) || 0 : target.value;
+		onchange?.(newValue as T);
 	};
 </script>
 
@@ -68,7 +68,8 @@
 	<input
 		class="input"
 		class:error={!!error}
-		{type}
+		class:no-spinner={!spinner}
+		type={typeof value === 'number' ? 'number' : 'text'}
 		{value}
 		{placeholder}
 		{disabled}
@@ -182,19 +183,14 @@
 		font-size: 1rem;
 	}
 
-	/* Number input styling */
-	input[type='number'] {
-		text-align: center;
-	}
-
-	/* Remove number input spinners */
-	input[type='number']::-webkit-outer-spin-button,
-	input[type='number']::-webkit-inner-spin-button {
+	/* Hide native number input spinners when spinner prop is false */
+	.input.no-spinner::-webkit-outer-spin-button,
+	.input.no-spinner::-webkit-inner-spin-button {
 		-webkit-appearance: none;
 		margin: 0;
 	}
 
-	input[type='number'] {
+	.input.no-spinner[type='number'] {
 		-moz-appearance: textfield;
 	}
 </style>
