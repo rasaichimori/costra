@@ -3,7 +3,8 @@
 	import type { IngredientDoc } from '$lib/data/schema';
 	import ModernButton from '../common/ModernButton.svelte';
 	import TextInput from '../common/TextInput.svelte';
-	import SearchableSelect from '../common/SearchableSelect.svelte';
+	import SelectInput from '../common/SelectInput.svelte';
+	import EditableTextField from '../common/EditableTextField.svelte';
 
 	let {
 		costs = $bindable()
@@ -11,12 +12,18 @@
 		costs: Record<string, IngredientDoc>;
 	} = $props();
 
-	const categories = $derived([...new Set(Object.values(costs).map((d) => d.category))]);
-	const allCategories = $derived(categories.filter(Boolean)); // Remove empty categories
+	const categories = $derived(
+		[...new Set(Object.values(costs).map((d) => d.category))].filter(
+			(value) => value !== undefined && value !== ''
+		)
+	);
+
+	const getCategoryCount = $derived((category: string) => {
+		return Object.values(costs).filter((ingredient) => ingredient.category === category).length;
+	});
 
 	let selectedFilters = $state<string[]>([]);
-	let editingIngredient = $state<string | null>(null);
-	let editingName = $state<string>('');
+	let newlyCreatedIngredients = $state<Set<string>>(new Set());
 
 	const toggleFilter = (filterType: string) => {
 		if (selectedFilters.includes(filterType)) {
@@ -30,30 +37,6 @@
 		selectedFilters = [];
 	};
 
-	const startEditing = (ingredientId: string) => {
-		editingIngredient = ingredientId;
-		editingName = costs[ingredientId].name;
-	};
-
-	const cancelEditing = () => {
-		editingIngredient = null;
-		editingName = '';
-	};
-
-	const saveNameChange = (ingredientId: string) => {
-		if (editingName.trim()) {
-			// Update the costs object
-			costs[ingredientId] = {
-				...costs[ingredientId],
-				name: editingName.trim()
-			};
-
-			// Save to localStorage
-			localStorage.setItem('ingredient-costs', JSON.stringify(costs));
-		}
-		cancelEditing();
-	};
-
 	const updateCategory = (ingredientId: string, newCategory: string) => {
 		costs[ingredientId] = {
 			...costs[ingredientId],
@@ -64,7 +47,63 @@
 		localStorage.setItem('ingredient-costs', JSON.stringify(costs));
 	};
 
-	let openAddModal = $state(false);
+	const deleteIngredient = (ingredientId: string) => {
+		// Remove from costs object
+		delete costs[ingredientId];
+
+		// Remove from newly created set if it exists there
+		newlyCreatedIngredients.delete(ingredientId);
+		newlyCreatedIngredients = newlyCreatedIngredients;
+	};
+
+	const addNewIngredient = () => {
+		// Generate a unique ID
+		const existingIds = Object.keys(costs);
+		let newId = `ingredient_${Date.now()}`;
+		while (existingIds.includes(newId)) {
+			newId = `ingredient_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
+		}
+
+		// Find the next sequential number for ingredient name
+		const existingIngredients = Object.values(costs);
+		const ingredientPattern = /^Ingredient (\d+)$/;
+		const existingNumbers = existingIngredients
+			.map((ing) => ing.name.match(ingredientPattern)?.[1])
+			.filter(Boolean)
+			.map(Number)
+			.sort((a, b) => a - b);
+
+		let nextNumber = 1;
+		for (const num of existingNumbers) {
+			if (num === nextNumber) {
+				nextNumber++;
+			} else {
+				break;
+			}
+		}
+
+		// Create new ingredient with placeholder values
+		const newIngredient: IngredientDoc = {
+			id: newId,
+			name: `Ingredient ${nextNumber}`,
+			category: '',
+			product: {
+				cost: 0,
+				amount: 1,
+				unit: 'cup'
+			}
+		};
+
+		// Add to costs object
+		costs[newId] = newIngredient;
+
+		// Mark as newly created so it starts in edit mode
+		newlyCreatedIngredients.add(newId);
+		newlyCreatedIngredients = newlyCreatedIngredients;
+
+		// Save to localStorage
+		localStorage.setItem('ingredient-costs', JSON.stringify(costs));
+	};
 
 	const filteredIngredients = $derived.by(() => {
 		const allIds = Object.values(costs).map((d) => d.id);
@@ -72,9 +111,9 @@
 		if (selectedFilters.length === 0) {
 			filtered = allIds;
 		} else {
-			filtered = [];
-			selectedFilters.forEach((category) => {
-				if (categories.includes(category)) filtered.push(category);
+			filtered = allIds.filter((ingredientId) => {
+				const ingredient = costs[ingredientId];
+				return ingredient && selectedFilters.includes(ingredient.category);
 			});
 		}
 		return filtered;
@@ -91,149 +130,112 @@
 					size="small"
 					onclick={() => toggleFilter(category)}
 				>
-					{category} ({categories.length})
+					{category} ({getCategoryCount(category)})
 				</ModernButton>
 			{/each}
 		</div>
 		{#if selectedFilters.length > 0}
-			<ModernButton variant="danger" size="small" onclick={clearAllFilters}>
+			<ModernButton
+				variant="danger"
+				size="small"
+				onclick={clearAllFilters}
+				style="width: fit-content;"
+			>
 				<i class="fa-solid fa-times"></i>
 				Clear all filters
 			</ModernButton>
 		{/if}
 	</div>
 
-	<div class="costs-grid">
-		<div class="grid-header">
-			<span>Ingredient</span>
-			<span>Category</span>
-			<span>Total Cost (¥)</span>
-			<span>Amount</span>
-			<span>Unit</span>
-		</div>
-		<!-- Compound ingredients at the top with different styling -->
-		<!-- {#each compoundCosts as category}
-			{#each category as costs}
-				{#if costs[ingredient]}
-					<div class="cost-row base-row">
-						<div class="ingredient-name">
-							{ingredient}
-						</div>
-						<div class="cost-input-group">
-							<span class="currency">¥</span>
-							<input type="number" min="0" bind:value={costs[ingredient].cost} class="cost-input" />
-						</div>
-						<div class="amount-input-group">
-							<input
-								type="number"
-								min="0.01"
-								step="0.01"
-								bind:value={costs[ingredient].amount}
-								class="amount-input"
-							/>
-						</div>
-						<div class="unit-input-group">
-							<select bind:value={costs[ingredient].unit} class="unit-select">
-								{#each units as unit}
-									<option value={unit}>{unit}</option>
-								{/each}
-							</select>
-						</div>
-					</div>
-				{/if}
-			{/each}
-		{/each} -->
-
-		<!-- Other ingredients -->
-		{#each filteredIngredients as ingredientId}
-			{#if costs[ingredientId]}
-				<div class="cost-row">
-					<div class="ingredient-name-container">
-						{#if editingIngredient === ingredientId}
-							<TextInput
-								bind:value={editingName}
-								size="small"
-								variant="inline"
-								placeholder="Ingredient name"
-								ariaLabel="Edit ingredient name"
-							/>
-							<ModernButton
-								variant="icon"
-								size="small"
-								ariaLabel="Save name"
-								title="Save changes"
-								onclick={() => saveNameChange(ingredientId)}
-							>
-								<i class="fa-solid fa-check"></i>
-							</ModernButton>
-							<ModernButton
-								variant="icon"
-								size="small"
-								ariaLabel="Cancel editing"
-								title="Cancel editing"
-								onclick={cancelEditing}
-							>
-								<i class="fa-solid fa-times"></i>
-							</ModernButton>
-						{:else}
-							<span class="ingredient-name">{costs[ingredientId].name}</span>
-							<ModernButton
-								variant="icon"
-								size="small"
-								ariaLabel="Edit ingredient name"
-								title="Edit ingredient name"
-								onclick={() => startEditing(ingredientId)}
-							>
-								<i class="fa-solid fa-pencil"></i>
-							</ModernButton>
-						{/if}
-					</div>
-					<div class="category-input-group">
-						<SearchableSelect
-							bind:value={costs[ingredientId].category}
-							options={allCategories}
-							placeholder="Select category..."
-							size="small"
-							onchange={(newCategory) => updateCategory(ingredientId, newCategory)}
-						/>
-					</div>
-					<div class="cost-input-group">
-						<span class="currency">¥</span>
-						<TextInput
-							type="number"
-							bind:value={costs[ingredientId].product.cost}
-							size="small"
-							variant="inline"
-							min={0}
-						/>
-					</div>
-					<div class="amount-input-group">
-						<TextInput
-							type="number"
-							bind:value={costs[ingredientId].product.amount}
-							size="small"
-							variant="inline"
-							min={0.01}
-							step={0.01}
-						/>
-					</div>
-					<div class="unit-input-group">
-						<select bind:value={costs[ingredientId].product.unit} class="unit-select">
-							{#each units as unit}
-								<option value={unit}>{unit}</option>
-							{/each}
-						</select>
-					</div>
-				</div>
-			{/if}
-		{/each}
+	<div class="costs-table-container">
+		<table class="costs-table">
+			<thead>
+				<tr>
+					<th class="ingredient-header">Ingredient</th>
+					<th class="category-header">Category</th>
+					<th class="cost-header">Total Cost (¥)</th>
+					<th class="amount-header">Amount</th>
+					<th class="unit-header">Unit</th>
+					<th class="actions-header">Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				{#each filteredIngredients as ingredientId}
+					{#if costs[ingredientId]}
+						<tr class="cost-row">
+							<td class="ingredient-cell">
+								<EditableTextField
+									bind:value={costs[ingredientId].name}
+									isEditing={newlyCreatedIngredients.has(ingredientId)}
+									onSave={() => {
+										newlyCreatedIngredients.delete(ingredientId);
+										newlyCreatedIngredients = newlyCreatedIngredients;
+									}}
+									onCancel={() => {
+										newlyCreatedIngredients.delete(ingredientId);
+										newlyCreatedIngredients = newlyCreatedIngredients;
+									}}
+								/>
+							</td>
+							<td class="category-cell">
+								<SelectInput
+									bind:value={costs[ingredientId].category}
+									options={categories}
+									placeholder="Select category..."
+									size="small"
+									onchange={(newCategory) => updateCategory(ingredientId, newCategory)}
+									searchable={true}
+								/>
+							</td>
+							<td class="cost-cell">
+								<div class="cost-input-container">
+									<span class="currency">¥</span>
+									<TextInput
+										type="number"
+										bind:value={costs[ingredientId].product.cost}
+										size="small"
+										variant="inline"
+										min={0}
+									/>
+								</div>
+							</td>
+							<td class="amount-cell">
+								<TextInput
+									type="number"
+									bind:value={costs[ingredientId].product.amount}
+									size="small"
+									variant="inline"
+									min={0.01}
+									step={0.01}
+								/>
+							</td>
+							<td class="unit-cell">
+								<SelectInput
+									bind:value={costs[ingredientId].product.unit}
+									options={Array.from(units)}
+									placeholder="Select unit..."
+									size="small"
+									searchable={false}
+								/>
+							</td>
+							<td class="actions-cell">
+								<ModernButton
+									variant="icon"
+									size="small"
+									ariaLabel="Delete ingredient"
+									title="Delete ingredient"
+									onclick={() => deleteIngredient(ingredientId)}
+								>
+									<i class="fa-solid fa-trash"></i>
+								</ModernButton>
+							</td>
+						</tr>
+					{/if}
+				{/each}
+			</tbody>
+		</table>
 	</div>
-	<ModernButton
-		variant="primary"
-		onclick={() => {
-			// add row
-		}}
-	>
+	<ModernButton variant="primary" onclick={addNewIngredient} style="width: fit-content;">
 		<i class="fa-solid fa-plus"></i>
 		Add Ingredient
 	</ModernButton>
@@ -241,20 +243,23 @@
 
 <style>
 	.ingredient-cost-section {
-		margin-bottom: 20px;
+		display: flex;
+		flex-direction: column;
 		background: rgba(255, 255, 255, 0.9);
 		padding: 1.5rem;
 		border-radius: 8px;
 		border: 1px solid rgba(0, 0, 0, 0.08);
 		backdrop-filter: blur(10px);
+		gap: 16px;
 	}
-
 	.filter-section {
-		margin-bottom: 20px;
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
 	}
 
 	.filter-section h3 {
-		margin: 0 0 15px 0;
+		margin: 0;
 		color: #333333;
 		font-size: 16px;
 		font-weight: 500;
@@ -264,67 +269,81 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: 8px;
-		margin-bottom: 15px;
 	}
 
-	.costs-grid {
+	.costs-table-container {
 		background: rgba(255, 255, 255, 0.9);
 		border-radius: 8px;
 		border: 1px solid rgba(0, 0, 0, 0.1);
 	}
 
-	.grid-header {
-		display: grid;
-		grid-template-columns: 2fr 1.5fr 1.5fr 1fr 1fr;
-		gap: 15px;
-		padding: 15px;
+	.costs-table {
+		width: 100%;
+		border-collapse: collapse;
+		table-layout: fixed;
+	}
+
+	.costs-table th {
 		background: rgba(0, 0, 0, 0.05);
 		color: #333333;
 		font-weight: 600;
-		text-align: center;
-	}
-
-	.grid-header span:first-child {
+		padding: 15px 12px;
 		text-align: left;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 	}
 
-	.cost-row {
-		display: grid;
-		grid-template-columns: 2fr 1.5fr 1.5fr 1fr 1fr;
-		gap: 15px;
-		padding: 10px 15px;
-		align-items: center;
+	.costs-table td {
+		padding: 12px;
 		border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-	}
-
-	.cost-row:last-child {
-		border-bottom: none;
+		vertical-align: middle;
 	}
 
 	.cost-row:nth-child(even) {
 		background: rgba(0, 0, 0, 0.02);
 	}
 
-	.ingredient-name-container {
-		display: flex;
-		align-items: center;
-		gap: 8px;
+	.ingredient-header {
+		width: 25%;
 	}
 
-	.ingredient-name {
-		font-weight: 500;
-		color: #333333;
-		text-transform: capitalize;
-		flex: 1;
+	.category-header {
+		width: 20%;
 	}
 
-	.cost-input-group,
-	.amount-input-group,
-	.unit-input-group,
-	.category-input-group {
+	.cost-header {
+		width: 18%;
+	}
+
+	.amount-header {
+		width: 15%;
+	}
+
+	.unit-header {
+		width: 12%;
+	}
+
+	.actions-header {
+		width: 10%;
+		text-align: center;
+	}
+
+	.ingredient-cell,
+	.category-cell,
+	.cost-cell,
+	.amount-cell,
+	.unit-cell {
+		position: relative;
+	}
+
+	.actions-cell {
+		text-align: center;
+	}
+
+	.cost-input-container {
 		display: flex;
 		align-items: center;
 		gap: 4px;
+		width: 100%;
 	}
 
 	.currency {
@@ -332,37 +351,17 @@
 		color: #333333;
 	}
 
-	.unit-select {
-		padding: 4px 6px;
-		border: 1px solid rgba(0, 0, 0, 0.2);
-		border-radius: 4px;
-		text-align: center;
-		font-weight: 400;
-		width: 100%;
-		background: rgba(255, 255, 255, 0.9);
-		color: #333333;
-		cursor: pointer;
-		font-size: 12px;
-	}
-
-	.unit-select:focus {
-		outline: none;
-		border-color: rgba(0, 0, 0, 0.4);
-		background: rgba(255, 255, 255, 1);
-	}
-
 	@media (max-width: 768px) {
 		.filter-pills {
 			justify-content: center;
 		}
 
-		.costs-grid {
+		.costs-table-container {
 			overflow-x: auto;
 		}
 
-		.grid-header,
-		.cost-row {
-			min-width: 800px;
+		.costs-table {
+			min-width: 880px;
 		}
 	}
 </style>

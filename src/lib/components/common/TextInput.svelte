@@ -16,6 +16,9 @@
 		ariaLabel?: string;
 		onchange?: (value: string | number) => void;
 		oninput?: (value: string | number) => void;
+		onfocus?: (event: FocusEvent) => void;
+		onblur?: (event: FocusEvent) => void;
+		onkeydown?: (event: KeyboardEvent) => void;
 	}
 
 	let {
@@ -34,7 +37,10 @@
 		required = false,
 		ariaLabel,
 		onchange,
-		oninput
+		oninput,
+		onkeydown,
+		onfocus,
+		onblur
 	}: Props = $props();
 
 	const handleInput = (e: Event) => {
@@ -58,7 +64,7 @@
 			{#if required}<span class="required">*</span>{/if}
 		</label>
 	{/if}
-	
+
 	<input
 		class="input"
 		class:error={!!error}
@@ -74,8 +80,11 @@
 		aria-label={ariaLabel || label}
 		oninput={handleInput}
 		onchange={handleChange}
+		{onkeydown}
+		{onfocus}
+		{onblur}
 	/>
-	
+
 	{#if error}
 		<span class="error-message">{error}</span>
 	{/if}
@@ -121,6 +130,7 @@
 		color: #333333;
 		transition: all 0.2s ease;
 		outline: none;
+		width: 100%;
 	}
 
 	.input:focus {
@@ -173,18 +183,18 @@
 	}
 
 	/* Number input styling */
-	input[type="number"] {
+	input[type='number'] {
 		text-align: center;
 	}
 
 	/* Remove number input spinners */
-	input[type="number"]::-webkit-outer-spin-button,
-	input[type="number"]::-webkit-inner-spin-button {
+	input[type='number']::-webkit-outer-spin-button,
+	input[type='number']::-webkit-inner-spin-button {
 		-webkit-appearance: none;
 		margin: 0;
 	}
 
-	input[type="number"] {
+	input[type='number'] {
 		-moz-appearance: textfield;
 	}
 </style>

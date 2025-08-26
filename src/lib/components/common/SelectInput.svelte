@@ -1,10 +1,13 @@
 <script lang="ts">
+	import TextInput from './TextInput.svelte';
+
 	interface Props {
 		value?: string;
 		options: string[];
 		placeholder?: string;
 		size?: 'small' | 'medium' | 'large';
 		disabled?: boolean;
+		searchable?: boolean;
 		onchange?: (value: string) => void;
 	}
 
@@ -14,80 +17,84 @@
 		placeholder = 'Select or type...',
 		size = 'medium',
 		disabled = false,
+		searchable = true,
 		onchange
 	}: Props = $props();
 
 	let isOpen = $state(false);
-	let searchTerm = $state('');
-	let inputRef: HTMLInputElement;
+	let searchTerm = $state(searchable ? (value ?? '') : '');
 
 	// Filter options based on search term
 	const filteredOptions = $derived(
-		searchTerm
+		searchTerm !== ''
 			? options.filter((option) => option.toLowerCase().includes(searchTerm.toLowerCase()))
 			: options
 	);
 
 	const selectOption = (option: string) => {
 		value = option;
-		searchTerm = '';
+		if (searchable) {
+			searchTerm = value;
+		}
 		isOpen = false;
 		onchange?.(option);
 	};
 
-	const handleInputFocus = () => {
+	const onfocus = () => {
 		isOpen = true;
-		searchTerm = value || '';
+		if (searchable) {
+			searchTerm = value || '';
+		}
 	};
 
-	// Show placeholder only when there's no value and not focused
-	const showPlaceholder = $derived(!value && !isOpen);
-
-	const handleInputBlur = (e: FocusEvent) => {
+	const onblur = (e: FocusEvent) => {
 		// Don't close if clicking on an option
 		const relatedTarget = e.relatedTarget as HTMLElement;
 		if (relatedTarget?.closest('.dropdown-options')) {
 			return;
 		}
 
-		setTimeout(() => {
-			isOpen = false;
-			searchTerm = '';
-		}, 150);
+		isOpen = false;
+		if (searchable && searchTerm !== '') {
+			value = searchTerm;
+		} else {
+			searchTerm = value ?? '';
+		}
 	};
 
-	const handleKeydown = (e: KeyboardEvent) => {
+	const onkeydown = (e: KeyboardEvent) => {
 		if (e.key === 'Escape') {
 			isOpen = false;
-			searchTerm = '';
-			inputRef?.blur();
+			searchTerm = value ?? '';
+		}
+		if (e.key === 'Enter') {
+			isOpen = false;
+			selectOption(searchTerm);
 		}
 	};
 </script>
 
 <div class="searchable-select searchable-select-{size}">
-	<input
-		bind:this={inputRef}
-		bind:value={searchTerm}
-		class="select-input"
-		placeholder={showPlaceholder ? placeholder : ''}
-		{disabled}
-		onfocus={handleInputFocus}
-		onblur={handleInputBlur}
-		onkeydown={handleKeydown}
-	/>
-
-	{#if !isOpen && value && !searchTerm}
-		<div class="selected-value">{value}</div>
-	{/if}
-
-	<div class="dropdown-icon">
-		<i class="fa-solid fa-chevron-down" class:rotated={isOpen}></i>
+	<div class="input-wrapper">
+		{#if searchable}
+			<TextInput
+				bind:value={searchTerm}
+				{size}
+				variant="inline"
+				placeholder={!searchTerm && !isOpen ? placeholder : ''}
+				{disabled}
+				{onfocus}
+				{onblur}
+				{onkeydown}
+			/>
+		{:else}
+			<button onclick={() => (isOpen = true)} {onblur}>{value}</button>
+		{/if}
 	</div>
 
 	{#if isOpen}
 		<div class="dropdown-options">
-			{#if !options.includes(searchTerm)}
+			{#if !options.includes(searchTerm) && searchTerm !== ''}
 				<button
 					class="option add-new-option"
 					onclick={() => selectOption(searchTerm)}
@@ -113,34 +120,31 @@
 		width: 100%;
 	}
 
-	.select-input {
+	.input-wrapper {
+		position: relative;
 		width: 100%;
-		border: 1px solid rgba(0, 0, 0, 0.2);
-		border-radius: 4px;
-		background: rgba(255, 255, 255, 0.9);
-		color: #333333;
-		font-family: inherit;
-		font-weight: 400;
-		outline: none;
-		transition: all 0.2s ease;
+
+		button {
+			width: 100%;
+			height: 25px;
+			border: 1px solid rgba(0, 0, 0, 0.2);
+			border-radius: 4px;
+			font-family: inherit;
+			font-weight: 400;
+			background: rgba(255, 255, 255, 0.9);
+			color: #333333;
+			transition: all 0.2s ease;
+			outline: none;
+		}
+	}
+
+	.input-wrapper :global(.text-input) {
 		padding-right: 30px;
-	}
-
-	.select-input:focus {
-		border-color: rgba(0, 0, 0, 0.4);
-		background: rgba(255, 255, 255, 1);
-		box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
-	}
-
-	.select-input:disabled {
-		opacity: 0.5;
-		cursor: not-allowed;
-		background: rgba(0, 0, 0, 0.02);
 	}
 
 	.selected-value {
 		position: absolute;
-		left: 0;
+		left: 8px;
 		top: 0;
 		right: 30px;
 		bottom: 0;
@@ -224,24 +228,5 @@
 		color: #666666;
 		font-style: italic;
 		text-align: center;
-	}
-
-	/* Sizes */
-	.searchable-select-small .select-input,
-	.searchable-select-small .selected-value {
-		padding: 4px 8px;
-		font-size: 0.75rem;
-	}
-
-	.searchable-select-medium .select-input,
-	.searchable-select-medium .selected-value {
-		padding: 8px 12px;
-		font-size: 0.875rem;
-	}
-
-	.searchable-select-large .select-input,
-	.searchable-select-large .selected-value {
-		padding: 12px 16px;
-		font-size: 1rem;
 	}
 </style>

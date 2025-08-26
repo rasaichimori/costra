@@ -7,6 +7,7 @@
 		onclick?: () => void;
 		ariaLabel?: string;
 		title?: string;
+		style?: string;
 		children?: any;
 	}
 
@@ -18,6 +19,7 @@
 		onclick,
 		ariaLabel,
 		title,
+		style,
 		children
 	}: Props = $props();
 </script>
@@ -29,6 +31,7 @@
 	onclick={onclick}
 	aria-label={ariaLabel}
 	{title}
+	{style}
 >
 	{@render children?.()}
 </button>

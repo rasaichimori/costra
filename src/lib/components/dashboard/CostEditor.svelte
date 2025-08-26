@@ -33,8 +33,6 @@
 	function saveChanges() {
 		storage.costs.save(costs);
 	}
-
-	$inspect(costs);
 </script>
 
 <div class="cost-editor">
