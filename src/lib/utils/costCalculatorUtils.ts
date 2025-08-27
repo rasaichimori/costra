@@ -44,3 +44,30 @@ export const getAvailableIngredients = (recipe: RecipeDoc, costs: Record<string,
 	Object.values(costs).filter((ingredient) => 
 		!recipe.ingredients.some(recipeIngredient => recipeIngredient.id === ingredient.id)
 	);
+
+/**
+ * Find all recipes that use a specific ingredient
+ */
+export const getRecipesUsingIngredient = (ingredientId: string, recipes: Record<string, RecipeDoc>): RecipeDoc[] => {
+	return Object.values(recipes).filter(recipe => 
+		recipe.ingredients.some(ingredient => ingredient.id === ingredientId)
+	);
+};
+
+/**
+ * Remove an ingredient from all recipes
+ */
+export const removeIngredientFromAllRecipes = (ingredientId: string, recipes: Record<string, RecipeDoc>): Record<string, RecipeDoc> => {
+	const updatedRecipes = { ...recipes };
+	
+	Object.keys(updatedRecipes).forEach(recipeId => {
+		updatedRecipes[recipeId] = {
+			...updatedRecipes[recipeId],
+			ingredients: updatedRecipes[recipeId].ingredients.filter(
+				ingredient => ingredient.id !== ingredientId
+			)
+		};
+	});
+	
+	return updatedRecipes;
+};

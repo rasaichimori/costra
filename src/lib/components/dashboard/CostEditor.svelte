@@ -1,6 +1,5 @@
 <script lang="ts">
 	import CostCalculator from './CostCalculator.svelte';
-	import { storage } from '$lib/utils/localStorage';
 	import type { IngredientDoc, RecipeDoc } from '$lib/data/schema';
 	import IngredientCostGrid from './IngredientCostGrid.svelte';
 
@@ -28,11 +27,6 @@
 			]
 		}
 	});
-
-	// Save function for manual save
-	function saveChanges() {
-		storage.costs.save(costs);
-	}
 </script>
 
 <div class="cost-editor">
@@ -41,16 +35,12 @@
 			<i class="fa-solid fa-dollar-sign"></i>
 			Cost Editor
 		</h2>
-		<button class="save-button" onclick={saveChanges}>
-			<i class="fa-solid fa-save"></i>
-			Save Changes
-		</button>
 	</div>
 	{#each Object.entries(recipes) as [id, recipe]}
 		<CostCalculator bind:recipe={recipes[id]} {costs} unit={'cup'} />
 	{/each}
 
-	<IngredientCostGrid bind:costs />
+	<IngredientCostGrid bind:costs bind:recipes />
 </div>
 
 <style>
@@ -84,30 +74,5 @@
 
 	.editor-header h2 i {
 		color: rgba(0, 0, 0, 0.6);
-	}
-
-	.save-button {
-		background: rgba(0, 0, 0, 0.05);
-		border: 1px solid rgba(0, 0, 0, 0.2);
-		color: #333333;
-		padding: 0.8rem 1.5rem;
-		border-radius: 6px;
-		cursor: pointer;
-		font-size: 0.9rem;
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		transition: all 0.2s ease;
-		font-weight: 400;
-	}
-
-	.save-button:hover {
-		background: rgba(0, 0, 0, 0.1);
-		border-color: rgba(0, 0, 0, 0.3);
-		transform: translateY(-1px);
-	}
-
-	.save-button i {
-		font-size: 0.8rem;
 	}
 </style>
