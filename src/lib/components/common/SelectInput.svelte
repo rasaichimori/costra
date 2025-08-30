@@ -1,5 +1,6 @@
 <script lang="ts">
 	import TextInput from './TextInput.svelte';
+	import { onMount } from 'svelte';
 
 	interface Props {
 		value?: string;
@@ -23,6 +24,8 @@
 
 	let isOpen = $state(false);
 	let searchTerm = $state(searchable ? (value ?? '') : '');
+	let containerElement: HTMLElement;
+	let dropdownRect = $state<DOMRect | null>(null);
 
 	// Filter options based on search term
 	const filteredOptions = $derived(
@@ -40,11 +43,17 @@
 		onchange?.(option);
 	};
 
+	const updateDropdownPosition = () => {
+		if (!containerElement) return;
+		dropdownRect = containerElement.getBoundingClientRect();
+	};
+
 	const onfocus = () => {
 		isOpen = true;
 		if (searchable) {
 			searchTerm = value || '';
 		}
+		updateDropdownPosition();
 	};
 
 	const onblur = (e: FocusEvent) => {
@@ -72,9 +81,25 @@
 			selectOption(searchTerm);
 		}
 	};
+
+	onMount(() => {
+		const handleReposition = () => {
+			if (isOpen) {
+				updateDropdownPosition();
+			}
+		};
+
+		window.addEventListener('scroll', handleReposition, true);
+		window.addEventListener('resize', handleReposition);
+
+		return () => {
+			window.removeEventListener('scroll', handleReposition, true);
+			window.removeEventListener('resize', handleReposition);
+		};
+	});
 </script>
 
-<div class="searchable-select searchable-select-{size}">
+<div class="searchable-select searchable-select-{size}" bind:this={containerElement}>
 	<div class="input-wrapper">
 		{#if searchable}
 			<TextInput
@@ -91,28 +116,29 @@
 			<button onclick={() => (isOpen = true)} {onblur}>{value}</button>
 		{/if}
 	</div>
-
-	{#if isOpen}
-		<div class="dropdown-options">
-			{#if !options.includes(searchTerm) && searchTerm !== ''}
-				<button
-					class="option add-new-option"
-					onclick={() => selectOption(searchTerm)}
-					tabindex="-1"
-				>
-					<i class="fa-solid fa-plus"></i>
-					"{searchTerm}"
-				</button>
-			{/if}
-
-			{#each filteredOptions as option}
-				<button class="option" onclick={() => selectOption(option)} tabindex="-1">
-					{option}
-				</button>
-			{/each}
-		</div>
-	{/if}
 </div>
+
+{#if isOpen && dropdownRect}
+	<div
+		class="dropdown-options"
+		style:top="{dropdownRect.bottom}px"
+		style:left="{dropdownRect.left}px"
+		style:width="{dropdownRect.width}px"
+	>
+		{#if !options.includes(searchTerm) && searchTerm !== ''}
+			<button class="option add-new-option" onclick={() => selectOption(searchTerm)} tabindex="-1">
+				<i class="fa-solid fa-plus"></i>
+				"{searchTerm}"
+			</button>
+		{/if}
+
+		{#each filteredOptions as option}
+			<button class="option" onclick={() => selectOption(option)} tabindex="-1">
+				{option}
+			</button>
+		{/each}
+	</div>
+{/if}
 
 <style>
 	.searchable-select {
@@ -172,9 +198,6 @@
 
 	.dropdown-options {
 		position: absolute;
-		top: 100%;
-		left: 0;
-		right: 0;
 		background: rgba(255, 255, 255, 0.95);
 		border: 1px solid rgba(0, 0, 0, 0.1);
 		border-radius: 4px;
@@ -183,9 +206,9 @@
 		border-top-right-radius: 0;
 		max-height: 200px;
 		overflow-y: auto;
-		z-index: 1000;
 		backdrop-filter: blur(10px);
 		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		pointer-events: auto;
 	}
 
 	.option {

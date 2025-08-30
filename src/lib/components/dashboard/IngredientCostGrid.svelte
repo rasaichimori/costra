@@ -1,13 +1,16 @@
 <script lang="ts">
 	import { units } from '$lib/utils/unit';
 	import type { IngredientDoc, RecipeDoc } from '$lib/data/schema';
-	import { getRecipesUsingIngredient, removeIngredientFromAllRecipes } from '$lib/utils/costCalculatorUtils';
-	import { getModalContext } from '$lib/contexts/modal.svelte';
-	import DeleteIngredientConfirmation from './DeleteIngredientConfirmation.svelte';
+	import {
+		getRecipesUsingIngredient,
+		removeIngredientFromAllRecipes
+	} from '$lib/utils/costCalculatorUtils';
+	import DeleteIngredientConfirmation from '../modals/DeleteIngredientModal.svelte';
 	import ModernButton from '../common/ModernButton.svelte';
 	import TextInput from '../common/TextInput.svelte';
 	import SelectInput from '../common/SelectInput.svelte';
 	import EditableTextField from '../common/EditableTextField.svelte';
+	import { getOverlayContext } from '$lib/contexts/overlay.svelte';
 
 	let {
 		costs = $bindable(),
@@ -17,7 +20,7 @@
 		recipes?: Record<string, RecipeDoc>;
 	} = $props();
 
-	const modalContext = getModalContext();
+	const { openOverlay, closeOverlay } = getOverlayContext();
 
 	let selectedFilters = $state<string[]>([]);
 	let newlyCreatedIngredients = $state<Set<string>>(new Set());
@@ -57,9 +60,6 @@
 			...costs[ingredientId],
 			category: newCategory
 		};
-
-		// Save to localStorage
-		localStorage.setItem('ingredient-costs', JSON.stringify(costs));
 	};
 
 	const initiateDeleteIngredient = (ingredientId: string) => {
@@ -74,18 +74,17 @@
 			return;
 		}
 
-		// Otherwise, show confirmation modal with recipe list
-		modalContext.showModal({
-			title: 'Delete Ingredient',
-			component: DeleteIngredientConfirmation,
-			props: {
-				ingredientName: ingredient.name,
-				recipesUsing
-			},
-			confirmText: 'Delete and Remove from Recipes',
-			cancelText: 'Cancel',
-			variant: 'danger',
-			onConfirm: () => deleteIngredientAndRemoveFromRecipes(ingredientId)
+		openOverlay(DeleteIngredientConfirmation, {
+			ingredientName: ingredient.name,
+			recipesUsing,
+			onclose: (confirm: boolean) => {
+				if (confirm) {
+					recipes = removeIngredientFromAllRecipes(ingredientId, recipes);
+					deleteIngredient(ingredientId);
+				}
+				// Close modal
+				closeOverlay();
+			}
 		});
 	};
 
@@ -96,31 +95,6 @@
 		// Remove from newly created set if it exists there
 		newlyCreatedIngredients.delete(ingredientId);
 		newlyCreatedIngredients = newlyCreatedIngredients;
-
-		// Save to localStorage
-		localStorage.setItem('ingredient-costs', JSON.stringify(costs));
-
-		// Close modal
-		modalContext.hideModal();
-	};
-
-	const deleteIngredientAndRemoveFromRecipes = (ingredientId: string) => {
-		// Remove ingredient from all recipes
-		recipes = removeIngredientFromAllRecipes(ingredientId, recipes);
-
-		// Remove from costs object
-		delete costs[ingredientId];
-
-		// Remove from newly created set if it exists there
-		newlyCreatedIngredients.delete(ingredientId);
-		newlyCreatedIngredients = newlyCreatedIngredients;
-
-		// Save to localStorage
-		localStorage.setItem('ingredient-costs', JSON.stringify(costs));
-		localStorage.setItem('lanibowls_recipes', JSON.stringify(recipes));
-
-		// Close modal
-		modalContext.hideModal();
 	};
 
 	const addNewIngredient = () => {
