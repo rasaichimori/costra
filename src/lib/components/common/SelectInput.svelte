@@ -1,6 +1,10 @@
 <script lang="ts">
+	import { getOverlayContext } from '$lib/contexts/overlay.svelte';
 	import TextInput from './TextInput.svelte';
 	import { onMount } from 'svelte';
+	import Dropdown from './Dropdown.svelte';
+
+	const { openOverlay, closeOverlay, updateOverlay } = getOverlayContext();
 
 	interface Props {
 		value?: string;
@@ -22,34 +26,31 @@
 		onchange
 	}: Props = $props();
 
-	let isOpen = $state(false);
 	let searchTerm = $state(searchable ? (value ?? '') : '');
 	let containerElement: HTMLElement;
-	let dropdownRect = $state<DOMRect | null>(null);
-
-	// Filter options based on search term
-	const filteredOptions = $derived(
-		searchTerm !== ''
-			? options.filter((option) => option.toLowerCase().includes(searchTerm.toLowerCase()))
-			: options
-	);
+	let dropdownRect = $state<DOMRect | undefined>(undefined);
+	let dropdownId = $state<string | undefined>(undefined);
 
 	const selectOption = (option: string) => {
 		value = option;
 		if (searchable) {
 			searchTerm = value;
 		}
-		isOpen = false;
+		closeDropdown();
 		onchange?.(option);
 	};
 
 	const updateDropdownPosition = () => {
 		if (!containerElement) return;
 		dropdownRect = containerElement.getBoundingClientRect();
+		// If overlay open, push new rect so it follows scroll/resize
+		if (dropdownId) {
+			updateOverlay(dropdownId, {}, { position: dropdownRect });
+		}
 	};
 
 	const onfocus = () => {
-		isOpen = true;
+		openDropdown();
 		if (searchable) {
 			searchTerm = value || '';
 		}
@@ -63,7 +64,7 @@
 			return;
 		}
 
-		isOpen = false;
+		closeDropdown();
 		if (searchable && searchTerm !== '') {
 			value = searchTerm;
 		} else {
@@ -73,21 +74,41 @@
 
 	const onkeydown = (e: KeyboardEvent) => {
 		if (e.key === 'Escape') {
-			isOpen = false;
+			closeDropdown();
 			searchTerm = value ?? '';
 		}
 		if (e.key === 'Enter') {
-			isOpen = false;
+			closeDropdown();
 			selectOption(searchTerm);
 		}
 	};
 
+	const openDropdown = () =>
+		(dropdownId = openOverlay(
+			Dropdown,
+			{
+				options,
+				searchTerm,
+				selectOption
+			},
+			{ position: dropdownRect, clearBackground: true }
+		));
+
+	const updateDropdown = () => {
+		console.log(dropdownRect);
+		if (!dropdownId) return;
+		updateOverlay(dropdownId, { options, searchTerm }, { position: dropdownRect });
+	};
+
+	const closeDropdown = () => {
+		if (dropdownId) {
+			closeOverlay(dropdownId);
+			dropdownId = undefined;
+		}
+	};
+
 	onMount(() => {
-		const handleReposition = () => {
-			if (isOpen) {
-				updateDropdownPosition();
-			}
-		};
+		const handleReposition = updateDropdownPosition;
 
 		window.addEventListener('scroll', handleReposition, true);
 		window.addEventListener('resize', handleReposition);
@@ -106,39 +127,18 @@
 				bind:value={searchTerm}
 				{size}
 				variant="inline"
-				placeholder={!searchTerm && !isOpen ? placeholder : ''}
+				placeholder={!searchTerm && !dropdownId ? placeholder : ''}
 				{disabled}
 				{onfocus}
 				{onblur}
 				{onkeydown}
+				oninput={updateDropdown}
 			/>
 		{:else}
-			<button onclick={() => (isOpen = true)} {onblur}>{value}</button>
+			<button onclick={openDropdown} {onblur}>{value}</button>
 		{/if}
 	</div>
 </div>
-
-{#if isOpen && dropdownRect}
-	<div
-		class="dropdown-options"
-		style:top="{dropdownRect.bottom}px"
-		style:left="{dropdownRect.left}px"
-		style:width="{dropdownRect.width}px"
-	>
-		{#if !options.includes(searchTerm) && searchTerm !== ''}
-			<button class="option add-new-option" onclick={() => selectOption(searchTerm)} tabindex="-1">
-				<i class="fa-solid fa-plus"></i>
-				"{searchTerm}"
-			</button>
-		{/if}
-
-		{#each filteredOptions as option}
-			<button class="option" onclick={() => selectOption(option)} tabindex="-1">
-				{option}
-			</button>
-		{/each}
-	</div>
-{/if}
 
 <style>
 	.searchable-select {
@@ -194,62 +194,5 @@
 
 	.dropdown-icon.rotated {
 		transform: translateY(-50%) rotate(180deg);
-	}
-
-	.dropdown-options {
-		position: absolute;
-		background: rgba(255, 255, 255, 0.95);
-		border: 1px solid rgba(0, 0, 0, 0.1);
-		border-radius: 4px;
-		border-top: none;
-		border-top-left-radius: 0;
-		border-top-right-radius: 0;
-		max-height: 200px;
-		overflow-y: auto;
-		backdrop-filter: blur(10px);
-		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-		pointer-events: auto;
-	}
-
-	.option {
-		width: 100%;
-		padding: 8px 12px;
-		border: none;
-		background: transparent;
-		color: #333333;
-		text-align: left;
-		cursor: pointer;
-		font-family: inherit;
-		font-size: inherit;
-		transition: background-color 0.2s ease;
-		display: flex;
-		align-items: center;
-		gap: 6px;
-	}
-
-	.option:hover {
-		background: rgba(0, 0, 0, 0.05);
-	}
-
-	.add-new-option {
-		background: rgba(0, 0, 0, 0.02);
-		font-weight: 500;
-		border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-	}
-
-	.add-new-option:hover {
-		background: rgba(0, 0, 0, 0.08);
-	}
-
-	.add-new-option i {
-		font-size: 0.75rem;
-		color: #666666;
-	}
-
-	.no-options {
-		padding: 8px 12px;
-		color: #666666;
-		font-style: italic;
-		text-align: center;
 	}
 </style>

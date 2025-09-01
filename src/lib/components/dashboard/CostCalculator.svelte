@@ -19,8 +19,6 @@
 
 	let { recipe = $bindable(), costs, unit, onRecipeUpdate }: Props = $props();
 
-	$inspect(recipe);
-
 	// Reactive calculations
 	const recipeCosts = $derived(calculateRecipeCosts(recipe, costs));
 	const totalCost = $derived(getTotalRecipeCost(recipeCosts));

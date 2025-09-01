@@ -9,8 +9,6 @@
 
 	// instantiate API and provide it
 	createOverlayContext();
-
-	$inspect(overlays);
 </script>
 
 {@render children?.()}

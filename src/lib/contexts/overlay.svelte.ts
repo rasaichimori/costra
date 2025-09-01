@@ -5,6 +5,13 @@ export const OVERLAY_KEY = Symbol('overlay');
 
 export type OverlayComponent<P, R> = Component<P & { onclose?: (value?: R) => void }>;
 
+export interface OverlayOptions {
+	/** The position of the overlay. */
+	position?: DOMRect;
+	/** Whether to show a background behind the overlay. */
+	clearBackground?: boolean;
+}
+
 /** Internal representation of a single overlay in the stack. */
 export interface OverlayEntry<P, R> {
 	/** The unique identifier for the overlay. */
@@ -13,6 +20,8 @@ export interface OverlayEntry<P, R> {
 	component: OverlayComponent<P, R>;
 	/** The props to pass to the component. */
 	props: P;
+	/** The options for the overlay. */
+	options?: OverlayOptions;
 }
 
 /** An Array that contains all the open overlays */
@@ -26,12 +35,38 @@ export const overlays = $state<OverlayEntry<any, any>[]>([]);
  */
 export const createOverlayContext = () => {
 	// Open a new overlay by supplying the component constructor and its props.
-	const openOverlay = <P, R>(component: OverlayComponent<P, R>, props: P): void => {
+	const openOverlay = <P, R>(
+		component: OverlayComponent<P, R>,
+		props: P,
+		options?: OverlayOptions
+	): string => {
+		const id = crypto.randomUUID();
 		overlays.push({
-			id: crypto.randomUUID(),
+			id,
 			component,
-			props
+			props,
+			options
 		});
+		return id;
+	};
+
+	// Update props of an existing overlay by id. Merges new props with existing ones.
+	const updateOverlay = <P>(
+		id: string,
+		newProps: Partial<P>,
+		newOptions: Partial<OverlayOptions>
+	): void => {
+		const idx = overlays.findIndex((e) => e.id === id);
+		if (idx === -1) return;
+		// Merge to keep existing props not provided in newProps
+		overlays[idx].props = {
+			...overlays[idx].props,
+			...newProps
+		} as (typeof overlays)[number]['props'];
+		overlays[idx].options = {
+			...overlays[idx].options,
+			...newOptions
+		} as (typeof overlays)[number]['options'];
 	};
 
 	// Close the topmost overlay (default) or a specific overlay by id. All
@@ -44,7 +79,7 @@ export const createOverlayContext = () => {
 		overlays.splice(idx);
 	};
 
-	const api = { openOverlay, closeOverlay, overlays } as const;
+	const api = { openOverlay, closeOverlay, updateOverlay, overlays } as const;
 	setContext(OVERLAY_KEY, api);
 	return api;
 };

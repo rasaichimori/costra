@@ -15,10 +15,23 @@
 		e.stopPropagation();
 		closeOverlay(entry.id);
 	};
+
+	$inspect(entry.options?.position);
 </script>
 
-<div class="overlay-backdrop" onpointerdown={handleBackdropClick}>
-	<div class="overlay-content" onpointerdown={(e) => e.stopPropagation()}>
+<div
+	class="overlay-backdrop"
+	onpointerdown={handleBackdropClick}
+	style="background: {entry.options?.clearBackground ? 'transparent' : 'rgba(0, 0, 0, 0.5)'}"
+>
+	<div
+		class="overlay-content"
+		onpointerdown={(e) => e.stopPropagation()}
+		style:position={entry.options?.position !== undefined ? 'absolute' : 'relative'}
+		style:top="{entry.options?.position?.bottom}px"
+		style:left="{entry.options?.position?.left}px"
+		style:width="{entry.options?.position?.width}px"
+	>
 		<Comp {...entry.props} />
 	</div>
 </div>
@@ -30,6 +43,10 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		background: rgba(0, 0, 0, 0.5);
+	}
+
+	.overlay-content {
+		width: fit-content;
+		height: fit-content;
 	}
 </style>
