@@ -12,20 +12,23 @@
 	import AddIngredientsButton from './AddIngredientsPopup.svelte';
 	import { getOverlayContext } from '$lib/contexts/overlay.svelte';
 	import { onMount, tick } from 'svelte';
+	import CostBreakdown from './CostBreakdown.svelte';
 
 	interface Props {
 		recipe: RecipeDoc;
 		costs: Record<string, IngredientDoc>;
 		unit?: Unit;
-		onRecipeUpdate?: (recipe: RecipeDoc) => void;
 	}
 
-	let { recipe = $bindable(), costs, unit, onRecipeUpdate }: Props = $props();
+	let { recipe = $bindable(), costs, unit }: Props = $props();
 
 	const { openOverlay, updateOverlay } = getOverlayContext();
 
 	let addBtnElement: HTMLButtonElement | undefined;
 	let addPopupId = $state<string | undefined>(undefined);
+
+	$inspect(recipe);
+
 	const openAddPopup = (btn: HTMLButtonElement) => {
 		addBtnElement = btn;
 		addPopupId = openOverlay(
@@ -33,8 +36,7 @@
 			{
 				availableIngredients,
 				recipe,
-				onRecipeUpdate: async (recipe) => {
-					onRecipeUpdate?.(recipe);
+				onAddIngredient: async () => {
 					await tick();
 					updateAddPopup();
 				}
@@ -96,7 +98,6 @@
 										value={ingredient.portion.amount}
 										onchange={(value) => {
 											ingredient.portion.amount = value;
-											onRecipeUpdate?.(recipe);
 										}}
 										size="small"
 										variant="inline"
@@ -114,13 +115,22 @@
 										searchable={false}
 										onchange={(newUnit) => {
 											ingredient.portion.unit = newUnit as Unit;
-											onRecipeUpdate?.(recipe);
 										}}
 									/>
 								</div>
 							</div>
 							<div class="ingredient-cost">
 								¥{recipeCosts[ingredient.id]?.toFixed(0) || '0'}
+							</div>
+							<div class="color-input-group">
+								<input
+									type="color"
+									class="color-picker"
+									value={ingredient.color}
+									oninput={(e) => {
+										ingredient.color = (e.target as HTMLInputElement).value;
+									}}
+								/>
 							</div>
 							<ModernButton
 								variant="icon"
@@ -129,7 +139,6 @@
 								title="Delete ingredient"
 								onclick={() => {
 									recipe.ingredients = recipe.ingredients.filter((i) => i.id !== ingredient.id);
-									onRecipeUpdate?.(recipe);
 								}}
 							>
 								<i class="fa-solid fa-trash"></i>
@@ -145,7 +154,7 @@
 					Add Ingredients
 				</ModernButton>
 			</div>
-			<!-- <CostBreakdown /> -->
+			<CostBreakdown {recipe} {costs} />
 		</div>
 	</div>
 </div>
@@ -254,5 +263,18 @@
 		align-items: center;
 		gap: 4px;
 		width: 100%;
+	}
+
+	.color-input-group {
+		display: flex;
+		align-items: center;
+	}
+
+	.color-picker {
+		border: none;
+		background: transparent;
+		width: 20px;
+		height: 20px;
+		padding: 0;
 	}
 </style>

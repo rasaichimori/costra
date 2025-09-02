@@ -22,7 +22,8 @@
 			ingredients: [
 				{
 					id: 'coconutMilk',
-					portion: { amount: 1, unit: 'cup' }
+					portion: { amount: 1, unit: 'cup' },
+					color: '#ff0000'
 				}
 			]
 		}

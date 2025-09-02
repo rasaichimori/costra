@@ -23,5 +23,7 @@ export interface RecipeDoc {
 	ingredients: {
 		id: string;
 		portion: Portion;
+		/** Hex or CSS colour string for chart slice */
+		color: string;
 	}[];
 }

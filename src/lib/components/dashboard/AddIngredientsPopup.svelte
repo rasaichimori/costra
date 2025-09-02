@@ -6,10 +6,10 @@
 	interface Props {
 		availableIngredients: IngredientDoc[];
 		recipe: RecipeDoc;
-		onRecipeUpdate?: (recipe: RecipeDoc) => void;
+		onAddIngredient?: (ingredientId: string) => void;
 	}
 
-	let { availableIngredients, recipe, onRecipeUpdate }: Props = $props();
+	let { availableIngredients, recipe, onAddIngredient }: Props = $props();
 	let searchTerm = $state('');
 	// allow multiple category filters
 	let selectedFilters: string[] = $state([]);
@@ -74,9 +74,12 @@
 					onclick={() => {
 						recipe.ingredients.push({
 							id: ingredient.id,
-							portion: { amount: 1, unit: 'cup' }
+							portion: { amount: 1, unit: 'cup' },
+							color: `#${Math.floor(Math.random() * 16777215)
+								.toString(16)
+								.padStart(6, '0')}`
 						});
-						onRecipeUpdate?.(recipe);
+						onAddIngredient?.(ingredient.id);
 					}}
 				>
 					<i class="fa-solid fa-plus"></i>
