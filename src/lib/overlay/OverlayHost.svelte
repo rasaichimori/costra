@@ -15,8 +15,6 @@
 		e.stopPropagation();
 		closeOverlay(entry.id);
 	};
-
-	$inspect(entry.options?.position);
 </script>
 
 <div
@@ -30,9 +28,10 @@
 		style:position={entry.options?.position !== undefined ? 'absolute' : 'relative'}
 		style:top="{entry.options?.position?.bottom}px"
 		style:left="{entry.options?.position?.left}px"
-		style:width="{entry.options?.position?.width}px"
 	>
-		<Comp {...entry.props} />
+		{#if Comp}
+			<Comp {...entry.props} />
+		{/if}
 	</div>
 </div>
 

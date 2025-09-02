@@ -4,7 +4,7 @@
 		size?: 'small' | 'medium' | 'large';
 		disabled?: boolean;
 		type?: 'button' | 'submit' | 'reset';
-		onclick?: () => void;
+		onclick?: (event: MouseEvent) => void;
 		ariaLabel?: string;
 		title?: string;
 		style?: string;
@@ -28,7 +28,7 @@
 	class="btn btn-{variant} btn-{size}"
 	{type}
 	{disabled}
-	onclick={onclick}
+	{onclick}
 	aria-label={ariaLabel}
 	{title}
 	{style}

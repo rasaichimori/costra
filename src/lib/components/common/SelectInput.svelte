@@ -28,7 +28,6 @@
 
 	let searchTerm = $state(searchable ? (value ?? '') : '');
 	let containerElement: HTMLElement;
-	let dropdownRect = $state<DOMRect | undefined>(undefined);
 	let dropdownId = $state<string | undefined>(undefined);
 
 	const selectOption = (option: string) => {
@@ -40,21 +39,12 @@
 		onchange?.(option);
 	};
 
-	const updateDropdownPosition = () => {
-		if (!containerElement) return;
-		dropdownRect = containerElement.getBoundingClientRect();
-		// If overlay open, push new rect so it follows scroll/resize
-		if (dropdownId) {
-			updateOverlay(dropdownId, {}, { position: dropdownRect });
-		}
-	};
-
 	const onfocus = () => {
 		openDropdown();
 		if (searchable) {
 			searchTerm = value || '';
 		}
-		updateDropdownPosition();
+		updateDropdown();
 	};
 
 	const onblur = (e: FocusEvent) => {
@@ -65,10 +55,12 @@
 		}
 
 		closeDropdown();
-		if (searchable && searchTerm !== '') {
-			value = searchTerm;
-		} else {
-			searchTerm = value ?? '';
+		if (searchable) {
+			if (searchTerm !== '') {
+				value = searchTerm;
+			} else {
+				searchTerm = value ?? '';
+			}
 		}
 	};
 
@@ -83,21 +75,26 @@
 		}
 	};
 
-	const openDropdown = () =>
-		(dropdownId = openOverlay(
+	const openDropdown = () => {
+		dropdownId = openOverlay(
 			Dropdown,
 			{
 				options,
 				searchTerm,
 				selectOption
 			},
-			{ position: dropdownRect, clearBackground: true }
-		));
+			{ clearBackground: true }
+		);
+		updateDropdown();
+	};
 
 	const updateDropdown = () => {
-		console.log(dropdownRect);
 		if (!dropdownId) return;
-		updateOverlay(dropdownId, { options, searchTerm }, { position: dropdownRect });
+		updateOverlay(
+			dropdownId,
+			{ options, searchTerm },
+			{ position: containerElement.getBoundingClientRect() }
+		);
 	};
 
 	const closeDropdown = () => {
@@ -108,14 +105,12 @@
 	};
 
 	onMount(() => {
-		const handleReposition = updateDropdownPosition;
-
-		window.addEventListener('scroll', handleReposition, true);
-		window.addEventListener('resize', handleReposition);
+		window.addEventListener('scroll', updateDropdown, true);
+		window.addEventListener('resize', updateDropdown);
 
 		return () => {
-			window.removeEventListener('scroll', handleReposition, true);
-			window.removeEventListener('resize', handleReposition);
+			window.removeEventListener('scroll', updateDropdown, true);
+			window.removeEventListener('resize', updateDropdown);
 		};
 	});
 </script>
@@ -161,6 +156,7 @@
 			color: #333333;
 			transition: all 0.2s ease;
 			outline: none;
+			cursor: pointer;
 		}
 	}
 

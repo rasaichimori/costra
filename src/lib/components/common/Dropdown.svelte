@@ -75,11 +75,4 @@
 	.add-new-option:hover {
 		background: rgba(0, 0, 0, 0.08);
 	}
-
-	.no-options {
-		padding: 8px 12px;
-		color: #666666;
-		font-style: italic;
-		text-align: center;
-	}
 </style>

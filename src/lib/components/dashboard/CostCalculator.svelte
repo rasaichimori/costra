@@ -9,6 +9,9 @@
 	import SelectInput from '../common/SelectInput.svelte';
 	import TextInput from '../common/TextInput.svelte';
 	import ModernButton from '../common/ModernButton.svelte';
+	import AddIngredientsButton from './AddIngredientsPopup.svelte';
+	import { getOverlayContext } from '$lib/contexts/overlay.svelte';
+	import { onMount, tick } from 'svelte';
 
 	interface Props {
 		recipe: RecipeDoc;
@@ -18,6 +21,46 @@
 	}
 
 	let { recipe = $bindable(), costs, unit, onRecipeUpdate }: Props = $props();
+
+	const { openOverlay, updateOverlay } = getOverlayContext();
+
+	let addBtnElement: HTMLButtonElement | undefined;
+	let addPopupId = $state<string | undefined>(undefined);
+	const openAddPopup = (btn: HTMLButtonElement) => {
+		addBtnElement = btn;
+		addPopupId = openOverlay(
+			AddIngredientsButton,
+			{
+				availableIngredients,
+				recipe,
+				onRecipeUpdate: async (recipe) => {
+					onRecipeUpdate?.(recipe);
+					await tick();
+					updateAddPopup();
+				}
+			},
+			{ clearBackground: true, position: addBtnElement.getBoundingClientRect() }
+		);
+		updateAddPopup();
+	};
+
+	const updateAddPopup = () => {
+		if (!addPopupId || !addBtnElement) return;
+		updateOverlay(
+			addPopupId,
+			{ availableIngredients, recipe },
+			{ position: addBtnElement.getBoundingClientRect() }
+		);
+	};
+
+	onMount(() => {
+		window.addEventListener('scroll', updateAddPopup, true);
+		window.addEventListener('resize', updateAddPopup);
+		return () => {
+			window.removeEventListener('scroll', updateAddPopup, true);
+			window.removeEventListener('resize', updateAddPopup);
+		};
+	});
 
 	// Reactive calculations
 	const recipeCosts = $derived(calculateRecipeCosts(recipe, costs));
@@ -38,8 +81,8 @@
 				{/if}
 			</div>
 		</div>
-		<div class="ingredient-section">
-			<div class="ingredient-breakdown">
+		<div class="recipe-section">
+			<div class="recipe-breakdown">
 				<h3>Ingredient Breakdown:</h3>
 				<div class="ingredient-list">
 					{#each recipe.ingredients as ingredient}
@@ -94,28 +137,15 @@
 						</div>
 					{/each}
 				</div>
+				<ModernButton
+					onclick={(e) => openAddPopup(e.currentTarget as HTMLButtonElement)}
+					style="width: fit-content;"
+				>
+					<i class="fa-solid fa-plus"></i>
+					Add Ingredients
+				</ModernButton>
 			</div>
-
-			<div class="add-ingredients">
-				<h3>Add New Ingredients:</h3>
-				<div class="available-ingredients">
-					{#each availableIngredients as ingredient}
-						<button
-							class="add-ingredient-btn"
-							onclick={() => {
-								recipe.ingredients.push({
-									id: ingredient.id,
-									portion: { amount: 1, unit: 'cup' }
-								});
-								onRecipeUpdate?.(recipe);
-							}}
-						>
-							<i class="fa-solid fa-plus"></i>
-							{ingredient.name}
-						</button>
-					{/each}
-				</div>
-			</div>
+			<!-- <CostBreakdown /> -->
 		</div>
 	</div>
 </div>
@@ -165,13 +195,12 @@
 		margin-bottom: 15px;
 	}
 
-	.ingredient-section {
+	.recipe-section {
 		display: flex;
 		gap: 32px;
 	}
 
-	.add-ingredients,
-	.ingredient-breakdown {
+	.recipe-breakdown {
 		display: flex;
 		flex-direction: column;
 		flex: 1;
@@ -181,32 +210,6 @@
 		border-top: 1px solid rgba(0, 0, 0, 0.1);
 		text-align: left;
 	}
-
-	.available-ingredients {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 8px;
-	}
-
-	.add-ingredient-btn {
-		background: rgba(255, 255, 255, 0.8);
-		border: 1px solid rgba(0, 0, 0, 0.2);
-		color: #333333;
-		padding: 6px 12px;
-		border-radius: 6px;
-		cursor: pointer;
-		font-size: 12px;
-		display: flex;
-		align-items: center;
-		gap: 6px;
-		transition: all 0.2s;
-	}
-
-	.add-ingredient-btn:hover {
-		background: rgba(255, 255, 255, 0.9);
-		border-color: rgba(0, 0, 0, 0.3);
-	}
-
 	.ingredient-list {
 		display: flex;
 		flex-direction: column;
