@@ -57,32 +57,36 @@
 		</div>
 	{/if}
 
-	<!-- Search -->
-	<TextInput
-		bind:value={searchTerm}
-		size={'small'}
-		variant="inline"
-		placeholder={!searchTerm ? 'Search ingredients...' : ''}
-	/>
+	{#if filteredIngredients.length > 0}
+		<!-- Search -->
+		<TextInput
+			bind:value={searchTerm}
+			size={'small'}
+			variant="inline"
+			placeholder={!searchTerm ? 'Search ingredients...' : ''}
+		/>
 
-	<!-- Available Ingredients -->
-	<div class="available-ingredients">
-		{#each filteredIngredients as ingredient}
-			<button
-				class="add-ingredient-btn"
-				onclick={() => {
-					recipe.ingredients.push({
-						id: ingredient.id,
-						portion: { amount: 1, unit: 'cup' }
-					});
-					onRecipeUpdate?.(recipe);
-				}}
-			>
-				<i class="fa-solid fa-plus"></i>
-				{ingredient.name}
-			</button>
-		{/each}
-	</div>
+		<!-- Available Ingredients -->
+		<div class="available-ingredients">
+			{#each filteredIngredients as ingredient}
+				<button
+					class="add-ingredient-btn"
+					onclick={() => {
+						recipe.ingredients.push({
+							id: ingredient.id,
+							portion: { amount: 1, unit: 'cup' }
+						});
+						onRecipeUpdate?.(recipe);
+					}}
+				>
+					<i class="fa-solid fa-plus"></i>
+					{ingredient.name}
+				</button>
+			{/each}
+		</div>
+	{:else}
+		<p>No ingredients left to add</p>
+	{/if}
 </div>
 
 <style>
@@ -97,6 +101,10 @@
 		box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
 		min-width: 260px;
 		max-width: 320px;
+
+		p {
+			margin: 0;
+		}
 	}
 
 	.available-ingredients {

@@ -38,7 +38,7 @@
 	<div class="actions">
 		<ModernButton variant="danger" size="small" onclick={() => handleClose(true)}>
 			<i class="fa-solid fa-trash"></i>
-			Confirm delete
+			Remove and Delete
 		</ModernButton>
 
 		<ModernButton variant="secondary" size="small" onclick={() => handleClose(false)}>
