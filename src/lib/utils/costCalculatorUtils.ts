@@ -14,6 +14,7 @@ export const calculateRecipeCosts = (recipe: RecipeDoc, costs: Record<string, In
 	const recipeCosts: Record<string, number> = {};
 
 	recipe.ingredients.forEach((ingredient) => {
+		if (ingredient.hidden) return; // Skip hidden ingredients
 		const ingredientDoc = costs[ingredient.id];
 		if (!ingredientDoc) return;
 

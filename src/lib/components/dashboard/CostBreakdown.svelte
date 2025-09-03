@@ -1,48 +1,89 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import type { IngredientDoc, RecipeDoc } from '$lib/data/schema';
-	import type { Chart, ChartData, ChartOptions } from 'chart.js';
+	import type { Chart, ChartData, ChartOptions, Plugin } from 'chart.js';
 	import { calculateRecipeCosts } from '$lib/utils/costCalculatorUtils';
 
-	function indexToHexColour(idx: number, total: number): string {
-		const hue = (idx * 360) / total;
-		const s = 0.7;
-		const l = 0.6;
-		const a = s * Math.min(l, 1 - l);
-		const f = (n: number) => {
-			const k = (n + hue / 30) % 12;
-			const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
-			return Math.round(255 * color)
-				.toString(16)
-				.padStart(2, '0');
-		};
-		return `#${f(0)}${f(8)}${f(4)}`;
-	}
-
 	import { Chart as ChartJS } from 'chart.js/auto';
+
+	// Custom plugin to render labels (ingredient name inside segment and percentage outside)
+	const labelPlugin: Plugin<'doughnut'> = {
+		id: 'labels',
+		afterDraw(chart) {
+			const meta = chart.getDatasetMeta(0);
+			if (!meta || !meta.data) return;
+			const total = (chart.data.datasets[0].data as number[]).reduce((a, b) => a + b, 0);
+			const ctx = chart.ctx;
+			ctx.save();
+			(meta.data as any[]).forEach((arc, idx) => {
+				const ing = recipe.ingredients[idx];
+				if (!ing || ing.hidden) return; // skip hidden
+				const center = arc.getCenterPoint();
+				ctx.textAlign = 'center';
+				ctx.textBaseline = 'middle';
+				ctx.fillStyle = '#ffffff';
+				ctx.font = '12px sans-serif';
+				const value = chart.data.datasets[0].data[idx] as number;
+				const percentText = `${Math.round((value / total) * 100)}%`;
+				// Draw name slightly above center
+				const label = (chart.data.labels ?? []) as unknown as string[];
+				ctx.fillText(label[idx] ?? '', center.x, center.y - 6);
+				// Draw percentage below
+				ctx.font = '10px sans-serif';
+				ctx.fillStyle = '#dddddd';
+				ctx.fillText(percentText, center.x, center.y + 8);
+			});
+			ctx.restore();
+		}
+	};
+
+	// Register plugin once (Chart.js ignores duplicates)
+	ChartJS.register(labelPlugin);
 
 	interface Props {
 		recipe: RecipeDoc;
 		costs: Record<string, IngredientDoc>;
 	}
 
-	let { recipe, costs }: Props = $props();
+	let { recipe = $bindable(), costs }: Props = $props();
 
 	// Derived recipeCosts and colors
 	const recipeCosts = $derived(calculateRecipeCosts(recipe, costs));
 
-	const colors = $derived(
-		recipe.ingredients.map(
-			(ing, idx) => ing.color ?? indexToHexColour(idx, recipe.ingredients.length)
-		)
+	// Helper to access all ingredient names in recipe order
+	const labelsAll = $derived(recipe.ingredients.map((ing) => costs[ing.id]?.name ?? ing.id));
+
+	// Data array reflecting hidden visibility (0 when hidden)
+	const chartDataValues = $derived(
+		recipe.ingredients.map((ing) => (ing.hidden ? 0 : (recipeCosts[ing.id] ?? 0)))
 	);
+
+	const colors = $derived(recipe.ingredients.map((ing) => ing.color));
 
 	let canvas: HTMLCanvasElement;
 	let chart = $state<Chart<'doughnut'> | undefined>(undefined);
 
+	// Unified visibility sync helper
+	const syncVisibility = (idx: number, hidden: boolean) => {
+		if (!chart) return;
+		const meta = chart.getDatasetMeta(0);
+		const element = meta.data[idx];
+		if (element && element.options) {
+			element.options.hidden = hidden;
+			console.log(element.options.hidden);
+			chart.update();
+		}
+		if (recipe.ingredients[idx]) {
+			// avoid triggering needless updates if already same
+			if (recipe.ingredients[idx].hidden !== hidden) {
+				recipe.ingredients[idx].hidden = hidden;
+			}
+		}
+	};
+
 	async function createChart() {
-		const labels = Object.keys(recipeCosts).map((id) => costs[id]?.name ?? id);
-		const data = Object.keys(recipeCosts).map((id) => recipeCosts[id]);
+		const labels = labelsAll;
+		const data = chartDataValues;
 
 		const chartData: ChartData<'doughnut'> = {
 			labels,
@@ -57,7 +98,53 @@
 		const options: ChartOptions<'doughnut'> = {
 			responsive: true,
 			plugins: {
-				legend: { position: 'bottom' }
+				legend: {
+					position: 'bottom',
+					onClick: (_e, legendItem, legend) => {
+						const index = legendItem.index;
+						if (index === undefined) return;
+						const meta = legend.chart.getDatasetMeta(0);
+						const element = meta.data[index];
+						const newHidden = !(element.options?.hidden ?? false);
+						syncVisibility(index, newHidden);
+					},
+
+					labels: {
+						generateLabels: function (chart) {
+							const data = chart.data;
+							if (data.labels && data.labels.length && data.datasets.length) {
+								return data.labels.map((label, i) => {
+									const meta = chart.getDatasetMeta(0);
+									const style = meta.controller.getStyle(i, false);
+									const isHidden = meta.data[i].options?.hidden;
+
+									return {
+										text: String(label), // Ensure string type
+										fillStyle: style.backgroundColor,
+										strokeStyle: style.borderColor,
+										lineWidth: style.borderWidth,
+										hidden: isHidden,
+										index: i,
+										fontStyle: isHidden ? 'italic' : 'normal',
+										fontColor: isHidden ? '#999999' : '#666666' // Use specific color strings
+									};
+								});
+							}
+							return [];
+						}
+					}
+				},
+				tooltip: {
+					displayColors: false,
+					callbacks: {
+						title: () => [],
+						label: (context) => {
+							// Only show Yen formatted value
+							const value = context.parsed as number;
+							return `¥${value.toFixed(0)}`;
+						}
+					}
+				}
 			},
 			maintainAspectRatio: false
 		};
@@ -74,11 +161,19 @@
 
 	$effect(() => {
 		if (!chart) return;
-		const labels = Object.keys(recipeCosts).map((id) => costs[id]?.name ?? id);
+		const labels = labelsAll;
 		chart.data.labels = labels;
-		chart.data.datasets[0].data = Object.keys(recipeCosts).map((id) => recipeCosts[id]);
+		chart.data.datasets[0].data = chartDataValues;
 		chart.data.datasets[0].backgroundColor = colors;
 		chart.update();
+	});
+
+	// Watch for ingredient.hidden changes coming from UI (eye button)
+	$effect(() => {
+		if (!chart) return;
+		recipe.ingredients.forEach((ing, idx) => {
+			syncVisibility(idx, ing.hidden);
+		});
 	});
 
 	onMount(createChart);

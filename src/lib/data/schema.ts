@@ -25,5 +25,7 @@ export interface RecipeDoc {
 		portion: Portion;
 		/** Hex or CSS colour string for chart slice */
 		color: string;
+		/** When true, ingredient is hidden from calculations & charts */
+		hidden: boolean;
 	}[];
 }

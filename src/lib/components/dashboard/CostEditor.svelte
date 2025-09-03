@@ -23,7 +23,8 @@
 				{
 					id: 'coconutMilk',
 					portion: { amount: 1, unit: 'cup' },
-					color: '#ff0000'
+					color: '#ff0000',
+					hidden: false
 				}
 			]
 		}

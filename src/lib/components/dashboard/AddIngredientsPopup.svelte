@@ -77,7 +77,8 @@
 							portion: { amount: 1, unit: 'cup' },
 							color: `#${Math.floor(Math.random() * 16777215)
 								.toString(16)
-								.padStart(6, '0')}`
+								.padStart(6, '0')}`,
+							hidden: false
 						});
 						onAddIngredient?.(ingredient.id);
 					}}

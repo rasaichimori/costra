@@ -88,7 +88,7 @@
 				<h3>Ingredient Breakdown:</h3>
 				<div class="ingredient-list">
 					{#each recipe.ingredients as ingredient}
-						<div class="ingredient-cost-item">
+						<div class="ingredient-cost-item" class:hidden={ingredient.hidden}>
 							<div class="ingredient-details">
 								<span class="ingredient-name"
 									>{costs[ingredient.id]?.name ?? "ingredient doesn't exist"}</span
@@ -132,6 +132,19 @@
 									}}
 								/>
 							</div>
+							<!-- Hide/Show Button -->
+							<ModernButton
+								variant="icon"
+								size="small"
+								ariaLabel={ingredient.hidden ? 'Show ingredient' : 'Hide ingredient'}
+								title={ingredient.hidden ? 'Show ingredient' : 'Hide ingredient'}
+								onclick={() => {
+									ingredient.hidden = !ingredient.hidden;
+								}}
+							>
+								<i class={`fa-solid ${ingredient.hidden ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+							</ModernButton>
+							<!-- Delete Button -->
 							<ModernButton
 								variant="icon"
 								size="small"
@@ -154,7 +167,7 @@
 					Add Ingredients
 				</ModernButton>
 			</div>
-			<CostBreakdown {recipe} {costs} />
+			<CostBreakdown bind:recipe {costs} />
 		</div>
 	</div>
 </div>
@@ -276,5 +289,10 @@
 		width: 20px;
 		height: 20px;
 		padding: 0;
+	}
+
+	/* Hidden row greyed out */
+	.ingredient-cost-item.hidden {
+		opacity: 0.4;
 	}
 </style>
