@@ -9,29 +9,31 @@
 	// Custom plugin to render labels (ingredient name inside segment and percentage outside)
 	const labelPlugin: Plugin<'doughnut'> = {
 		id: 'labels',
-		afterDraw(chart) {
+		afterDatasetsDraw(chart) {
 			const meta = chart.getDatasetMeta(0);
 			if (!meta || !meta.data) return;
 			const total = (chart.data.datasets[0].data as number[]).reduce((a, b) => a + b, 0);
 			const ctx = chart.ctx;
+			const minPercentForName = 5; // below this only show %
 			ctx.save();
 			(meta.data as any[]).forEach((arc, idx) => {
 				const ing = recipe.ingredients[idx];
 				if (!ing || ing.hidden) return; // skip hidden
+				const value = chart.data.datasets[0].data[idx] as number;
+				const percent = (value / total) * 100;
 				const center = arc.getCenterPoint();
 				ctx.textAlign = 'center';
 				ctx.textBaseline = 'middle';
 				ctx.fillStyle = '#ffffff';
 				ctx.font = '12px sans-serif';
-				const value = chart.data.datasets[0].data[idx] as number;
-				const percentText = `${Math.round((value / total) * 100)}%`;
-				// Draw name slightly above center
-				const label = (chart.data.labels ?? []) as unknown as string[];
-				ctx.fillText(label[idx] ?? '', center.x, center.y - 6);
-				// Draw percentage below
+				if (percent >= minPercentForName) {
+					const labelsArr = (chart.data.labels ?? []) as unknown as string[];
+					ctx.fillText(labelsArr[idx] ?? '', center.x, center.y - 6);
+				}
+				// Always show percentage below (smaller font)
 				ctx.font = '10px sans-serif';
 				ctx.fillStyle = '#dddddd';
-				ctx.fillText(percentText, center.x, center.y + 8);
+				ctx.fillText(`${Math.round(percent)}%`, center.x, center.y + 8);
 			});
 			ctx.restore();
 		}
@@ -139,9 +141,12 @@
 					callbacks: {
 						title: () => [],
 						label: (context) => {
-							// Only show Yen formatted value
-							const value = context.parsed as number;
-							return `¥${value.toFixed(0)}`;
+							const dataset = context.dataset.data as number[];
+							const total = dataset.reduce((a, b) => (a as number) + (b as number), 0 as number);
+							const percent = ((context.parsed as number) / total) * 100;
+							const showName = percent < 5; // name only if slice too small to display
+							const yen = `¥${(context.parsed as number).toFixed(0)}`;
+							return showName ? `${context.label}: ${yen}` : yen;
 						}
 					}
 				}

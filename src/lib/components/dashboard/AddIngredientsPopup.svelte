@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { IngredientDoc, RecipeDoc } from '$lib/data/schema';
+	import { randomLightColorHex } from '$lib/utils/color';
 	import ModernButton from '../common/ModernButton.svelte';
 	import TextInput from '../common/TextInput.svelte';
 
@@ -75,9 +76,7 @@
 						recipe.ingredients.push({
 							id: ingredient.id,
 							portion: { amount: 1, unit: 'cup' },
-							color: `#${Math.floor(Math.random() * 16777215)
-								.toString(16)
-								.padStart(6, '0')}`,
+							color: randomLightColorHex(),
 							hidden: false
 						});
 						onAddIngredient?.(ingredient.id);

@@ -129,7 +129,7 @@
 			name: `Ingredient ${nextNumber}`,
 			category: '',
 			product: {
-				cost: 0,
+				cost: 10,
 				amount: 1,
 				unit: 'cup'
 			}
