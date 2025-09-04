@@ -2,6 +2,10 @@
 	import CostCalculator from './CostCalculator.svelte';
 	import type { IngredientDoc, RecipeDoc } from '$lib/data/schema';
 	import IngredientCostGrid from './IngredientCostGrid.svelte';
+	import { getOverlayContext } from '$lib/contexts/overlay.svelte';
+	import ExportDataModal from '../modals/ExportDataModal.svelte';
+	import ImportDataModal from '../modals/ImportDataModal.svelte';
+	import ModernButton from '../common/ModernButton.svelte';
 
 	let costs = $state<Record<string, IngredientDoc>>({
 		coconutMilk: {
@@ -27,8 +31,39 @@
 					hidden: false
 				}
 			]
+		},
+		mangoBase: {
+			id: 'mangoBase',
+			name: 'Mango Base',
+			ingredients: [
+				{
+					id: 'coconutMilk',
+					portion: { amount: 1, unit: 'cup' },
+					color: '#ff0000',
+					hidden: false
+				}
+			]
 		}
 	});
+
+	const { openOverlay, closeOverlay } = getOverlayContext();
+
+	const exportData = () => {
+		openOverlay(ExportDataModal, {
+			data: { costs, recipes },
+			onclose: () => closeOverlay()
+		});
+	};
+
+	const importData = () => {
+		openOverlay(ImportDataModal, {
+			onLoad: (d: { costs: Record<string, IngredientDoc>; recipes: Record<string, RecipeDoc> }) => {
+				costs = d.costs;
+				recipes = d.recipes;
+			},
+			onclose: () => closeOverlay()
+		});
+	};
 </script>
 
 <div class="cost-editor">
@@ -37,6 +72,10 @@
 			<i class="fa-solid fa-dollar-sign"></i>
 			Cost Editor
 		</h2>
+		<div class="header-actions">
+			<ModernButton variant="secondary" onclick={importData}>Import</ModernButton>
+			<ModernButton variant="primary" onclick={exportData}>Export</ModernButton>
+		</div>
 	</div>
 	{#each Object.entries(recipes) as [id, recipe]}
 		<CostCalculator bind:recipe={recipes[id]} {costs} unit={'cup'} />
@@ -76,5 +115,10 @@
 
 	.editor-header h2 i {
 		color: rgba(0, 0, 0, 0.6);
+	}
+
+	.header-actions {
+		display: flex;
+		gap: 8px;
 	}
 </style>
