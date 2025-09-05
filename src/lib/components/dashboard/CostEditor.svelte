@@ -1,5 +1,6 @@
 <script lang="ts">
-	import CostCalculator from './CostCalculator.svelte';
+	import RecipeEditor from './RecipeEditor.svelte';
+	import RecipesList from './RecipesList.svelte';
 	import type { IngredientDoc, RecipeDoc } from '$lib/data/schema';
 	import IngredientCostGrid from './IngredientCostGrid.svelte';
 	import { getOverlayContext } from '$lib/contexts/overlay.svelte';
@@ -48,6 +49,8 @@
 
 	const { openOverlay, closeOverlay } = getOverlayContext();
 
+	let selectedRecipeId = $state<string | undefined>();
+
 	const exportData = () => {
 		openOverlay(ExportDataModal, {
 			data: { costs, recipes },
@@ -77,15 +80,24 @@
 			<ModernButton variant="primary" onclick={exportData}>Export</ModernButton>
 		</div>
 	</div>
-	{#each Object.entries(recipes) as [id, recipe]}
-		<CostCalculator bind:recipe={recipes[id]} {costs} unit={'cup'} />
-	{/each}
-
-	<IngredientCostGrid bind:costs bind:recipes />
+	<div class="content">
+		<div class="recipes">
+			<RecipesList {recipes} {costs} bind:selectedRecipeId />
+			{#if selectedRecipeId}
+				<RecipeEditor bind:recipe={recipes[selectedRecipeId]} {costs} unit={'cup'} />
+			{:else}
+				<!-- <RecipeEditorPlaceholder /> -->
+			{/if}
+		</div>
+		<IngredientCostGrid bind:costs bind:recipes />
+	</div>
 </div>
 
 <style>
 	.cost-editor {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
 		padding: 2rem;
 		background: rgba(255, 255, 255, 0.95);
 		border-radius: 12px;
@@ -98,9 +110,6 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		margin-bottom: 2rem;
-		padding-bottom: 1rem;
-		border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 	}
 
 	.editor-header h2 {
@@ -120,5 +129,16 @@
 	.header-actions {
 		display: flex;
 		gap: 8px;
+	}
+
+	.content {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		flex-wrap: wrap;
+	}
+	.recipes {
+		display: flex;
+		gap: 16px;
 	}
 </style>

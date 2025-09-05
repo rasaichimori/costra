@@ -70,137 +70,126 @@
 	const availableIngredients = $derived(getAvailableIngredients(recipe, costs));
 </script>
 
-<div class="cost-calculator">
-	<div class="selected-cost">
-		<div class="cost-display">
-			<h4>
-				{recipe.name}
-			</h4>
-			<div class="cost-amount">
-				¥{totalCost.toFixed(0)}
-				{#if unit}
-					/ {unit}
-				{/if}
-			</div>
+<div class="recipe-cost-calculator">
+	<div class="cost-display">
+		<h4>
+			{recipe.name}
+		</h4>
+		<div class="cost-amount">
+			¥{totalCost.toFixed(0)}
+			{#if unit}
+				/ {unit}
+			{/if}
 		</div>
-		<div class="recipe-section">
-			<div class="recipe-breakdown">
-				<h3>Ingredient Breakdown:</h3>
-				<div class="ingredient-list">
-					{#each recipe.ingredients as ingredient}
-						<div class="ingredient-cost-item" class:hidden={ingredient.hidden}>
-							<div class="ingredient-details">
-								<span class="ingredient-name"
-									>{costs[ingredient.id]?.name ?? "ingredient doesn't exist"}</span
-								>
-								<div class="amount-input-group">
-									<TextInput
-										value={ingredient.portion.amount}
-										onchange={(value) => {
-											ingredient.portion.amount = value;
-										}}
-										size="small"
-										variant="inline"
-										min={1}
-										step={1}
-										spinner={true}
-									/>
-								</div>
-								<div class="unit-input-group">
-									<SelectInput
-										value={ingredient.portion.unit}
-										options={[...units]}
-										placeholder="Select unit..."
-										size="small"
-										searchable={false}
-										onchange={(newUnit) => {
-											ingredient.portion.unit = newUnit as Unit;
-										}}
-									/>
-								</div>
+	</div>
+	<div class="recipe-section">
+		<div class="recipe-breakdown">
+			<h3>Ingredient Breakdown:</h3>
+			<div class="ingredient-list">
+				{#each recipe.ingredients as ingredient}
+					<div class="ingredient-cost-item" class:hidden={ingredient.hidden}>
+						<div class="ingredient-details">
+							<span class="ingredient-name"
+								>{costs[ingredient.id]?.name ?? "ingredient doesn't exist"}</span
+							>
+							<div class="amount-input-group">
+								<TextInput
+									value={ingredient.portion.amount}
+									onchange={(value) => {
+										ingredient.portion.amount = value;
+									}}
+									size="small"
+									variant="inline"
+									min={1}
+									step={1}
+									spinner={true}
+								/>
 							</div>
-							<div class="ingredient-cost">
-								¥{recipeCosts[ingredient.id]?.toFixed(0) || '0'}
-							</div>
-							<div class="color-input-group">
-								<input
-									type="color"
-									class="color-picker"
-									value={ingredient.color}
-									oninput={(e) => {
-										ingredient.color = (e.target as HTMLInputElement).value;
+							<div class="unit-input-group">
+								<SelectInput
+									value={ingredient.portion.unit}
+									options={[...units]}
+									placeholder="Select unit..."
+									size="small"
+									searchable={false}
+									onchange={(newUnit) => {
+										ingredient.portion.unit = newUnit as Unit;
 									}}
 								/>
 							</div>
-							<!-- Hide/Show Button -->
-							<ModernButton
-								variant="icon"
-								size="small"
-								ariaLabel={ingredient.hidden ? 'Show ingredient' : 'Hide ingredient'}
-								title={ingredient.hidden ? 'Show ingredient' : 'Hide ingredient'}
-								onclick={() => {
-									ingredient.hidden = !ingredient.hidden;
-								}}
-							>
-								<i class={`fa-solid ${ingredient.hidden ? 'fa-eye-slash' : 'fa-eye'}`}></i>
-							</ModernButton>
-							<!-- Delete Button -->
-							<ModernButton
-								variant="icon"
-								size="small"
-								ariaLabel="Delete ingredient"
-								title="Delete ingredient"
-								onclick={() => {
-									recipe.ingredients = recipe.ingredients.filter((i) => i.id !== ingredient.id);
-								}}
-							>
-								<i class="fa-solid fa-trash"></i>
-							</ModernButton>
 						</div>
-					{/each}
-				</div>
-				<ModernButton
-					onclick={(e) => openAddPopup(e.currentTarget as HTMLButtonElement)}
-					style="width: fit-content;"
-				>
-					<i class="fa-solid fa-plus"></i>
-					Add Ingredients
-				</ModernButton>
+						<div class="ingredient-cost">
+							¥{recipeCosts[ingredient.id]?.toFixed(0) || '0'}
+						</div>
+						<div class="color-input-group">
+							<input
+								type="color"
+								class="color-picker"
+								value={ingredient.color}
+								oninput={(e) => {
+									ingredient.color = (e.target as HTMLInputElement).value;
+								}}
+							/>
+						</div>
+						<!-- Hide/Show Button -->
+						<ModernButton
+							variant="icon"
+							size="small"
+							ariaLabel={ingredient.hidden ? 'Show ingredient' : 'Hide ingredient'}
+							title={ingredient.hidden ? 'Show ingredient' : 'Hide ingredient'}
+							onclick={() => {
+								ingredient.hidden = !ingredient.hidden;
+							}}
+						>
+							<i class={`fa-solid ${ingredient.hidden ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+						</ModernButton>
+						<!-- Delete Button -->
+						<ModernButton
+							variant="icon"
+							size="small"
+							ariaLabel="Delete ingredient"
+							title="Delete ingredient"
+							onclick={() => {
+								recipe.ingredients = recipe.ingredients.filter((i) => i.id !== ingredient.id);
+							}}
+						>
+							<i class="fa-solid fa-trash"></i>
+						</ModernButton>
+					</div>
+				{/each}
 			</div>
-			<CostBreakdown bind:recipe {costs} />
+			<ModernButton
+				onclick={(e) => openAddPopup(e.currentTarget as HTMLButtonElement)}
+				style="width: fit-content;"
+			>
+				<i class="fa-solid fa-plus"></i>
+				Add Ingredients
+			</ModernButton>
 		</div>
+		<CostBreakdown bind:recipe {costs} />
 	</div>
 </div>
 
 <style>
-	.cost-calculator {
+	.recipe-cost-calculator {
 		background: rgba(255, 255, 255, 0.95);
 		border: 1px solid rgba(0, 0, 0, 0.1);
 		padding: 18px;
 		border-radius: 8px;
-		margin-bottom: 20px;
 		backdrop-filter: blur(10px);
+		flex: 1;
 	}
 
-	.cost-calculator h3 {
+	.recipe-cost-calculator h3 {
 		color: #333333;
 		font-weight: 500;
 	}
 
-	.cost-calculator h4 {
+	.recipe-cost-calculator h4 {
 		margin: 8px 0;
 		color: #333333;
 		font-size: 16px;
 		font-weight: 500;
-	}
-
-	.selected-cost {
-		background: rgba(255, 255, 255, 0.9);
-		border: 1px solid rgba(0, 0, 0, 0.15);
-		padding: 18px;
-		border-radius: 8px;
-		text-align: center;
-		backdrop-filter: blur(10px);
 	}
 
 	.cost-display h4 {
@@ -214,7 +203,6 @@
 		font-size: 32px;
 		font-weight: 600;
 		color: #333333;
-		margin-bottom: 15px;
 	}
 
 	.recipe-section {

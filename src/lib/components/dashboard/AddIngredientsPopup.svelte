@@ -150,6 +150,5 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: 6px;
-		margin-bottom: 4px;
 	}
 </style>

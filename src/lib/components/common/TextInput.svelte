@@ -114,7 +114,6 @@
 		font-size: 0.875rem;
 		font-weight: 500;
 		color: #333333;
-		margin-bottom: 2px;
 	}
 
 	.required {

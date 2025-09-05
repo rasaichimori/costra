@@ -320,7 +320,6 @@
 	/* Title Container */
 	.title-container {
 		position: relative;
-		margin-bottom: 3rem;
 	}
 
 	.title-decoration {
@@ -349,7 +348,6 @@
 		-webkit-background-clip: text;
 		-webkit-text-fill-color: transparent;
 		background-clip: text;
-		margin-bottom: 1rem;
 		position: relative;
 		text-transform: uppercase;
 	}
@@ -511,7 +509,6 @@
 		font-size: 2.2rem;
 		font-weight: 200;
 		color: #ffffff;
-		margin-bottom: 0.5rem;
 		line-height: 1;
 	}
 
@@ -520,7 +517,6 @@
 		color: rgba(255, 255, 255, 0.6);
 		text-transform: uppercase;
 		letter-spacing: 0.15em;
-		margin-bottom: 1rem;
 	}
 
 	.metric-bar {
@@ -547,7 +543,6 @@
 
 	.section-header {
 		text-align: center;
-		margin-bottom: 5rem;
 	}
 
 	.section-title {
@@ -616,7 +611,6 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		margin-bottom: 2rem;
 	}
 
 	.feature-icon-modern {
