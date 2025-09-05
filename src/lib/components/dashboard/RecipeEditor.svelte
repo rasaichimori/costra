@@ -13,6 +13,7 @@
 	import { getOverlayContext } from '$lib/contexts/overlay.svelte';
 	import { onMount, tick } from 'svelte';
 	import CostBreakdown from './CostBreakdown.svelte';
+	import EditableTextField from '../common/EditableTextField.svelte';
 
 	interface Props {
 		recipe: RecipeDoc;
@@ -71,10 +72,10 @@
 </script>
 
 <div class="recipe-cost-calculator">
-	<div class="cost-display">
-		<h4>
-			{recipe.name}
-		</h4>
+	<div class="title">
+		<div class="title-label">
+			<EditableTextField bind:value={recipe.name} />
+		</div>
 		<div class="cost-amount">
 			¥{totalCost.toFixed(0)}
 			{#if unit}
@@ -185,21 +186,16 @@
 		font-weight: 500;
 	}
 
-	.recipe-cost-calculator h4 {
+	.title-label {
 		margin: 8px 0;
 		color: #333333;
 		font-size: 16px;
 		font-weight: 500;
+		width: fit-content;
+		min-width: 150px;
 	}
 
-	.cost-display h4 {
-		margin: 0 0 15px 0;
-		color: #333333;
-		font-size: 18px;
-		font-weight: 500;
-	}
-
-	.cost-amount {
+	.title {
 		font-size: 32px;
 		font-weight: 600;
 		color: #333333;
@@ -248,7 +244,11 @@
 		color: #333333;
 		text-transform: capitalize;
 		min-width: 80px;
+		width: 120px;
 		font-size: 12px;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
 	}
 
 	.ingredient-cost {
@@ -263,7 +263,7 @@
 		display: flex;
 		align-items: center;
 		gap: 4px;
-		width: 100%;
+		width: 100px;
 	}
 
 	.color-input-group {
