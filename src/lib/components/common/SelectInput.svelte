@@ -83,7 +83,7 @@
 				searchTerm,
 				selectOption
 			},
-			{ clearBackground: true }
+			{ transparentBackground: true }
 		);
 		updateDropdown();
 	};

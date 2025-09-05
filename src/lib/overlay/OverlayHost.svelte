@@ -20,7 +20,7 @@
 <div
 	class="overlay-backdrop"
 	onpointerdown={handleBackdropClick}
-	style="background: {entry.options?.clearBackground ? 'transparent' : 'rgba(0, 0, 0, 0.5)'}"
+	style="background: {entry.options?.transparentBackground ? 'transparent' : 'rgba(0, 0, 0, 0.5)'}"
 >
 	<div
 		class="overlay-content"

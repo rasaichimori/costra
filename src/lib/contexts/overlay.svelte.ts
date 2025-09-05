@@ -9,7 +9,7 @@ export interface OverlayOptions {
 	/** The position of the overlay. */
 	position?: DOMRect;
 	/** Whether to show a background behind the overlay. */
-	clearBackground?: boolean;
+	transparentBackground?: boolean;
 }
 
 /** Internal representation of a single overlay in the stack. */

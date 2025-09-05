@@ -42,7 +42,7 @@
 					updateAddPopup();
 				}
 			},
-			{ clearBackground: true, position: addBtnElement.getBoundingClientRect() }
+			{ transparentBackground: true, position: addBtnElement.getBoundingClientRect() }
 		);
 		updateAddPopup();
 	};
@@ -263,7 +263,7 @@
 		display: flex;
 		align-items: center;
 		gap: 4px;
-		width: 100px;
+		width: 80px;
 	}
 
 	.color-input-group {
