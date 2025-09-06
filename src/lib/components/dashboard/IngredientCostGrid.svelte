@@ -99,12 +99,7 @@
 
 	const addNewIngredient = () => {
 		// Generate a unique ID
-		const existingIds = Object.keys(costs);
-		let newId = `ingredient_${Date.now()}`;
-		while (existingIds.includes(newId)) {
-			newId = `ingredient_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
-		}
-
+		const newId = crypto.randomUUID();
 		// Find the next sequential number for ingredient name
 		const existingIngredients = Object.values(costs);
 		const ingredientPattern = /^Ingredient (\d+)$/;
@@ -141,9 +136,6 @@
 		// Mark as newly created so it starts in edit mode
 		newlyCreatedIngredients.add(newId);
 		newlyCreatedIngredients = newlyCreatedIngredients;
-
-		// Save to localStorage
-		localStorage.setItem('ingredient-costs', JSON.stringify(costs));
 	};
 </script>
 

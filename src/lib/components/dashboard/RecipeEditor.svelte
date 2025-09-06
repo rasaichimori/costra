@@ -18,17 +18,16 @@
 	interface Props {
 		recipe: RecipeDoc;
 		costs: Record<string, IngredientDoc>;
+		isEditingName: boolean;
 		unit?: Unit;
 	}
 
-	let { recipe = $bindable(), costs, unit }: Props = $props();
+	let { recipe = $bindable(), costs, unit, isEditingName = $bindable() }: Props = $props();
 
 	const { openOverlay, updateOverlay } = getOverlayContext();
 
 	let addBtnElement: HTMLButtonElement | undefined;
 	let addPopupId = $state<string | undefined>(undefined);
-
-	$inspect(recipe);
 
 	const openAddPopup = (btn: HTMLButtonElement) => {
 		addBtnElement = btn;
@@ -74,7 +73,13 @@
 <div class="recipe-cost-calculator">
 	<div class="title">
 		<div class="title-label">
-			<EditableTextField bind:value={recipe.name} />
+			<EditableTextField
+				bind:value={recipe.name}
+				bind:isEditing={isEditingName}
+				onSave={() => {
+					isEditingName = false;
+				}}
+			/>
 		</div>
 		<div class="cost-amount">
 			¥{totalCost.toFixed(0)}
@@ -86,79 +91,83 @@
 	<div class="recipe-section">
 		<div class="recipe-breakdown">
 			<h3>Ingredient Breakdown:</h3>
-			<div class="ingredient-list">
-				{#each recipe.ingredients as ingredient}
-					<div class="ingredient-cost-item" class:hidden={ingredient.hidden}>
-						<div class="ingredient-details">
-							<span class="ingredient-name"
-								>{costs[ingredient.id]?.name ?? "ingredient doesn't exist"}</span
-							>
-							<div class="amount-input-group">
-								<TextInput
-									value={ingredient.portion.amount}
-									onchange={(value) => {
-										ingredient.portion.amount = value;
+			{#if recipe.ingredients.length > 0}
+				<div class="ingredient-list">
+					{#each recipe.ingredients as ingredient}
+						<div class="ingredient-cost-item" class:hidden={ingredient.hidden}>
+							<div class="ingredient-details">
+								<span class="ingredient-name"
+									>{costs[ingredient.id]?.name ?? "ingredient doesn't exist"}</span
+								>
+								<div class="amount-input-group">
+									<TextInput
+										value={ingredient.portion.amount}
+										onchange={(value) => {
+											ingredient.portion.amount = value;
+										}}
+										size="small"
+										variant="inline"
+										min={1}
+										step={1}
+										spinner={true}
+									/>
+								</div>
+								<div class="unit-input-group">
+									<SelectInput
+										value={ingredient.portion.unit}
+										options={[...units]}
+										placeholder="Select unit..."
+										size="small"
+										searchable={false}
+										onchange={(newUnit) => {
+											ingredient.portion.unit = newUnit as Unit;
+										}}
+									/>
+								</div>
+							</div>
+							<div class="ingredient-cost">
+								¥{recipeCosts[ingredient.id]?.toFixed(0) || '0'}
+							</div>
+							<div class="color-input-group">
+								<input
+									type="color"
+									class="color-picker"
+									value={ingredient.color}
+									oninput={(e) => {
+										ingredient.color = (e.target as HTMLInputElement).value;
 									}}
-									size="small"
-									variant="inline"
-									min={1}
-									step={1}
-									spinner={true}
 								/>
 							</div>
-							<div class="unit-input-group">
-								<SelectInput
-									value={ingredient.portion.unit}
-									options={[...units]}
-									placeholder="Select unit..."
-									size="small"
-									searchable={false}
-									onchange={(newUnit) => {
-										ingredient.portion.unit = newUnit as Unit;
-									}}
-								/>
-							</div>
-						</div>
-						<div class="ingredient-cost">
-							¥{recipeCosts[ingredient.id]?.toFixed(0) || '0'}
-						</div>
-						<div class="color-input-group">
-							<input
-								type="color"
-								class="color-picker"
-								value={ingredient.color}
-								oninput={(e) => {
-									ingredient.color = (e.target as HTMLInputElement).value;
+							<!-- Hide/Show Button -->
+							<ModernButton
+								variant="icon"
+								size="small"
+								ariaLabel={ingredient.hidden ? 'Show ingredient' : 'Hide ingredient'}
+								title={ingredient.hidden ? 'Show ingredient' : 'Hide ingredient'}
+								onclick={() => {
+									ingredient.hidden = !ingredient.hidden;
 								}}
-							/>
+							>
+								<i class={`fa-solid ${ingredient.hidden ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+							</ModernButton>
+							<!-- Delete Button -->
+							<ModernButton
+								variant="icon"
+								size="small"
+								ariaLabel="Delete ingredient"
+								title="Delete ingredient"
+								onclick={() => {
+									recipe.ingredients = recipe.ingredients.filter((i) => i.id !== ingredient.id);
+								}}
+							>
+								<i class="fa-solid fa-trash"></i>
+							</ModernButton>
 						</div>
-						<!-- Hide/Show Button -->
-						<ModernButton
-							variant="icon"
-							size="small"
-							ariaLabel={ingredient.hidden ? 'Show ingredient' : 'Hide ingredient'}
-							title={ingredient.hidden ? 'Show ingredient' : 'Hide ingredient'}
-							onclick={() => {
-								ingredient.hidden = !ingredient.hidden;
-							}}
-						>
-							<i class={`fa-solid ${ingredient.hidden ? 'fa-eye-slash' : 'fa-eye'}`}></i>
-						</ModernButton>
-						<!-- Delete Button -->
-						<ModernButton
-							variant="icon"
-							size="small"
-							ariaLabel="Delete ingredient"
-							title="Delete ingredient"
-							onclick={() => {
-								recipe.ingredients = recipe.ingredients.filter((i) => i.id !== ingredient.id);
-							}}
-						>
-							<i class="fa-solid fa-trash"></i>
-						</ModernButton>
-					</div>
-				{/each}
-			</div>
+					{/each}
+				</div>
+			{:else}
+				<div>No ingredients added yet</div>
+			{/if}
 			<ModernButton
 				onclick={(e) => openAddPopup(e.currentTarget as HTMLButtonElement)}
 				style="width: fit-content;"

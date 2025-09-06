@@ -2,15 +2,58 @@
 	import type { IngredientDoc, RecipeDoc } from '$lib/data/schema';
 	import { calculateRecipeCosts, getTotalRecipeCost } from '$lib/utils/costCalculatorUtils';
 	import RecipeListItem from './RecipeListItem.svelte';
-	import AddRecipeButton from './AddRecipeButton.svelte';
 
 	interface Props {
 		recipes: Record<string, RecipeDoc>;
 		costs: Record<string, IngredientDoc>;
 		selectedRecipeId?: string;
+		setIsEditingName: (isEditing: boolean) => void;
 	}
 
-	let { recipes, selectedRecipeId = $bindable(), costs }: Props = $props();
+	let {
+		recipes = $bindable(),
+		selectedRecipeId = $bindable(),
+		costs,
+		setIsEditingName
+	}: Props = $props();
+
+	let newlyCreatedRecipes = $state<Set<string>>(new Set());
+
+	const addRecipe = () => {
+		const newId = crypto.randomUUID();
+
+		// Find the next sequential number for ingredient name
+		const existingRecipes = Object.values(recipes);
+		const recipePattern = /^Recipe (\d+)$/;
+		const existingNumbers = existingRecipes
+			.map((recipe) => recipe.name.match(recipePattern)?.[1])
+			.filter(Boolean)
+			.map(Number)
+			.sort((a, b) => a - b);
+
+		let nextNumber = 1;
+		for (const num of existingNumbers) {
+			if (num === nextNumber) {
+				nextNumber++;
+			} else {
+				break;
+			}
+		}
+
+		// Create new ingredient with placeholder values
+		const newRecipe: RecipeDoc = {
+			id: newId,
+			name: `Recipe ${nextNumber}`,
+			ingredients: []
+		};
+
+		// Add to costs object
+		recipes[newId] = newRecipe;
+
+		newlyCreatedRecipes.add(newId);
+		selectedRecipeId = newId;
+		setIsEditingName(true);
+	};
 </script>
 
 <div class="recipes-list">
@@ -19,14 +62,13 @@
 			label={recipe.name}
 			selected={id === selectedRecipeId}
 			cost={getTotalRecipeCost(calculateRecipeCosts(recipe, costs))}
-			onclick={() => (selectedRecipeId = id)}
+			onclick={() => {
+				selectedRecipeId = id;
+				setIsEditingName(false);
+			}}
 		/>
 	{/each}
-	<AddRecipeButton
-		onclick={() => {
-			/* future add action */
-		}}
-	/>
+	<button class="add-recipe-btn" onclick={addRecipe}> ＋ Add Recipe </button>
 </div>
 
 <style>
@@ -41,5 +83,22 @@
 		max-height: 80vh;
 		overflow-y: auto;
 		width: 220px;
+	}
+	.add-recipe-btn {
+		display: block;
+		width: 100%;
+		padding: 0.6rem 0.9rem;
+		font-size: 0.85rem;
+		background: rgba(0, 0, 0, 0.05);
+		border: 1px dashed rgba(0, 0, 0, 0.3);
+		border-radius: 6px;
+		color: #333333;
+		font-weight: 500;
+		cursor: pointer;
+		transition: background 0.25s ease;
+	}
+
+	.add-recipe-btn:hover {
+		background: rgba(0, 0, 0, 0.08);
 	}
 </style>

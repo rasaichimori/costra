@@ -4,7 +4,7 @@
 
 	let {
 		value = $bindable(),
-		isEditing = false,
+		isEditing = $bindable(),
 		onSave,
 		onCancel
 	}: {
@@ -13,7 +13,8 @@
 		onSave?: (newValue: string) => void;
 		onCancel?: (oldValue: string) => void;
 	} = $props();
-	let editingValue = $state(value);
+
+	let editingValue = $derived(value);
 
 	const startEditing = () => {
 		isEditing = true;

@@ -67,6 +67,8 @@
 			onclose: () => closeOverlay()
 		});
 	};
+
+	let isEditingName = $state(false);
 </script>
 
 <div class="cost-editor">
@@ -82,9 +84,21 @@
 	</div>
 	<div class="content">
 		<div class="recipes">
-			<RecipesList {recipes} {costs} bind:selectedRecipeId />
+			<RecipesList
+				{recipes}
+				{costs}
+				bind:selectedRecipeId
+				setIsEditingName={(isEditing: boolean) => {
+					isEditingName = isEditing;
+				}}
+			/>
 			{#if selectedRecipeId}
-				<RecipeEditor bind:recipe={recipes[selectedRecipeId]} {costs} unit={'cup'} />
+				<RecipeEditor
+					bind:recipe={recipes[selectedRecipeId]}
+					{costs}
+					unit={'cup'}
+					bind:isEditingName
+				/>
 			{:else}
 				<!-- <RecipeEditorPlaceholder /> -->
 			{/if}
