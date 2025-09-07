@@ -95,29 +95,3 @@ export const averageHexColors = (colors: string[]): string | undefined => {
 	];
 	return rgbToHex(avg);
 };
-
-import type { RecipeDoc } from '$lib/data/schema';
-
-// For an ingredient id, look through all recipes and return the average colour used, if any.
-export const getMostCommonIngredientColor = (
-	ingredientId: string,
-	recipes: Record<string, RecipeDoc>
-): string | undefined => {
-	const frequency: Record<string, number> = {};
-	Object.values(recipes).forEach((recipe) => {
-		recipe.ingredients.forEach((ing) => {
-			if (ing.id === ingredientId) {
-				frequency[ing.color] = (frequency[ing.color] ?? 0) + 1;
-			}
-		});
-	});
-	let mostCommon: string | undefined;
-	let max = 0;
-	Object.entries(frequency).forEach(([color, count]) => {
-		if (count > max) {
-			mostCommon = color;
-			max = count;
-		}
-	});
-	return mostCommon;
-};

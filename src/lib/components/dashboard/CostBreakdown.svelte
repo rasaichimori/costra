@@ -53,14 +53,14 @@
 	const recipeCosts = $derived(calculateRecipeCosts(recipe, costs));
 
 	// Helper to access all ingredient names in recipe order
-	const labelsAll = $derived(recipe.ingredients.map((ing) => costs[ing.id]?.name ?? ing.id));
+	const labelsAll = $derived(recipe.ingredients.map((ing) => costs[ing.id].name));
 
 	// Data array reflecting hidden visibility (0 when hidden)
 	const chartDataValues = $derived(
 		recipe.ingredients.map((ing) => (ing.hidden ? 0 : (recipeCosts[ing.id] ?? 0)))
 	);
 
-	const colors = $derived(recipe.ingredients.map((ing) => ing.color));
+	const colors = $derived(recipe.ingredients.map((ing) => costs[ing.id].color));
 
 	let canvas: HTMLCanvasElement;
 	let chart = $state<Chart<'doughnut'> | undefined>(undefined);

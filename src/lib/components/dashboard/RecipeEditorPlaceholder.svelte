@@ -113,17 +113,4 @@
 		background: var(--c);
 		display: inline-block;
 	}
-
-	.help-list {
-		margin: 0;
-		padding: 0;
-		display: flex;
-		flex-direction: column;
-		gap: 6px;
-		font-size: 0.85rem;
-		text-align: left;
-	}
-	.help-list li {
-		list-style: disc inside;
-	}
 </style>

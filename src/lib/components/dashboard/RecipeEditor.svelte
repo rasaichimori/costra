@@ -18,7 +18,6 @@
 	interface Props {
 		recipe: RecipeDoc;
 		costs: Record<string, IngredientDoc>;
-		recipes: Record<string, RecipeDoc>;
 		isEditingName: boolean;
 		unit?: Unit;
 		onDelete?: () => void;
@@ -27,7 +26,6 @@
 	let {
 		recipe = $bindable(),
 		costs,
-		recipes,
 		unit,
 		onDelete,
 		isEditingName = $bindable()
@@ -45,7 +43,6 @@
 			{
 				availableIngredients,
 				recipe,
-				recipes,
 				onAddIngredient: async () => {
 					await tick();
 					updateAddPopup();
@@ -60,7 +57,7 @@
 		if (!addPopupId || !addBtnElement) return;
 		updateOverlay(
 			addPopupId,
-			{ availableIngredients, recipe, recipes },
+			{ availableIngredients, recipe },
 			{ position: addBtnElement.getBoundingClientRect() }
 		);
 	};
@@ -118,9 +115,7 @@
 					{#each recipe.ingredients as ingredient}
 						<div class="ingredient-cost-item" class:hidden={ingredient.hidden}>
 							<div class="ingredient-details">
-								<span class="ingredient-name"
-									>{costs[ingredient.id]?.name ?? "ingredient doesn't exist"}</span
-								>
+								<span class="ingredient-name">{costs[ingredient.id].name}</span>
 								<div class="amount-input-group">
 									<TextInput
 										value={ingredient.portion.amount}
@@ -151,14 +146,7 @@
 								¥{recipeCosts[ingredient.id]?.toFixed(0) || '0'}
 							</div>
 							<div class="color-input-group">
-								<input
-									type="color"
-									class="color-picker"
-									value={ingredient.color}
-									oninput={(e) => {
-										ingredient.color = (e.target as HTMLInputElement).value;
-									}}
-								/>
+								<input type="color" class="color-picker" bind:value={costs[ingredient.id].color} />
 							</div>
 							<!-- Hide/Show Button -->
 							<ModernButton

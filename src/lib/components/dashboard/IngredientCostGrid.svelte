@@ -11,6 +11,7 @@
 	import SelectInput from '../common/SelectInput.svelte';
 	import EditableTextField from '../common/EditableTextField.svelte';
 	import { getOverlayContext } from '$lib/contexts/overlay.svelte';
+	import { randomLightColorHex } from '$lib/utils/color';
 
 	let {
 		costs = $bindable(),
@@ -127,7 +128,8 @@
 				cost: 10,
 				amount: 1,
 				unit: 'cup'
-			}
+			},
+			color: randomLightColorHex()
 		};
 
 		// Add to costs object

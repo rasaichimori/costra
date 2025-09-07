@@ -18,7 +18,8 @@
 				cost: 10,
 				amount: 1,
 				unit: 'cup'
-			}
+			},
+			color: '#DB8585'
 		}
 	});
 	let recipes = $state<Record<string, RecipeDoc>>({
@@ -29,7 +30,6 @@
 				{
 					id: 'coconutMilk',
 					portion: { amount: 1, unit: 'cup' },
-					color: '#ff0000',
 					hidden: false
 				}
 			]
@@ -41,7 +41,6 @@
 				{
 					id: 'coconutMilk',
 					portion: { amount: 1, unit: 'cup' },
-					color: '#ff0000',
 					hidden: false
 				}
 			]
@@ -106,7 +105,6 @@
 				<RecipeEditor
 					bind:recipe={recipes[selectedRecipeId]}
 					{costs}
-					{recipes}
 					unit={'cup'}
 					onDelete={() => deleteRecipe(selectedRecipeId!)}
 					bind:isEditingName

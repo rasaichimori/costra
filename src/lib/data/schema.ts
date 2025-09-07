@@ -15,6 +15,8 @@ export interface IngredientDoc {
 		/** Unit of the package (e.g. "g", "ml", "pack") */
 		unit: Unit;
 	};
+	/** Hex or CSS colour string for chart slice */
+	color: string;
 }
 
 export interface RecipeDoc {
@@ -23,8 +25,6 @@ export interface RecipeDoc {
 	ingredients: {
 		id: string;
 		portion: Portion;
-		/** Hex or CSS colour string for chart slice */
-		color: string;
 		/** When true, ingredient is hidden from calculations & charts */
 		hidden: boolean;
 	}[];
