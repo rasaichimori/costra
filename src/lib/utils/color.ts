@@ -51,3 +51,73 @@ export const randomLightColorHex = (): string => {
 
 	return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 };
+
+// Converts a hex colour (e.g. "#ffcc00" or "ffcc00") to an RGB tuple.
+export const hexToRgb = (hex: string): [number, number, number] | undefined => {
+	// Remove leading # if present
+	const cleaned = hex.replace(/^#/, '');
+	if (!/^([0-9A-Fa-f]{6})$/.test(cleaned)) return undefined;
+	const r = parseInt(cleaned.slice(0, 2), 16);
+	const g = parseInt(cleaned.slice(2, 4), 16);
+	const b = parseInt(cleaned.slice(4, 6), 16);
+	return [r, g, b];
+};
+
+// Convert an RGB tuple back into a hex string (e.g. [255, 204, 0] => "#ffcc00")
+export const rgbToHex = ([r, g, b]: [number, number, number]): string =>
+	`#${[r, g, b]
+		.map((v) =>
+			Math.max(0, Math.min(255, Math.round(v)))
+				.toString(16)
+				.padStart(2, '0')
+		)
+		.join('')}`;
+
+// Average an array of hex colour strings. Returns undefined if no valid colours provided.
+export const averageHexColors = (colors: string[]): string | undefined => {
+	const rgbs = colors.map(hexToRgb).filter(Boolean) as [number, number, number][];
+	if (rgbs.length === 0) return undefined;
+
+	const total = rgbs.reduce(
+		(acc, [r, g, b]) => {
+			acc[0] += r;
+			acc[1] += g;
+			acc[2] += b;
+			return acc;
+		},
+		[0, 0, 0] as [number, number, number]
+	);
+
+	const avg: [number, number, number] = [
+		total[0] / rgbs.length,
+		total[1] / rgbs.length,
+		total[2] / rgbs.length
+	];
+	return rgbToHex(avg);
+};
+
+import type { RecipeDoc } from '$lib/data/schema';
+
+// For an ingredient id, look through all recipes and return the average colour used, if any.
+export const getMostCommonIngredientColor = (
+	ingredientId: string,
+	recipes: Record<string, RecipeDoc>
+): string | undefined => {
+	const frequency: Record<string, number> = {};
+	Object.values(recipes).forEach((recipe) => {
+		recipe.ingredients.forEach((ing) => {
+			if (ing.id === ingredientId) {
+				frequency[ing.color] = (frequency[ing.color] ?? 0) + 1;
+			}
+		});
+	});
+	let mostCommon: string | undefined;
+	let max = 0;
+	Object.entries(frequency).forEach(([color, count]) => {
+		if (count > max) {
+			mostCommon = color;
+			max = count;
+		}
+	});
+	return mostCommon;
+};

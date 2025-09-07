@@ -18,11 +18,20 @@
 	interface Props {
 		recipe: RecipeDoc;
 		costs: Record<string, IngredientDoc>;
+		recipes: Record<string, RecipeDoc>;
 		isEditingName: boolean;
 		unit?: Unit;
+		onDelete?: () => void;
 	}
 
-	let { recipe = $bindable(), costs, unit, isEditingName = $bindable() }: Props = $props();
+	let {
+		recipe = $bindable(),
+		costs,
+		recipes,
+		unit,
+		onDelete,
+		isEditingName = $bindable()
+	}: Props = $props();
 
 	const { openOverlay, updateOverlay } = getOverlayContext();
 
@@ -36,6 +45,7 @@
 			{
 				availableIngredients,
 				recipe,
+				recipes,
 				onAddIngredient: async () => {
 					await tick();
 					updateAddPopup();
@@ -50,7 +60,7 @@
 		if (!addPopupId || !addBtnElement) return;
 		updateOverlay(
 			addPopupId,
-			{ availableIngredients, recipe },
+			{ availableIngredients, recipe, recipes },
 			{ position: addBtnElement.getBoundingClientRect() }
 		);
 	};
@@ -71,22 +81,34 @@
 </script>
 
 <div class="recipe-cost-calculator">
-	<div class="title">
-		<div class="title-label">
-			<EditableTextField
-				bind:value={recipe.name}
-				bind:isEditing={isEditingName}
-				onSave={() => {
-					isEditingName = false;
-				}}
-			/>
+	<div class="header">
+		<div class="title">
+			<div class="title-label">
+				<EditableTextField
+					bind:value={recipe.name}
+					bind:isEditing={isEditingName}
+					onSave={() => {
+						isEditingName = false;
+					}}
+				/>
+			</div>
+			<div class="cost-amount">
+				¥{totalCost.toFixed(0)}
+				{#if unit}
+					/ {unit}
+				{/if}
+			</div>
 		</div>
-		<div class="cost-amount">
-			¥{totalCost.toFixed(0)}
-			{#if unit}
-				/ {unit}
-			{/if}
-		</div>
+		<ModernButton
+			variant="icon"
+			size="small"
+			ariaLabel="Delete recipe"
+			title="Delete recipe"
+			onclick={() => onDelete?.()}
+		>
+			<i class="fa-solid fa-trash"></i>
+			Delete Recipe
+		</ModernButton>
 	</div>
 	<div class="recipe-section">
 		<div class="recipe-breakdown">
@@ -195,8 +217,12 @@
 		font-weight: 500;
 	}
 
+	.header {
+		display: flex;
+		justify-content: space-between;
+	}
+
 	.title-label {
-		margin: 8px 0;
 		color: #333333;
 		font-size: 16px;
 		font-weight: 500;
@@ -205,6 +231,9 @@
 	}
 
 	.title {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
 		font-size: 32px;
 		font-weight: 600;
 		color: #333333;

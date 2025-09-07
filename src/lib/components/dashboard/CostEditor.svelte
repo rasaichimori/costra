@@ -7,6 +7,7 @@
 	import ExportDataModal from '../modals/ExportDataModal.svelte';
 	import ImportDataModal from '../modals/ImportDataModal.svelte';
 	import ModernButton from '../common/ModernButton.svelte';
+	import RecipeEditorPlaceholder from './RecipeEditorPlaceholder.svelte';
 
 	let costs = $state<Record<string, IngredientDoc>>({
 		coconutMilk: {
@@ -46,6 +47,15 @@
 			]
 		}
 	});
+
+	const deleteRecipe = (id: string) => {
+		// Remove recipe from collection
+		const { [id]: _removed, ...rest } = recipes;
+		recipes = rest;
+		if (selectedRecipeId === id) {
+			selectedRecipeId = undefined;
+		}
+	};
 
 	const { openOverlay, closeOverlay } = getOverlayContext();
 
@@ -96,11 +106,13 @@
 				<RecipeEditor
 					bind:recipe={recipes[selectedRecipeId]}
 					{costs}
+					{recipes}
 					unit={'cup'}
+					onDelete={() => deleteRecipe(selectedRecipeId!)}
 					bind:isEditingName
 				/>
 			{:else}
-				<!-- <RecipeEditorPlaceholder /> -->
+				<RecipeEditorPlaceholder />
 			{/if}
 		</div>
 		<IngredientCostGrid bind:costs bind:recipes />

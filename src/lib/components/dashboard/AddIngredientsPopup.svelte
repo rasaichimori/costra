@@ -1,16 +1,17 @@
 <script lang="ts">
 	import type { IngredientDoc, RecipeDoc } from '$lib/data/schema';
-	import { randomLightColorHex } from '$lib/utils/color';
+	import { randomLightColorHex, getMostCommonIngredientColor } from '$lib/utils/color';
 	import ModernButton from '../common/ModernButton.svelte';
 	import TextInput from '../common/TextInput.svelte';
 
 	interface Props {
 		availableIngredients: IngredientDoc[];
 		recipe: RecipeDoc;
+		recipes: Record<string, RecipeDoc>;
 		onAddIngredient?: (ingredientId: string) => void;
 	}
 
-	let { availableIngredients, recipe, onAddIngredient }: Props = $props();
+	let { availableIngredients, recipe, recipes, onAddIngredient }: Props = $props();
 	let searchTerm = $state('');
 	// allow multiple category filters
 	let selectedFilters: string[] = $state([]);
@@ -73,10 +74,11 @@
 				<button
 					class="add-ingredient-btn"
 					onclick={() => {
+						const commonColor = getMostCommonIngredientColor(ingredient.id, recipes);
 						recipe.ingredients.push({
 							id: ingredient.id,
 							portion: { amount: 1, unit: 'cup' },
-							color: randomLightColorHex(),
+							color: commonColor ?? randomLightColorHex(),
 							hidden: false
 						});
 						onAddIngredient?.(ingredient.id);
