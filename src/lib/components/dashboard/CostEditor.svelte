@@ -6,6 +6,7 @@
 	import { getOverlayContext } from '$lib/contexts/overlay.svelte';
 	import ExportDataModal from '../modals/ExportDataModal.svelte';
 	import ImportDataModal from '../modals/ImportDataModal.svelte';
+	import ClearAllModal from '../modals/ClearAllModal.svelte';
 	import ModernButton from '../common/ModernButton.svelte';
 	import RecipeEditorPlaceholder from './RecipeEditorPlaceholder.svelte';
 
@@ -77,6 +78,17 @@
 		});
 	};
 
+	const clearAllData = () => {
+		openOverlay(ClearAllModal, {
+			onConfirm: () => {
+				costs = {};
+				recipes = {};
+				selectedRecipeId = undefined;
+			},
+			onclose: () => closeOverlay()
+		});
+	};
+
 	let isEditingName = $state(false);
 </script>
 
@@ -87,6 +99,7 @@
 			Cost Editor
 		</h2>
 		<div class="header-actions">
+			<ModernButton variant="danger" onclick={clearAllData}>Clear All</ModernButton>
 			<ModernButton variant="secondary" onclick={importData}>Import</ModernButton>
 			<ModernButton variant="primary" onclick={exportData}>Export</ModernButton>
 		</div>
