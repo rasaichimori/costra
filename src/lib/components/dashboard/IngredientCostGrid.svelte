@@ -315,10 +315,13 @@
 
 	.costs-table td {
 		padding: 12px;
-		border-bottom: 1px solid var(--border-tertiary);
+		border-bottom: 1px solid var(--border-primary);
 		vertical-align: middle;
 	}
 
+	.costs-table tr:last-child td {
+		border-bottom: none;
+	}
 
 	.ingredient-header {
 		width: 25%;
