@@ -57,15 +57,15 @@
 		</div>
 	{/if}
 
-	{#if filteredIngredients.length > 0}
-		<!-- Search -->
-		<TextInput
-			bind:value={searchTerm}
-			size={'small'}
-			variant="inline"
-			placeholder={!searchTerm ? 'Search ingredients...' : ''}
-		/>
+	<!-- Search -->
+	<TextInput
+		bind:value={searchTerm}
+		size={'small'}
+		variant="inline"
+		placeholder={!searchTerm ? 'Search ingredients...' : ''}
+	/>
 
+	{#if filteredIngredients.length > 0}
 		<!-- Available Ingredients -->
 		<div class="available-ingredients">
 			{#each filteredIngredients as ingredient}
@@ -86,7 +86,7 @@
 			{/each}
 		</div>
 	{:else}
-		<p>No ingredients left to add</p>
+		<p class="no-ingredients-message">No ingredients left to add</p>
 	{/if}
 </div>
 
@@ -96,16 +96,24 @@
 		flex-direction: column;
 		gap: 12px;
 		padding: 20px;
-		background: rgba(255, 255, 255, 0.95);
-		border: 1px solid rgba(0, 0, 0, 0.1);
+		background: var(--bg-secondary);
+		border: 1px solid var(--border-secondary);
 		border-radius: 10px;
-		box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+		box-shadow: 0 6px 18px var(--shadow-heavy);
 		min-width: 260px;
 		max-width: 320px;
+		color: var(--text-primary);
 
 		p {
 			margin: 0;
 		}
+	}
+
+	.no-ingredients-message {
+		color: var(--text-secondary);
+		font-style: italic;
+		text-align: center;
+		padding: 20px;
 	}
 
 	.available-ingredients {
@@ -117,9 +125,9 @@
 	}
 
 	.add-ingredient-btn {
-		background: rgba(255, 255, 255, 0.85);
-		border: 1px solid rgba(0, 0, 0, 0.12);
-		color: #333333;
+		background: var(--bg-tertiary);
+		border: 1px solid var(--border-primary);
+		color: var(--text-primary);
 		padding: 6px 12px;
 		border-radius: 6px;
 		cursor: pointer;
@@ -134,8 +142,8 @@
 	}
 
 	.add-ingredient-btn:hover {
-		background: rgba(255, 255, 255, 1);
-		border-color: rgba(0, 0, 0, 0.25);
+		background: var(--bg-primary);
+		border-color: var(--border-tertiary);
 		transform: translateY(-1px);
 	}
 

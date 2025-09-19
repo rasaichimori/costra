@@ -25,7 +25,7 @@
 		padding: 0.6rem 0.9rem;
 		font-size: 0.85rem;
 		background: transparent;
-		color: #333333;
+		color: var(--text-primary);
 		border: 1px solid transparent;
 		border-radius: 6px;
 		cursor: pointer;
@@ -33,13 +33,13 @@
 	}
 
 	.recipe-list-item:hover {
-		background: rgba(0, 0, 0, 0.05);
+		background: var(--bg-hover);
 	}
 
 	.recipe-list-item.selected {
-		background: rgba(0, 0, 0, 0.1);
-		border-color: rgba(0, 0, 0, 0.2);
-		color: #000000;
+		background: var(--bg-active);
+		border-color: var(--border-secondary);
+		color: var(--text-primary);
 	}
 
 	.label {

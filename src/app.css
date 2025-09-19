@@ -3,6 +3,80 @@
 
 :root {
   font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  
+  /* Light mode colors */
+  --bg-primary: #ffffff;
+  --bg-secondary: rgba(255, 255, 255, 0.95);
+  --bg-tertiary: rgba(255, 255, 255, 0.8);
+  --bg-quaternary: rgba(255, 255, 255, 0.9);
+  --bg-overlay: rgba(0, 0, 0, 0.5);
+  --bg-hover: rgba(0, 0, 0, 0.05);
+  --bg-active: rgba(0, 0, 0, 0.1);
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --text-muted: #999999;
+  --text-on-dark: #ffffff;
+  --border-primary: rgba(0, 0, 0, 0.08);
+  --border-secondary: rgba(0, 0, 0, 0.1);
+  --border-tertiary: rgba(0, 0, 0, 0.2);
+  --border-dashed: rgba(0, 0, 0, 0.3);
+  --shadow-light: rgba(0, 0, 0, 0.05);
+  --shadow-medium: rgba(0, 0, 0, 0.1);
+  --shadow-heavy: rgba(0, 0, 0, 0.15);
+  --danger: #d32f2f;
+  --danger-light: #ef4444;
+  --danger-bg: rgba(255, 100, 100, 0.8);
+  --danger-bg-hover: rgba(255, 100, 100, 1);
+  --danger-bg-light: rgba(255, 0, 0, 0.02);
+  --danger-shadow: rgba(239, 68, 68, 0.1);
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --info: #3b82f6;
+  
+  /* Landing page specific */
+  --landing-bg: #000000;
+  --landing-text: #ffffff;
+  --landing-text-muted: rgba(255, 255, 255, 0.6);
+  --landing-border: rgba(255, 255, 255, 0.08);
+  --landing-accent: #ffffff;
+}
+
+[data-theme="dark"] {
+  /* Dark mode colors */
+  --bg-primary: #121212;
+  --bg-secondary: #1e1e1e;
+  --bg-tertiary: #2a2a2a;
+  --bg-quaternary: #353535;
+  --bg-overlay: rgba(0, 0, 0, 0.7);
+  --bg-hover: rgba(255, 255, 255, 0.08);
+  --bg-active: rgba(255, 255, 255, 0.12);
+  --text-primary: #ffffff;
+  --text-secondary: #e0e0e0;
+  --text-muted: #b0b0b0;
+  --text-on-dark: #000000;
+  --border-primary: rgba(255, 255, 255, 0.12);
+  --border-secondary: rgba(255, 255, 255, 0.16);
+  --border-tertiary: rgba(255, 255, 255, 0.24);
+  --border-dashed: rgba(255, 255, 255, 0.3);
+  --shadow-light: rgba(0, 0, 0, 0.3);
+  --shadow-medium: rgba(0, 0, 0, 0.4);
+  --shadow-heavy: rgba(0, 0, 0, 0.5);
+  --danger: #f87171;
+  --danger-light: #fca5a5;
+  --danger-bg: rgba(248, 113, 113, 0.8);
+  --danger-bg-hover: rgba(248, 113, 113, 1);
+  --danger-bg-light: rgba(248, 113, 113, 0.1);
+  --danger-shadow: rgba(248, 113, 113, 0.2);
+  --success: #4ade80;
+  --warning: #fbbf24;
+  --info: #60a5fa;
+  
+  /* Landing page specific */
+  --landing-bg: #000000;
+  --landing-text: #ffffff;
+  --landing-text-muted: rgba(255, 255, 255, 0.8);
+  --landing-border: rgba(255, 255, 255, 0.1);
+  --landing-accent: #ffffff;
 }
 
 * {
@@ -11,4 +85,6 @@
 
 body{
   overscroll-behavior: none;
+  margin: 0;
+  background-color: var(--bg-primary);
 }

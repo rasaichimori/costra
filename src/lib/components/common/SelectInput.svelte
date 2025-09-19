@@ -148,12 +148,12 @@
 		button {
 			width: 100%;
 			height: 25px;
-			border: 1px solid rgba(0, 0, 0, 0.2);
+			border: 1px solid var(--border-tertiary);
 			border-radius: 4px;
 			font-family: inherit;
 			font-weight: 400;
-			background: rgba(255, 255, 255, 0.9);
-			color: #333333;
+			background: var(--bg-secondary);
+			color: var(--text-primary);
 			transition: all 0.2s ease;
 			outline: none;
 			cursor: pointer;
@@ -173,7 +173,7 @@
 		display: flex;
 		align-items: center;
 		pointer-events: none;
-		color: #333333;
+		color: var(--text-primary);
 		font-weight: 400;
 	}
 
@@ -182,7 +182,7 @@
 		right: 8px;
 		top: 50%;
 		transform: translateY(-50%);
-		color: #666666;
+		color: var(--text-secondary);
 		pointer-events: none;
 		font-size: 0.75rem;
 		transition: transform 0.2s ease;

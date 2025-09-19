@@ -1,5 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
+	import ThemeToggle from '$lib/components/common/ThemeToggle.svelte';
 
 	let mounted = false;
 	let mouseX = 0;
@@ -28,6 +29,9 @@
 </svelte:head>
 
 <main class="container">
+	<div class="theme-toggle-container">
+		<ThemeToggle />
+	</div>
 	<!-- Geometric background elements -->
 	<div class="bg-geometry">
 		<div
@@ -199,8 +203,8 @@
 			'Segoe UI',
 			system-ui,
 			sans-serif;
-		background: #000000;
-		color: #ffffff;
+		background: var(--bg-primary);
+		color: var(--text-primary);
 		overflow-x: hidden;
 		font-feature-settings:
 			'ss02' on,
@@ -216,6 +220,13 @@
 			linear-gradient(180deg, #000000 0%, #0a0a0f 50%, #000000 100%);
 		position: relative;
 		overflow: hidden;
+	}
+
+	.theme-toggle-container {
+		position: fixed;
+		top: 1rem;
+		right: 1rem;
+		z-index: 1000;
 	}
 
 	/* Geometric Background Elements */

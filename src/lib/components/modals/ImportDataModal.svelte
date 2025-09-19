@@ -44,6 +44,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: 12px;
+		color: var(--text-primary);
 	}
 
 	textarea {
@@ -52,10 +53,14 @@
 		resize: vertical;
 		padding: 8px;
 		font-family: monospace;
+		background: var(--bg-secondary);
+		color: var(--text-primary);
+		border: 1px solid var(--border-secondary);
+		border-radius: 4px;
 	}
 
 	.error {
-		color: red;
+		color: var(--danger);
 		font-size: 12px;
 	}
 

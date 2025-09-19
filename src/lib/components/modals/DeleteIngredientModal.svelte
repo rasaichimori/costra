@@ -61,12 +61,13 @@
 
 <style>
 	.modal {
-		background: rgba(255, 255, 255, 0.9);
+		background: var(--bg-quaternary);
 		padding: 1.5rem;
 		border-radius: 8px;
-		border: 1px solid rgba(0, 0, 0, 0.1);
+		border: 1px solid var(--border-secondary);
 		backdrop-filter: blur(10px);
 		gap: 16px;
+		color: var(--text-primary);
 	}
 	.actions {
 		display: flex;

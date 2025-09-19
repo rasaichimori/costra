@@ -22,10 +22,10 @@
 
 <style>
 	.clear-all-modal {
-		background: rgba(255, 255, 255, 0.9);
+		background: var(--bg-quaternary);
 		padding: 1.5rem;
 		border-radius: 8px;
-		border: 1px solid rgba(0, 0, 0, 0.1);
+		border: 1px solid var(--border-secondary);
 		backdrop-filter: blur(10px);
 		gap: 16px;
 		width: 400px;
@@ -35,19 +35,19 @@
 
 	h3 {
 		margin: 0;
-		color: black;
+		color: var(--text-primary);
 		font-weight: 500;
 	}
 
 	p {
 		margin: 0;
-		color: black;
+		color: var(--text-primary);
 		line-height: 1.4;
 	}
 
 	.warning {
 		font-weight: 500;
-		color: #d32f2f;
+		color: var(--danger);
 	}
 
 	.actions {

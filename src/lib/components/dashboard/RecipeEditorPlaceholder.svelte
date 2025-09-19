@@ -25,8 +25,8 @@
 	.placeholder-card {
 		display: flex;
 		flex: 1;
-		background: rgba(255, 255, 255, 0.9);
-		border: 2px dashed rgba(0, 0, 0, 0.1);
+		background: var(--bg-quaternary);
+		border: 2px dashed var(--border-secondary);
 		border-radius: 8px;
 		padding: 2rem;
 		text-align: center;
@@ -36,7 +36,7 @@
 	.placeholder-content {
 		display: flex;
 		gap: 12px;
-		color: #333333;
+		color: var(--text-primary);
 		flex: 1;
 	}
 
@@ -89,7 +89,7 @@
 		width: 75%;
 		height: 75%;
 		border-radius: 50%;
-		background: #ffffff;
+		background: var(--bg-primary);
 	}
 
 	.demo-legend {

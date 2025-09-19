@@ -76,8 +76,8 @@
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
-		background: rgba(0, 0, 0, 0.03);
-		border: 1px solid rgba(0, 0, 0, 0.08);
+		background: var(--bg-tertiary);
+		border: 1px solid var(--border-primary);
 		padding: 1rem;
 		border-radius: 10px;
 		max-height: 80vh;
@@ -89,16 +89,16 @@
 		width: 100%;
 		padding: 0.6rem 0.9rem;
 		font-size: 0.85rem;
-		background: rgba(0, 0, 0, 0.05);
-		border: 1px dashed rgba(0, 0, 0, 0.3);
+		background: var(--bg-hover);
+		border: 1px dashed var(--border-dashed);
 		border-radius: 6px;
-		color: #333333;
+		color: var(--text-primary);
 		font-weight: 500;
 		cursor: pointer;
 		transition: background 0.25s ease;
 	}
 
 	.add-recipe-btn:hover {
-		background: rgba(0, 0, 0, 0.08);
+		background: var(--bg-active);
 	}
 </style>

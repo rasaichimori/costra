@@ -28,6 +28,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: 12px;
+		color: var(--text-primary);
 	}
 	textarea {
 		width: 100%;
@@ -35,6 +36,10 @@
 		resize: vertical;
 		padding: 8px;
 		font-family: monospace;
+		background: var(--bg-secondary);
+		color: var(--text-primary);
+		border: 1px solid var(--border-secondary);
+		border-radius: 4px;
 	}
 	.actions {
 		display: flex;

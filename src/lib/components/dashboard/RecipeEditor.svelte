@@ -176,7 +176,7 @@
 					{/each}
 				</div>
 			{:else}
-				<div>No ingredients added yet</div>
+				<div class="no-ingredients-message">No ingredients added yet</div>
 			{/if}
 			<ModernButton
 				onclick={(e) => openAddPopup(e.currentTarget as HTMLButtonElement)}
@@ -192,8 +192,8 @@
 
 <style>
 	.recipe-cost-calculator {
-		background: rgba(255, 255, 255, 0.95);
-		border: 1px solid rgba(0, 0, 0, 0.1);
+		background: var(--bg-secondary);
+		border: 1px solid var(--border-secondary);
 		padding: 18px;
 		border-radius: 8px;
 		backdrop-filter: blur(10px);
@@ -201,7 +201,7 @@
 	}
 
 	.recipe-cost-calculator h3 {
-		color: #333333;
+		color: var(--text-primary);
 		font-weight: 500;
 	}
 
@@ -211,7 +211,7 @@
 	}
 
 	.title-label {
-		color: #333333;
+		color: var(--text-primary);
 		font-size: 16px;
 		font-weight: 500;
 		width: fit-content;
@@ -224,7 +224,7 @@
 		gap: 8px;
 		font-size: 32px;
 		font-weight: 600;
-		color: #333333;
+		color: var(--text-primary);
 	}
 
 	.recipe-section {
@@ -239,7 +239,7 @@
 		margin-top: 18px;
 		gap: 8px;
 		padding-top: 15px;
-		border-top: 1px solid rgba(0, 0, 0, 0.1);
+		border-top: 1px solid var(--border-secondary);
 		text-align: left;
 	}
 	.ingredient-list {
@@ -253,8 +253,8 @@
 		justify-content: space-between;
 		align-items: center;
 		padding: 8px 12px;
-		background: rgba(255, 255, 255, 0.7);
-		border: 1px solid rgba(0, 0, 0, 0.08);
+		background: var(--bg-tertiary);
+		border: 1px solid var(--border-primary);
 		border-radius: 6px;
 		font-size: 12px;
 	}
@@ -267,7 +267,7 @@
 
 	.ingredient-name {
 		font-weight: 500;
-		color: #333333;
+		color: var(--text-primary);
 		text-transform: capitalize;
 		min-width: 80px;
 		width: 120px;
@@ -279,7 +279,7 @@
 
 	.ingredient-cost {
 		font-weight: 600;
-		color: #333333;
+		color: var(--text-primary);
 		min-width: 40px;
 		font-size: 12px;
 	}
@@ -303,6 +303,13 @@
 		width: 20px;
 		height: 20px;
 		padding: 0;
+	}
+
+	.no-ingredients-message {
+		color: var(--text-secondary);
+		font-style: italic;
+		padding: 12px;
+		text-align: center;
 	}
 
 	/* Hidden row greyed out */

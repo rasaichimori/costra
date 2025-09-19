@@ -113,56 +113,56 @@
 	.input-label {
 		font-size: 0.875rem;
 		font-weight: 500;
-		color: #333333;
+		color: var(--text-primary);
 	}
 
 	.required {
-		color: #ef4444;
+		color: var(--danger);
 		margin-left: 2px;
 	}
 
 	.input {
-		border: 1px solid rgba(0, 0, 0, 0.2);
+		border: 1px solid var(--border-secondary);
 		border-radius: 4px;
 		font-family: inherit;
 		font-weight: 400;
-		background: rgba(255, 255, 255, 0.9);
-		color: #333333;
+		background: var(--bg-secondary);
+		color: var(--text-primary);
 		transition: all 0.2s ease;
 		outline: none;
 		width: 100%;
 	}
 
 	.input:focus {
-		border-color: rgba(0, 0, 0, 0.4);
-		background: rgba(255, 255, 255, 1);
-		box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
+		border-color: var(--border-primary);
+		background: var(--bg-primary);
+		box-shadow: var(--shadow-light);
 	}
 
 	.input:disabled {
 		opacity: 0.5;
 		cursor: not-allowed;
-		background: rgba(0, 0, 0, 0.02);
+		background: var(--bg-tertiary);
 	}
 
 	.input:readonly {
-		background: rgba(0, 0, 0, 0.02);
+		background: var(--bg-tertiary);
 		cursor: default;
 	}
 
 	.input.error {
-		border-color: #ef4444;
-		background: rgba(255, 0, 0, 0.02);
+		border-color: var(--danger);
+		background: var(--danger-bg-light);
 	}
 
 	.input.error:focus {
-		border-color: #ef4444;
-		box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.1);
+		border-color: var(--danger);
+		box-shadow: var(--danger-shadow);
 	}
 
 	.error-message {
 		font-size: 0.75rem;
-		color: #ef4444;
+		color: var(--danger);
 		margin-top: 2px;
 	}
 

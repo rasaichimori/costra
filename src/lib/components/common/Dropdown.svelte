@@ -33,8 +33,8 @@
 <style>
 	.dropdown-options {
 		position: absolute;
-		background: rgba(255, 255, 255, 0.95);
-		border: 1px solid rgba(0, 0, 0, 0.1);
+		background: var(--bg-secondary);
+		border: 1px solid var(--border-secondary);
 		border-radius: 4px;
 		border-top: none;
 		border-top-left-radius: 0;
@@ -42,7 +42,7 @@
 		max-height: 200px;
 		overflow-y: auto;
 		backdrop-filter: blur(10px);
-		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		box-shadow: 0 4px 6px var(--shadow-medium);
 		pointer-events: auto;
 	}
 
@@ -51,7 +51,7 @@
 		padding: 8px 12px;
 		border: none;
 		background: transparent;
-		color: #333333;
+		color: var(--text-primary);
 		text-align: left;
 		cursor: pointer;
 		font-family: inherit;
@@ -63,16 +63,16 @@
 	}
 
 	.option:hover {
-		background: rgba(0, 0, 0, 0.05);
+		background: var(--bg-hover);
 	}
 
 	.add-new-option {
-		background: rgba(0, 0, 0, 0.02);
+		background: var(--bg-tertiary);
 		font-weight: 500;
-		border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+		border-bottom: 1px solid var(--border-primary);
 	}
 
 	.add-new-option:hover {
-		background: rgba(0, 0, 0, 0.08);
+		background: var(--bg-active);
 	}
 </style>

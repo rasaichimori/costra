@@ -30,13 +30,13 @@
 	}
 
 	.sidebar a {
-		color: rgba(255, 255, 255, 0.8);
+		color: var(--text-secondary);
 		text-decoration: none;
 		font-size: 0.95rem;
 		transition: color 0.2s ease;
 	}
 
 	.sidebar a:hover {
-		color: #ffffff;
+		color: var(--text-primary);
 	}
 </style>

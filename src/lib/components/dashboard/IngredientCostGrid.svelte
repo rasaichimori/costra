@@ -266,10 +266,10 @@
 	.ingredient-cost-section {
 		display: flex;
 		flex-direction: column;
-		background: rgba(255, 255, 255, 0.9);
+		background: var(--bg-secondary);
 		padding: 1.5rem;
 		border-radius: 8px;
-		border: 1px solid rgba(0, 0, 0, 0.08);
+		border: 1px solid var(--border-primary);
 		backdrop-filter: blur(10px);
 		gap: 16px;
 	}
@@ -281,7 +281,7 @@
 
 	.filter-section h3 {
 		margin: 0;
-		color: #333333;
+		color: var(--text-primary);
 		font-size: 16px;
 		font-weight: 500;
 	}
@@ -293,9 +293,9 @@
 	}
 
 	.costs-table-container {
-		background: rgba(255, 255, 255, 0.9);
+		background: var(--bg-secondary);
 		border-radius: 8px;
-		border: 1px solid rgba(0, 0, 0, 0.1);
+		border: 1px solid var(--border-secondary);
 	}
 
 	.costs-table {
@@ -305,23 +305,20 @@
 	}
 
 	.costs-table th {
-		background: rgba(0, 0, 0, 0.05);
-		color: #333333;
+		background: var(--bg-tertiary);
+		color: var(--text-primary);
 		font-weight: 600;
 		padding: 15px 12px;
 		text-align: left;
-		border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+		border-bottom: 1px solid var(--border-secondary);
 	}
 
 	.costs-table td {
 		padding: 12px;
-		border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+		border-bottom: 1px solid var(--border-tertiary);
 		vertical-align: middle;
 	}
 
-	.cost-row:nth-child(even) {
-		background: rgba(0, 0, 0, 0.02);
-	}
 
 	.ingredient-header {
 		width: 25%;
@@ -369,7 +366,7 @@
 
 	.currency {
 		font-weight: 600;
-		color: #333333;
+		color: var(--text-primary);
 	}
 
 	@media (max-width: 768px) {

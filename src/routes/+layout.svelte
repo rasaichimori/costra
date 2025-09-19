@@ -2,10 +2,15 @@
 	import favicon from '$lib/assets/favicon.svg';
 	import OverlayProvider from '$lib/overlay/OverlayProvider.svelte';
 	import Sidebar from '$lib/components/common/Sidebar.svelte';
+	import ThemeToggle from '$lib/components/common/ThemeToggle.svelte';
+	import { setThemeContext } from '$lib/contexts/theme.svelte';
 	import { page } from '$app/state';
 	import '../app.css';
 
 	let { children } = $props();
+
+	// Initialize theme context
+	setThemeContext();
 </script>
 
 <svelte:head>

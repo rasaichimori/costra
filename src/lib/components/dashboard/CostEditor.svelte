@@ -8,6 +8,7 @@
 	import ImportDataModal from '../modals/ImportDataModal.svelte';
 	import ClearAllModal from '../modals/ClearAllModal.svelte';
 	import ModernButton from '../common/ModernButton.svelte';
+	import ThemeToggle from '../common/ThemeToggle.svelte';
 	import RecipeEditorPlaceholder from './RecipeEditorPlaceholder.svelte';
 
 	let costs = $state<Record<string, IngredientDoc>>({
@@ -99,6 +100,7 @@
 			Cost Editor
 		</h2>
 		<div class="header-actions">
+			<ThemeToggle />
 			<ModernButton variant="danger" onclick={clearAllData}>Clear All</ModernButton>
 			<ModernButton variant="secondary" onclick={importData}>Import</ModernButton>
 			<ModernButton variant="primary" onclick={exportData}>Export</ModernButton>
@@ -136,10 +138,10 @@
 		flex-direction: column;
 		gap: 16px;
 		padding: 2rem;
-		background: rgba(255, 255, 255, 0.95);
+		background: var(--bg-secondary);
 		border-radius: 12px;
 		margin: 1rem;
-		border: 1px solid rgba(0, 0, 0, 0.08);
+		border: 1px solid var(--border-primary);
 		backdrop-filter: blur(10px);
 	}
 
@@ -150,7 +152,7 @@
 	}
 
 	.editor-header h2 {
-		color: #333333;
+		color: var(--text-primary);
 		font-weight: 500;
 		font-size: 1.5rem;
 		display: flex;
@@ -160,7 +162,7 @@
 	}
 
 	.editor-header h2 i {
-		color: rgba(0, 0, 0, 0.6);
+		color: var(--text-secondary);
 	}
 
 	.header-actions {
