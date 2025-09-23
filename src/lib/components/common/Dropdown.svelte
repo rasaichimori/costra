@@ -44,6 +44,8 @@
 		backdrop-filter: blur(10px);
 		box-shadow: 0 4px 6px var(--shadow-medium);
 		pointer-events: auto;
+		width: 100%;
+		min-width: 0;
 	}
 
 	.option {
@@ -60,6 +62,9 @@
 		display: flex;
 		align-items: center;
 		gap: 6px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
 	.option:hover {

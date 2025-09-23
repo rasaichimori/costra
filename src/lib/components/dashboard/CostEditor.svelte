@@ -10,44 +10,10 @@
 	import ModernButton from '../common/ModernButton.svelte';
 	import ThemeToggle from '../common/ThemeToggle.svelte';
 	import RecipeEditorPlaceholder from './RecipeEditorPlaceholder.svelte';
+	import { mockData } from '$lib/data/mockData';
 
-	let costs = $state<Record<string, IngredientDoc>>({
-		coconutMilk: {
-			id: 'coconutMilk',
-			name: 'Coconut Milk',
-			category: 'liquid',
-			product: {
-				cost: 10,
-				amount: 1,
-				unit: 'cup'
-			},
-			color: '#DB8585'
-		}
-	});
-	let recipes = $state<Record<string, RecipeDoc>>({
-		acaiBase: {
-			id: 'acaiBase',
-			name: 'Acai Base',
-			ingredients: [
-				{
-					id: 'coconutMilk',
-					portion: { amount: 1, unit: 'cup' },
-					hidden: false
-				}
-			]
-		},
-		mangoBase: {
-			id: 'mangoBase',
-			name: 'Mango Base',
-			ingredients: [
-				{
-					id: 'coconutMilk',
-					portion: { amount: 1, unit: 'cup' },
-					hidden: false
-				}
-			]
-		}
-	});
+	let costs = $state<Record<string, IngredientDoc>>(mockData.costs);
+	let recipes = $state<Record<string, RecipeDoc>>(mockData.recipes);
 
 	const deleteRecipe = (id: string) => {
 		// Remove recipe from collection
