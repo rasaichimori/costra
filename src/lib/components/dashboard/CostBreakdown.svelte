@@ -72,7 +72,6 @@
 		const element = meta.data[idx];
 		if (element && element.options) {
 			element.options.hidden = hidden;
-			console.log(element.options.hidden);
 			chart.update();
 		}
 		if (recipe.ingredients[idx]) {

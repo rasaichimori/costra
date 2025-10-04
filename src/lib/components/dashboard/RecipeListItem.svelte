@@ -3,16 +3,21 @@
 		label: string;
 		selected?: boolean;
 		cost?: number;
+		unit?: string;
 		onclick?: () => void;
 	}
 
-	let { label, selected = false, cost, onclick }: Props = $props();
+	let { label, selected = false, cost, unit, onclick }: Props = $props();
 </script>
 
 <button class="recipe-list-item {selected ? 'selected' : ''}" {onclick}>
 	<span class="label">{label}</span>
 	{#if cost !== undefined}
 		<span class="cost">¥{cost.toFixed(0)}</span>
+	{/if}
+	{#if unit !== undefined}
+		{' / '}
+		<span class="unit">{unit}</span>
 	{/if}
 </button>
 

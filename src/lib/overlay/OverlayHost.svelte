@@ -30,7 +30,7 @@
 		if (position.bottom + dropdownMaxHeight > viewportHeight) {
 			// Position above the input instead
 			top = position.top - dropdownMaxHeight;
-			
+
 			// If still not enough space above, adjust to fit within viewport
 			if (top < 0) {
 				top = Math.max(10, viewportHeight - dropdownMaxHeight - 10);

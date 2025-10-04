@@ -1,31 +1,40 @@
-<script lang="ts">
-	interface Props {
-		options: string[];
-		searchTerm: string;
-		selectOption: (option: string) => void;
+<script lang="ts" generics="T">
+	type Option<T> = { label: string; value: T };
+	interface Props<T> {
+		options: Option<T>[];
+		// The label acts as the search term. If value is not provided, the new option will not be added to the dropdown.
+		newOption?: Option<T>;
+		selectOption: (option: Option<T>) => void;
 	}
 
-	let { options, searchTerm, selectOption }: Props = $props();
+	let { options, newOption, selectOption }: Props<T> = $props();
 
 	// Filter options based on search term
 	const filteredOptions = $derived(
-		searchTerm !== ''
-			? options.filter((option) => option.toLowerCase().includes(searchTerm.toLowerCase()))
+		newOption?.label
+			? options.filter((option) =>
+					option.label.toLowerCase().includes(newOption.label.toLowerCase())
+				)
 			: options
 	);
+	$inspect(options, filteredOptions);
 </script>
 
 <div class="dropdown-options">
-	{#if !options.includes(searchTerm) && searchTerm !== ''}
-		<button class="option add-new-option" onclick={() => selectOption(searchTerm)} tabindex="-1">
+	{#if newOption && newOption.value !== undefined && !options.some((option) => option.label === newOption.label) && newOption.label !== ''}
+		<button
+			class="option add-new-option"
+			onclick={() => selectOption(newOption as Option<T>)}
+			tabindex="-1"
+		>
 			<i class="fa-solid fa-plus"></i>
-			"{searchTerm}"
+			"{newOption.label}"
 		</button>
 	{/if}
 
 	{#each filteredOptions as option}
 		<button class="option" onclick={() => selectOption(option)} tabindex="-1">
-			{option}
+			{option.label}
 		</button>
 	{/each}
 </div>

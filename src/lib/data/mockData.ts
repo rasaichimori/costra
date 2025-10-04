@@ -1,4 +1,4 @@
-import type { IngredientDoc, RecipeDoc } from './schema';
+import type { CompoundIngredientDoc, IngredientDoc, RecipeDoc } from './schema';
 
 export const mockData = {
 	costs: {
@@ -539,5 +539,128 @@ export const mockData = {
 				}
 			]
 		}
-	} as Record<string, RecipeDoc>
+	} as Record<string, RecipeDoc>,
+	compoundIngredients: {
+		'd90838e0-0835-4515-9048-af7898a85953': {
+			id: 'd90838e0-0835-4515-9048-af7898a85953',
+			name: 'Acai Base',
+			yield: {
+				amount: 1,
+				unit: 'pint'
+			},
+			viewedUnit: 'cup',
+			ingredients: [
+				{
+					id: 'e42fc8f1-3d4b-454a-836d-aefa21562047',
+					portion: {
+						amount: 0.25,
+						unit: 'pack'
+					},
+					hidden: false
+				},
+				{
+					id: '06abe694-884a-4730-b8b3-27ca0dbf6a7b',
+					portion: {
+						amount: 1,
+						unit: 'cup'
+					},
+					hidden: false
+				},
+				{
+					id: 'b83b0488-0716-42f1-a83f-36060e1b61f1',
+					portion: {
+						amount: 1,
+						unit: 'cup'
+					},
+					hidden: false
+				},
+				{
+					id: '5e039c48-bbd5-45fe-afc0-a3652c780630',
+					portion: {
+						amount: 1,
+						unit: 'tbs'
+					},
+					hidden: false
+				},
+				{
+					id: 'ddcf0a3e-7969-4c19-8cd1-ff1ffb89b22d',
+					portion: {
+						amount: 1,
+						unit: 'cup'
+					},
+					hidden: false
+				}
+			]
+		},
+		'b7b26e24-f164-4bee-8800-18590dda80fe': {
+			id: 'b7b26e24-f164-4bee-8800-18590dda80fe',
+			name: 'Mango Base',
+			yield: {
+				amount: 1,
+				unit: 'pint'
+			},
+			viewedUnit: 'cup',
+			ingredients: [
+				{
+					id: '06abe694-884a-4730-b8b3-27ca0dbf6a7b',
+					portion: {
+						amount: 1,
+						unit: 'cup'
+					},
+					hidden: false
+				},
+				{
+					id: '5e039c48-bbd5-45fe-afc0-a3652c780630',
+					portion: {
+						amount: 1,
+						unit: 'tsp'
+					},
+					hidden: false
+				},
+				{
+					id: 'ddcf0a3e-7969-4c19-8cd1-ff1ffb89b22d',
+					portion: {
+						amount: 1,
+						unit: 'cup'
+					},
+					hidden: false
+				}
+			]
+		},
+		'51cde09f-7b77-43cd-ae20-4fd425aaf101': {
+			id: '51cde09f-7b77-43cd-ae20-4fd425aaf101',
+			name: 'Coconut Base',
+			yield: {
+				amount: 1,
+				unit: 'pint'
+			},
+			viewedUnit: 'cup',
+			ingredients: [
+				{
+					id: '5128567b-f0be-4b90-bafc-bebc286ff9fc',
+					portion: {
+						amount: 2,
+						unit: 'tbs'
+					},
+					hidden: false
+				},
+				{
+					id: '22de7026-c267-45b9-abc1-1989d8c80a0e',
+					portion: {
+						amount: 1,
+						unit: 'cup'
+					},
+					hidden: false
+				},
+				{
+					id: '5e039c48-bbd5-45fe-afc0-a3652c780630',
+					portion: {
+						amount: 1,
+						unit: 'tbs'
+					},
+					hidden: false
+				}
+			]
+		}
+	} as Record<string, CompoundIngredientDoc>
 };

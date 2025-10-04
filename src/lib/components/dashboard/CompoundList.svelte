@@ -1,10 +1,11 @@
 <script lang="ts">
-	import type { CompoundIngredientDoc, IngredientDoc, RecipeDoc } from '$lib/data/schema';
+	import type { CompoundIngredientDoc, IngredientDoc } from '$lib/data/schema';
 	import { calculateRecipeCosts, getTotalRecipeCost } from '$lib/utils/costCalculatorUtils';
+	import { convertUnit } from '$lib/utils/unit';
 	import RecipeListItem from './RecipeListItem.svelte';
 
 	interface Props {
-		recipes: Record<string, RecipeDoc>;
+		recipes: Record<string, CompoundIngredientDoc>;
 		costs: Record<string, IngredientDoc>;
 		selectedRecipeId?: string;
 		setIsEditingName: (isEditing: boolean) => void;
@@ -41,11 +42,17 @@
 		}
 
 		// Create new ingredient with placeholder values
-		const newRecipe: RecipeDoc = {
+		const newRecipe: CompoundIngredientDoc = {
 			id: newId,
 			name: `Recipe ${nextNumber}`,
-			ingredients: []
+			ingredients: [],
+			yield: {
+				amount: 1,
+				unit: 'pint'
+			},
+			viewedUnit: 'pint'
 		};
+
 		recipes[newId] = newRecipe;
 
 		newlyCreatedRecipes.add(newId);
@@ -59,14 +66,16 @@
 		<RecipeListItem
 			label={recipe.name}
 			selected={id === selectedRecipeId}
-			cost={getTotalRecipeCost(calculateRecipeCosts(recipe, costs))}
+			cost={getTotalRecipeCost(calculateRecipeCosts(recipe, costs)) /
+				convertUnit(recipe.yield.amount, recipe.yield.unit, recipe.viewedUnit)}
+			unit={recipe.viewedUnit}
 			onclick={() => {
 				selectedRecipeId = id;
 				setIsEditingName(false);
 			}}
 		/>
 	{/each}
-	<button class="add-recipe-btn" onclick={addRecipe}> ＋ Create New Recipe </button>
+	<button class="add-recipe-btn" onclick={addRecipe}> ＋ Create New Ingredient </button>
 </div>
 
 <style>

@@ -29,3 +29,8 @@ export interface RecipeDoc {
 		hidden: boolean;
 	}[];
 }
+
+export interface CompoundIngredientDoc extends RecipeDoc {
+	yield: Portion;
+	viewedUnit: Unit;
+}

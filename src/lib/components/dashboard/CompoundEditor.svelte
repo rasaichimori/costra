@@ -4,8 +4,8 @@
 		getTotalRecipeCost,
 		getAvailableIngredients
 	} from '../../utils/costCalculatorUtils';
-	import type { IngredientDoc, RecipeDoc } from '$lib/data/schema';
-	import { units, type Unit } from '$lib/utils/unit';
+	import type { CompoundIngredientDoc, IngredientDoc, RecipeDoc } from '$lib/data/schema';
+	import { convertUnit, units, type Unit } from '$lib/utils/unit';
 	import SelectInput from '../common/SelectInput.svelte';
 	import TextInput from '../common/TextInput.svelte';
 	import ModernButton from '../common/ModernButton.svelte';
@@ -14,9 +14,10 @@
 	import { onMount, tick } from 'svelte';
 	import CostBreakdown from './CostBreakdown.svelte';
 	import EditableTextField from '../common/EditableTextField.svelte';
+	import DropdownChevronButton from '../common/DropdownChevronButton.svelte';
 
 	interface Props {
-		recipe: RecipeDoc;
+		recipe: CompoundIngredientDoc;
 		costs: Record<string, IngredientDoc>;
 		isEditingName: boolean;
 		onDelete?: () => void;
@@ -68,33 +69,88 @@
 	const recipeCosts = $derived(calculateRecipeCosts(recipe, costs));
 	const totalCost = $derived(getTotalRecipeCost(recipeCosts));
 	const availableIngredients = $derived(getAvailableIngredients(recipe, costs));
+	const convertedYield = $derived(
+		convertUnit(recipe.yield.amount, recipe.yield.unit, recipe.viewedUnit)
+	);
+	const perUnitCost = $derived(totalCost / convertedYield);
 </script>
 
 <div class="recipe-cost-calculator">
 	<div class="header">
-		<div class="title">
-			<div class="title-label">
-				<EditableTextField
-					bind:value={recipe.name}
-					bind:isEditing={isEditingName}
-					onSave={() => {
-						isEditingName = false;
-					}}
-				/>
+		<div class="header-left">
+			<div class="title">
+				<div class="title-label">
+					<EditableTextField
+						bind:value={recipe.name}
+						bind:isEditing={isEditingName}
+						onSave={() => {
+							isEditingName = false;
+						}}
+					/>
+				</div>
+				<div class="cost-amount">
+					¥{perUnitCost.toFixed(0)} / {recipe.viewedUnit}
+					<DropdownChevronButton
+						size="small"
+						options={[...units.map((unit) => ({ label: unit, value: unit }))]}
+						value={recipe.viewedUnit}
+						onchange={(value) => {
+							recipe.viewedUnit = value;
+						}}
+					/>
+				</div>
 			</div>
-			<div class="cost-amount">
-				¥{totalCost.toFixed(0)}
+			<div class="recipe-yield">
+				<div class="yield-row">
+					<div class="total-cost-row">
+						<span>Total Cost:</span>
+						<div class="ingredient-cost">
+							¥{totalCost.toFixed(0)}
+						</div>
+					</div>
+					<div class="yield-row-item">
+						<span class="total-cost">yield:</span>
+						<div class="amount-input-group">
+							<TextInput
+								value={recipe.yield.amount}
+								oninput={(value) => {
+									recipe.yield.amount = value;
+								}}
+								onchange={(value) => {
+									recipe.yield.amount = value;
+								}}
+								size="small"
+								variant="inline"
+								min={1}
+								step={1}
+								spinner={true}
+							/>
+						</div>
+						<div class="unit-input-group">
+							<SelectInput
+								value={recipe.yield.unit}
+								options={[...units]}
+								placeholder="Select unit..."
+								size="small"
+								searchable={false}
+								onchange={(newUnit) => {
+									recipe.yield.unit = newUnit as Unit;
+								}}
+							/>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 		<ModernButton
 			variant="icon"
 			size="small"
-			ariaLabel="Delete recipe"
-			title="Delete recipe"
+			ariaLabel="Delete"
+			title="Delete Ingredient"
 			onclick={() => onDelete?.()}
 		>
 			<i class="fa-solid fa-trash"></i>
-			Delete Recipe
+			Delete
 		</ModernButton>
 	</div>
 	<div class="recipe-section">
@@ -111,6 +167,9 @@
 										value={ingredient.portion.amount}
 										onchange={(value) => {
 											ingredient.portion.amount = value;
+										}}
+										oninput={(value) => {
+											recipe.yield.amount = value;
 										}}
 										size="small"
 										variant="inline"
@@ -200,6 +259,12 @@
 		justify-content: space-between;
 	}
 
+	.header-left {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px 32px;
+	}
+
 	.title-label {
 		color: var(--text-primary);
 		font-size: 16px;
@@ -217,12 +282,43 @@
 		color: var(--text-primary);
 	}
 
+	.recipe-yield {
+		display: flex;
+		flex-direction: column-reverse;
+	}
+
+	.yield-row {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+
+		span {
+			font-weight: 500;
+			color: var(--text-primary);
+			text-transform: capitalize;
+			min-width: 60px;
+			font-size: 12px;
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+		}
+	}
+	.total-cost-row {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+	.yield-row-item {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
 	.recipe-section {
 		display: flex;
 		flex-wrap: wrap;
 		gap: 32px;
 	}
-
 	.recipe-breakdown {
 		display: flex;
 		flex-direction: column;
@@ -255,7 +351,6 @@
 		align-items: center;
 		gap: 8px;
 	}
-
 	.ingredient-name {
 		font-weight: 500;
 		color: var(--text-primary);

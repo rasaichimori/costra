@@ -272,6 +272,7 @@
 		border: 1px solid var(--border-primary);
 		backdrop-filter: blur(10px);
 		gap: 16px;
+		flex: 1;
 	}
 	.filter-section {
 		display: flex;

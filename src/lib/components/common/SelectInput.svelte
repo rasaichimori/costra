@@ -30,13 +30,13 @@
 	let containerElement: HTMLElement;
 	let dropdownId = $state<string | undefined>(undefined);
 
-	const selectOption = (option: string) => {
-		value = option;
+	const selectOption = (option: { label: string; value: string }) => {
+		value = option.value;
 		if (searchable) {
-			searchTerm = value;
+			searchTerm = option.label;
 		}
 		closeDropdown();
-		onchange?.(option);
+		onchange?.(option.value);
 	};
 
 	const onfocus = () => {
@@ -71,7 +71,7 @@
 		}
 		if (e.key === 'Enter') {
 			closeDropdown();
-			selectOption(searchTerm);
+			selectOption({ label: searchTerm, value: searchTerm });
 		}
 	};
 
@@ -79,8 +79,8 @@
 		dropdownId = openOverlay(
 			Dropdown,
 			{
-				options,
-				searchTerm,
+				options: options.map((option) => ({ label: option, value: option })),
+				newOption: searchTerm !== '' ? { label: searchTerm, value: searchTerm } : undefined,
 				selectOption
 			},
 			{ transparentBackground: true }
@@ -92,7 +92,10 @@
 		if (!dropdownId) return;
 		updateOverlay(
 			dropdownId,
-			{ options, searchTerm },
+			{
+				options: options.map((option) => ({ label: option, value: option })),
+				newOption: searchTerm !== '' ? { label: searchTerm, value: searchTerm } : undefined
+			},
 			{ position: containerElement.getBoundingClientRect() }
 		);
 	};

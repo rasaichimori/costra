@@ -1,7 +1,5 @@
 <script lang="ts">
-	import RecipeEditor from './RecipeEditor.svelte';
-	import RecipesList from './RecipesList.svelte';
-	import type { IngredientDoc, RecipeDoc } from '$lib/data/schema';
+	import type { CompoundIngredientDoc, IngredientDoc, RecipeDoc } from '$lib/data/schema';
 	import IngredientCostGrid from './IngredientCostGrid.svelte';
 	import { getOverlayContext } from '$lib/contexts/overlay.svelte';
 	import ExportDataModal from '../modals/ExportDataModal.svelte';
@@ -9,24 +7,17 @@
 	import ClearAllModal from '../modals/ClearAllModal.svelte';
 	import ModernButton from '../common/ModernButton.svelte';
 	import ThemeToggle from '../common/ThemeToggle.svelte';
-	import RecipeEditorPlaceholder from './RecipeEditorPlaceholder.svelte';
 	import { mockData } from '$lib/data/mockData';
+	import RecipeSection from './RecipeSection.svelte';
+	import CompoundSection from './CompoundSection.svelte';
 
 	let costs = $state<Record<string, IngredientDoc>>(mockData.costs);
+	let compoundIngredients = $state<Record<string, CompoundIngredientDoc>>(
+		mockData.compoundIngredients
+	);
 	let recipes = $state<Record<string, RecipeDoc>>(mockData.recipes);
 
-	const deleteRecipe = (id: string) => {
-		// Remove recipe from collection
-		const { [id]: _removed, ...rest } = recipes;
-		recipes = rest;
-		if (selectedRecipeId === id) {
-			selectedRecipeId = undefined;
-		}
-	};
-
 	const { openOverlay, closeOverlay } = getOverlayContext();
-
-	let selectedRecipeId = $state<string | undefined>();
 
 	const exportData = () => {
 		openOverlay(ExportDataModal, {
@@ -50,21 +41,15 @@
 			onConfirm: () => {
 				costs = {};
 				recipes = {};
-				selectedRecipeId = undefined;
 			},
 			onclose: () => closeOverlay()
 		});
 	};
-
-	let isEditingName = $state(false);
 </script>
 
 <div class="cost-editor">
 	<div class="editor-header">
-		<h2>
-			<i class="fa-solid fa-dollar-sign"></i>
-			Cost Editor
-		</h2>
+		<h2>COSTRA</h2>
 		<div class="header-actions">
 			<ThemeToggle />
 			<ModernButton variant="danger" onclick={clearAllData}>Clear All</ModernButton>
@@ -73,28 +58,13 @@
 		</div>
 	</div>
 	<div class="content">
-		<div class="recipes">
-			<RecipesList
-				{recipes}
-				{costs}
-				bind:selectedRecipeId
-				setIsEditingName={(isEditing: boolean) => {
-					isEditingName = isEditing;
-				}}
-			/>
-			{#if selectedRecipeId}
-				<RecipeEditor
-					bind:recipe={recipes[selectedRecipeId]}
-					{costs}
-					unit={'cup'}
-					onDelete={() => deleteRecipe(selectedRecipeId!)}
-					bind:isEditingName
-				/>
-			{:else}
-				<RecipeEditorPlaceholder />
-			{/if}
+		<h2>Recipes</h2>
+		<RecipeSection bind:recipes bind:costs />
+		<h2>Ingredients</h2>
+		<div class="ingredients">
+			<CompoundSection bind:recipes={compoundIngredients} bind:costs />
+			<IngredientCostGrid bind:costs bind:recipes />
 		</div>
-		<IngredientCostGrid bind:costs bind:recipes />
 	</div>
 </div>
 
@@ -127,10 +97,6 @@
 		margin: 0;
 	}
 
-	.editor-header h2 i {
-		color: var(--text-secondary);
-	}
-
 	.header-actions {
 		display: flex;
 		gap: 8px;
@@ -141,8 +107,14 @@
 		flex-direction: column;
 		gap: 16px;
 		flex-wrap: wrap;
+
+		h2 {
+			margin: 0;
+			color: var(--text-primary);
+		}
 	}
-	.recipes {
+
+	.ingredients {
 		display: flex;
 		gap: 16px;
 	}
