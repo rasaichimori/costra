@@ -2,9 +2,10 @@
 	import {
 		calculateRecipeCosts,
 		getTotalRecipeCost,
-		getAvailableIngredients
+		getAvailableIngredients,
+		getAllCosts
 	} from '../../utils/costCalculatorUtils';
-	import type { IngredientDoc, RecipeDoc } from '$lib/data/schema';
+	import type { IngredientDoc, RecipeDoc, CompoundIngredientDoc } from '$lib/data/schema';
 	import { units, type Unit } from '$lib/utils/unit';
 	import SelectInput from '../common/SelectInput.svelte';
 	import TextInput from '../common/TextInput.svelte';
@@ -18,11 +19,18 @@
 	interface Props {
 		recipe: RecipeDoc;
 		costs: Record<string, IngredientDoc>;
+		compounds: Record<string, CompoundIngredientDoc>;
 		isEditingName: boolean;
 		onDelete?: () => void;
 	}
 
-	let { recipe = $bindable(), costs, onDelete, isEditingName = $bindable() }: Props = $props();
+	let {
+		recipe = $bindable(),
+		costs,
+		compounds,
+		onDelete,
+		isEditingName = $bindable()
+	}: Props = $props();
 
 	const { openOverlay, updateOverlay } = getOverlayContext();
 
@@ -35,6 +43,7 @@
 			AddIngredientsButton,
 			{
 				availableIngredients,
+				availableCompounds,
 				recipe,
 				onAddIngredient: async () => {
 					await tick();
@@ -50,7 +59,7 @@
 		if (!addPopupId || !addBtnElement) return;
 		updateOverlay(
 			addPopupId,
-			{ availableIngredients, recipe },
+			{ availableIngredients, availableCompounds, recipe },
 			{ position: addBtnElement.getBoundingClientRect() }
 		);
 	};
@@ -64,10 +73,15 @@
 		};
 	});
 
+	const allCosts = $derived(getAllCosts(costs, compounds));
+
 	// Reactive calculations
-	const recipeCosts = $derived(calculateRecipeCosts(recipe, costs));
+	const recipeCosts = $derived(calculateRecipeCosts(recipe, allCosts));
 	const totalCost = $derived(getTotalRecipeCost(recipeCosts));
 	const availableIngredients = $derived(getAvailableIngredients(recipe, costs));
+	const availableCompounds = $derived(
+		Object.values(compounds).filter((c) => !recipe.ingredients.some((i) => i.id === c.id))
+	);
 </script>
 
 <div class="recipe-cost-calculator">
@@ -103,9 +117,13 @@
 			{#if recipe.ingredients.length > 0}
 				<div class="ingredient-list">
 					{#each recipe.ingredients as ingredient}
-						<div class="ingredient-cost-item" class:hidden={ingredient.hidden}>
+						<div
+							class="ingredient-cost-item"
+							class:compound={ingredient.id in compounds}
+							class:hidden={ingredient.hidden}
+						>
 							<div class="ingredient-details">
-								<span class="ingredient-name">{costs[ingredient.id].name}</span>
+								<span class="ingredient-name">{allCosts[ingredient.id].name}</span>
 								<div class="amount-input-group">
 									<TextInput
 										value={ingredient.portion.amount}
@@ -136,7 +154,18 @@
 								¥{recipeCosts[ingredient.id]?.toFixed(0) || '0'}
 							</div>
 							<div class="color-input-group">
-								<input type="color" class="color-picker" bind:value={costs[ingredient.id].color} />
+								<input
+									type="color"
+									class="color-picker"
+									value={allCosts[ingredient.id].color}
+									oninput={(e) => {
+										if (ingredient.id in compounds) {
+											compounds[ingredient.id].color = e.currentTarget.value;
+										} else if (ingredient.id in costs) {
+											costs[ingredient.id].color = e.currentTarget.value;
+										}
+									}}
+								/>
 							</div>
 							<!-- Hide/Show Button -->
 							<ModernButton
@@ -176,7 +205,7 @@
 				Add Ingredients
 			</ModernButton>
 		</div>
-		<CostBreakdown bind:recipe {costs} />
+		<CostBreakdown bind:recipe costs={allCosts} />
 	</div>
 </div>
 
@@ -306,5 +335,9 @@
 	/* Hidden row greyed out */
 	.ingredient-cost-item.hidden {
 		opacity: 0.4;
+	}
+
+	.ingredient-cost-item.compound {
+		border-color: var(--accent-warning, #ff9500);
 	}
 </style>

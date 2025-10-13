@@ -1,30 +1,39 @@
 <script lang="ts">
-	import type { IngredientDoc, RecipeDoc } from '$lib/data/schema';
+	import type { IngredientDoc, RecipeDoc, CompoundIngredientDoc } from '$lib/data/schema';
 	import ModernButton from '../common/ModernButton.svelte';
 	import TextInput from '../common/TextInput.svelte';
 
 	interface Props {
 		availableIngredients: IngredientDoc[];
+		availableCompounds?: CompoundIngredientDoc[];
 		recipe: RecipeDoc;
 		onAddIngredient?: (ingredientId: string) => void;
 	}
 
-	let { availableIngredients, recipe, onAddIngredient }: Props = $props();
+	let { availableIngredients, availableCompounds = [], recipe, onAddIngredient }: Props = $props();
 	let searchTerm = $state('');
 	// allow multiple category filters
 	let selectedFilters: string[] = $state([]);
-	// derive categories from incoming list (unique)
-	const categories = $derived(
-		Array.from(new Set(availableIngredients.map((i) => i.category))).sort()
-	);
+
+	const categories = $derived([
+		...Array.from(new Set(availableCompounds.map((i) => i.category))).sort(),
+		...Array.from(new Set(availableIngredients.map((i) => i.category))).sort()
+	]);
+
+	const combinedIngredients = $derived([...availableCompounds, ...availableIngredients]);
 	// reactive filtered list based on searchTerm and selectedCategory
 	const filteredIngredients = $derived(
-		availableIngredients.filter((ingredient) => {
+		combinedIngredients.filter((ingredient) => {
 			const matchesSearch = ingredient.name.toLowerCase().includes(searchTerm.toLowerCase());
-			const matchesCategory =
-				selectedFilters.length > 0 ? selectedFilters.includes(ingredient.category) : true;
+			let matchesCategory = false;
+			if (selectedFilters.length === 0) {
+				matchesCategory = true;
+			} else {
+				matchesCategory = selectedFilters.includes(ingredient.category);
+			}
+
 			return matchesSearch && matchesCategory;
-		}) as IngredientDoc[]
+		})
 	);
 
 	const clearFilters = () => {
@@ -39,6 +48,7 @@
 			{#each categories as category}
 				<ModernButton
 					variant={selectedFilters.includes(category) ? 'primary' : 'secondary'}
+					style={category === 'Compound' ? 'border-color: var(--accent-warning, #ff9500);' : ''}
 					size="small"
 					onclick={() => {
 						if (selectedFilters.includes(category)) {
@@ -71,12 +81,23 @@
 			{#each filteredIngredients as ingredient}
 				<button
 					class="add-ingredient-btn"
+					class:compound={ingredient.category === 'Compound'}
 					onclick={() => {
-						recipe.ingredients.push({
-							id: ingredient.id,
-							portion: { amount: 1, unit: 'cup' },
-							hidden: false
-						});
+						if ('yield' in ingredient) {
+							const compound = ingredient as CompoundIngredientDoc;
+							recipe.ingredients.push({
+								id: compound.id,
+								portion: { amount: 1, unit: compound.viewedUnit },
+								hidden: false
+							});
+						} else {
+							// regular ingredient
+							recipe.ingredients.push({
+								id: ingredient.id,
+								portion: { amount: 1, unit: 'cup' },
+								hidden: false
+							});
+						}
 						onAddIngredient?.(ingredient.id);
 					}}
 				>
@@ -156,5 +177,10 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: 6px;
+	}
+
+	/* Highlight for compound category */
+	.compound {
+		border-color: var(--accent-warning, #ff9500);
 	}
 </style>

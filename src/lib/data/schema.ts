@@ -31,6 +31,12 @@ export interface RecipeDoc {
 }
 
 export interface CompoundIngredientDoc extends RecipeDoc {
+	/** Category controls filtering & colours in UI */
+	category: string;
+	/** Hex or CSS colour string for chart slice */
+	color: string;
+	/** Amount of the compound ingredient that comes out of the recipe */
 	yield: Portion;
+	/** Unit of the yield displayed in the recipe */
 	viewedUnit: Unit;
 }

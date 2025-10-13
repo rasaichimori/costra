@@ -59,10 +59,10 @@
 	</div>
 	<div class="content">
 		<h2>Recipes</h2>
-		<RecipeSection bind:recipes bind:costs />
+		<RecipeSection bind:recipes {costs} compounds={compoundIngredients} />
 		<h2>Ingredients</h2>
 		<div class="ingredients">
-			<CompoundSection bind:recipes={compoundIngredients} bind:costs />
+			<CompoundSection bind:recipes={compoundIngredients} {costs} />
 			<IngredientCostGrid bind:costs bind:recipes />
 		</div>
 	</div>

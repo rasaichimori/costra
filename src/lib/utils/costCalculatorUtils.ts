@@ -1,10 +1,37 @@
-import type { IngredientDoc, RecipeDoc } from '$lib/data/schema';
+import type { CompoundIngredientDoc, IngredientDoc, RecipeDoc } from '$lib/data/schema';
 import { convertUnit, type Unit } from '$lib/utils/unit';
 
 export type IngredientProduct = {
 	cost: number;
 	amount: number;
 	unit: Unit;
+};
+
+export const getAllCosts = (
+	costs: Record<string, IngredientDoc>,
+	compounds: Record<string, CompoundIngredientDoc>
+): Record<string, IngredientDoc> => {
+	return { ...costs, ...compoundsToIngredients(compounds, costs) };
+};
+
+export const compoundsToIngredients = (
+	compounds: Record<string, CompoundIngredientDoc>,
+	costs: Record<string, IngredientDoc>
+): Record<string, IngredientDoc> => {
+	return Object.values(compounds).reduce(
+		(acc, compound) => ({
+			...acc,
+			[compound.id]: {
+				...compound,
+				product: {
+					cost: getTotalRecipeCost(calculateRecipeCosts(compound, costs)),
+					amount: compound.yield.amount,
+					unit: compound.yield.unit
+				}
+			}
+		}),
+		{}
+	);
 };
 
 /**

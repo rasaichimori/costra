@@ -1,15 +1,17 @@
 <script lang="ts">
-	import type { IngredientDoc, RecipeDoc } from '$lib/data/schema';
+	import type { IngredientDoc, RecipeDoc, CompoundIngredientDoc } from '$lib/data/schema';
 	import RecipeEditor from './RecipeEditor.svelte';
 	import RecipeEditorPlaceholder from './RecipeEditorPlaceholder.svelte';
 	import RecipesList from './RecipesList.svelte';
 
 	let {
-		costs = $bindable(),
-		recipes = $bindable({})
+		costs,
+		recipes = $bindable({}),
+		compounds
 	}: {
 		costs: Record<string, IngredientDoc>;
 		recipes: Record<string, RecipeDoc>;
+		compounds: Record<string, CompoundIngredientDoc>;
 	} = $props();
 
 	let selectedRecipeId = $state<string | undefined>();
@@ -38,6 +40,7 @@
 		<RecipeEditor
 			bind:recipe={recipes[selectedRecipeId]}
 			{costs}
+			{compounds}
 			onDelete={() => deleteRecipe(selectedRecipeId!)}
 			bind:isEditingName
 		/>

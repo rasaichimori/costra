@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { CompoundIngredientDoc, IngredientDoc } from '$lib/data/schema';
+	import { randomLightColorHex } from '$lib/utils/color';
 	import { calculateRecipeCosts, getTotalRecipeCost } from '$lib/utils/costCalculatorUtils';
 	import { convertUnit } from '$lib/utils/unit';
 	import RecipeListItem from './RecipeListItem.svelte';
@@ -50,7 +51,9 @@
 				amount: 1,
 				unit: 'pint'
 			},
-			viewedUnit: 'pint'
+			viewedUnit: 'pint',
+			category: 'Compound',
+			color: randomLightColorHex()
 		};
 
 		recipes[newId] = newRecipe;

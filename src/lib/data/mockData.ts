@@ -544,6 +544,8 @@ export const mockData = {
 		'd90838e0-0835-4515-9048-af7898a85953': {
 			id: 'd90838e0-0835-4515-9048-af7898a85953',
 			name: 'Acai Base',
+			category: 'Compound',
+			color: '#b6a29c',
 			yield: {
 				amount: 1,
 				unit: 'pint'
@@ -595,6 +597,8 @@ export const mockData = {
 		'b7b26e24-f164-4bee-8800-18590dda80fe': {
 			id: 'b7b26e24-f164-4bee-8800-18590dda80fe',
 			name: 'Mango Base',
+			category: 'Compound',
+			color: '#ddba87',
 			yield: {
 				amount: 1,
 				unit: 'pint'
@@ -630,6 +634,8 @@ export const mockData = {
 		'51cde09f-7b77-43cd-ae20-4fd425aaf101': {
 			id: '51cde09f-7b77-43cd-ae20-4fd425aaf101',
 			name: 'Coconut Base',
+			category: 'Compound',
+			color: '#cdb2b5',
 			yield: {
 				amount: 1,
 				unit: 'pint'

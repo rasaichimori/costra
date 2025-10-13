@@ -5,7 +5,7 @@
 	import RecipeEditorPlaceholder from './RecipeEditorPlaceholder.svelte';
 
 	let {
-		costs = $bindable(),
+		costs,
 		recipes = $bindable({})
 	}: {
 		costs: Record<string, IngredientDoc>;
