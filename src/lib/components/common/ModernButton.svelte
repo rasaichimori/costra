@@ -60,26 +60,26 @@
 
 	/* Variants */
 	.btn-primary {
-		background: var(--bg-active);
-		border: 1px solid var(--border-tertiary);
+		background: var(--bg-secondary);
+		border: 1px solid var(--text-primary);
 		color: var(--text-primary);
 	}
 
 	.btn-primary:hover:not(:disabled) {
 		background: var(--bg-hover);
-		border-color: var(--border-dashed);
+		border-color: var(--text-primary);
 		transform: translateY(-1px);
 	}
 
 	.btn-secondary {
-		background: var(--bg-tertiary);
-		border: 1px solid var(--border-tertiary);
+		background: var(--bg-secondary);
+		border: 1px solid var(--border-secondary);
 		color: var(--text-primary);
 	}
 
 	.btn-secondary:hover:not(:disabled) {
-		background: var(--bg-quaternary);
-		border-color: var(--border-dashed);
+		background: var(--bg-hover);
+		border-color: var(--border-tertiary);
 		transform: translateY(-1px);
 	}
 
