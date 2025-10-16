@@ -16,6 +16,7 @@
 		ariaLabel?: string;
 		spinner?: boolean;
 		autofocus?: boolean;
+		clearable?: boolean;
 		onchange?: (value: T) => void;
 		oninput?: (value: T) => void;
 		onfocus?: (event: FocusEvent) => void;
@@ -39,6 +40,7 @@
 		ariaLabel,
 		spinner = false,
 		autofocus = false,
+		clearable = false,
 		onchange,
 		oninput,
 		onkeydown,
@@ -47,6 +49,18 @@
 	}: Props<T> = $props();
 
 	let inputRef: HTMLInputElement;
+
+	const hasText = $derived(typeof value === 'string' && (value as string).length > 0);
+
+	const clearValue = () => {
+		if (typeof value === 'string') {
+			value = '' as T;
+			// notify handlers
+			oninput?.('' as T);
+			onchange?.('' as T);
+			inputRef?.focus();
+		}
+	};
 
 	onMount(() => {
 		if (autofocus && inputRef) {
@@ -98,6 +112,10 @@
 		{onblur}
 	/>
 
+	{#if clearable && hasText}
+		<button type="button" class="clear-btn" onclick={clearValue} aria-label="Clear">×</button>
+	{/if}
+
 	{#if error}
 		<span class="error-message">{error}</span>
 	{/if}
@@ -105,6 +123,7 @@
 
 <style>
 	.input-container {
+		position: relative;
 		display: flex;
 		flex-direction: column;
 		gap: 4px;
@@ -203,5 +222,23 @@
 
 	.input.no-spinner[type='number'] {
 		-moz-appearance: textfield;
+	}
+
+	.clear-btn {
+		position: absolute;
+		right: 8px;
+		top: 50%;
+		transform: translateY(-50%);
+		background: transparent;
+		border: none;
+		color: var(--text-secondary);
+		cursor: pointer;
+		font-size: 14px;
+		line-height: 1;
+		padding: 0;
+	}
+
+	.clear-btn:hover {
+		color: var(--text-primary);
 	}
 </style>

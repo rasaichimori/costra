@@ -74,6 +74,7 @@
 		variant="inline"
 		placeholder={!searchTerm ? 'Search ingredients...' : ''}
 		autofocus={true}
+		clearable={true}
 	/>
 
 	{#if filteredIngredients.length > 0}
