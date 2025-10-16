@@ -27,6 +27,11 @@
 	}: Props = $props();
 
 	let searchTerm = $state(searchable ? (value ?? '') : '');
+	$effect(() => {
+		if (searchable) {
+			searchTerm = value ?? '';
+		}
+	});
 	let containerElement: HTMLElement;
 	let dropdownId = $state<string | undefined>(undefined);
 
