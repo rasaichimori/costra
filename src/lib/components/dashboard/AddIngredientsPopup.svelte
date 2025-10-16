@@ -73,6 +73,7 @@
 		size={'small'}
 		variant="inline"
 		placeholder={!searchTerm ? 'Search ingredients...' : ''}
+		autofocus={true}
 	/>
 
 	{#if filteredIngredients.length > 0}

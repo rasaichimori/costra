@@ -1,4 +1,5 @@
 <script lang="ts" generics="T extends string | number">
+	import { onMount } from 'svelte';
 	interface Props<T> {
 		value?: T;
 		placeholder?: string;
@@ -14,6 +15,7 @@
 		required?: boolean;
 		ariaLabel?: string;
 		spinner?: boolean;
+		autofocus?: boolean;
 		onchange?: (value: T) => void;
 		oninput?: (value: T) => void;
 		onfocus?: (event: FocusEvent) => void;
@@ -36,12 +38,21 @@
 		required = false,
 		ariaLabel,
 		spinner = false,
+		autofocus = false,
 		onchange,
 		oninput,
 		onkeydown,
 		onfocus,
 		onblur
 	}: Props<T> = $props();
+
+	let inputRef: HTMLInputElement;
+
+	onMount(() => {
+		if (autofocus && inputRef) {
+			inputRef.focus();
+		}
+	});
 
 	const handleInput = (e: Event) => {
 		const target = e.target as HTMLInputElement;
@@ -66,6 +77,7 @@
 	{/if}
 
 	<input
+		bind:this={inputRef}
 		class="input"
 		class:error={!!error}
 		class:no-spinner={!spinner}
