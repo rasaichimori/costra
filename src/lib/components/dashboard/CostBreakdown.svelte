@@ -15,6 +15,20 @@
 			const total = (chart.data.datasets[0].data as number[]).reduce((a, b) => a + b, 0);
 			const ctx = chart.ctx;
 			const minPercentForName = 5; // below this only show %
+
+			// util to pick black/white based on bg
+			const getContrast = (hex: string) => {
+				if (!hex) return '#000000';
+				const normalized = hex.replace('#', '');
+				const bigint = parseInt(normalized, 16);
+				const r = (bigint >> 16) & 255;
+				const g = (bigint >> 8) & 255;
+				const b = bigint & 255;
+				// relative luminance
+				const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+				return luminance > 0.6 ? '#000000' : '#ffffff';
+			};
+
 			ctx.save();
 			(meta.data as any[]).forEach((arc, idx) => {
 				const ing = recipe.ingredients[idx];
@@ -24,7 +38,9 @@
 				const center = arc.getCenterPoint();
 				ctx.textAlign = 'center';
 				ctx.textBaseline = 'middle';
-				ctx.fillStyle = '#ffffff';
+				const bgColor = (chart.data.datasets[0].backgroundColor as string[])[idx];
+				const textColor = getContrast(bgColor);
+				ctx.fillStyle = textColor;
 				ctx.font = '12px sans-serif';
 				if (percent >= minPercentForName) {
 					const labelsArr = (chart.data.labels ?? []) as unknown as string[];
@@ -32,7 +48,7 @@
 				}
 				// Always show percentage below (smaller font)
 				ctx.font = '10px sans-serif';
-				ctx.fillStyle = '#dddddd';
+				ctx.fillStyle = textColor === '#ffffff' ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.7)';
 				ctx.fillText(`${Math.round(percent)}%`, center.x, center.y + 8);
 			});
 			ctx.restore();
