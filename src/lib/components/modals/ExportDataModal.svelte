@@ -1,11 +1,16 @@
 <script lang="ts">
 	import ModernButton from '../common/ModernButton.svelte';
+	import Toast from '../common/Toast.svelte';
 	let { data = {}, onclose = () => {} } = $props();
 	const jsonString = JSON.stringify(data, null, 2);
+
+	let showToast = $state(false);
 
 	const copyToClipboard = async () => {
 		try {
 			await navigator.clipboard.writeText(jsonString);
+			showToast = true;
+			setTimeout(() => (showToast = false), 2000);
 		} catch (e) {
 			console.error('Failed to copy', e);
 		}
@@ -20,6 +25,10 @@
 		<ModernButton variant="secondary" onclick={copyToClipboard}>Copy</ModernButton>
 		<ModernButton variant="primary" onclick={() => onclose()}>Close</ModernButton>
 	</div>
+
+	{#if showToast}
+		<Toast message="Copied!" />
+	{/if}
 </div>
 
 <style>
