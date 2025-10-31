@@ -430,6 +430,28 @@ export const mockData = {
 				unit: 'g'
 			},
 			color: '#e4b0e1'
+		},
+		'346ca52c-bff3-4622-a1c8-1eeb567bfd89': {
+			id: '346ca52c-bff3-4622-a1c8-1eeb567bfd89',
+			name: 'katifi',
+			category: 'dry',
+			product: {
+				cost: 2500,
+				amount: 500,
+				unit: 'g'
+			},
+			color: '#e27ea1'
+		},
+		'3d611b0d-28a1-4ccc-8ce3-49268ed0f692': {
+			id: '3d611b0d-28a1-4ccc-8ce3-49268ed0f692',
+			name: 'Pistachio Cream',
+			category: 'cream',
+			product: {
+				cost: 1100,
+				amount: 240,
+				unit: 'g'
+			},
+			color: '#76e26e'
 		}
 	} as Record<string, IngredientDoc>,
 	recipes: {
@@ -533,6 +555,44 @@ export const mockData = {
 					id: '5e039c48-bbd5-45fe-afc0-a3652c780630',
 					portion: {
 						amount: 1,
+						unit: 'tbs'
+					},
+					hidden: false
+				}
+			]
+		},
+		'b20691ad-57ab-4840-80b1-6cd064f0d594': {
+			id: 'b20691ad-57ab-4840-80b1-6cd064f0d594',
+			name: 'Dubai Chocolate',
+			ingredients: [
+				{
+					id: '346ca52c-bff3-4622-a1c8-1eeb567bfd89',
+					portion: {
+						amount: 45,
+						unit: 'g'
+					},
+					hidden: false
+				},
+				{
+					id: '3d611b0d-28a1-4ccc-8ce3-49268ed0f692',
+					portion: {
+						amount: 45,
+						unit: 'g'
+					},
+					hidden: false
+				},
+				{
+					id: '13fc1284-a87a-4d7c-8cfd-c13c4cc30030',
+					portion: {
+						amount: 48,
+						unit: 'g'
+					},
+					hidden: false
+				},
+				{
+					id: 'eedf952a-f257-4bb2-a149-2b6abe0bf616',
+					portion: {
+						amount: 3,
 						unit: 'tbs'
 					},
 					hidden: false

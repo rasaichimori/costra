@@ -21,16 +21,23 @@
 
 	const exportData = () => {
 		openOverlay(ExportDataModal, {
-			data: { costs, recipes },
+			data: { costs, recipes, compoundIngredients },
 			onclose: () => closeOverlay()
 		});
 	};
 
 	const importData = () => {
 		openOverlay(ImportDataModal, {
-			onLoad: (d: { costs: Record<string, IngredientDoc>; recipes: Record<string, RecipeDoc> }) => {
+			onLoad: (d: {
+				costs: Record<string, IngredientDoc>;
+				recipes: Record<string, RecipeDoc>;
+				compoundIngredients?: Record<string, CompoundIngredientDoc>;
+			}) => {
 				costs = d.costs;
 				recipes = d.recipes;
+				if (d.compoundIngredients) {
+					compoundIngredients = d.compoundIngredients;
+				}
 			},
 			onclose: () => closeOverlay()
 		});

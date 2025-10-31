@@ -12,9 +12,10 @@
 	import ModernButton from '../common/ModernButton.svelte';
 	import AddIngredientsButton from './AddIngredientsPopup.svelte';
 	import { getOverlayContext } from '$lib/contexts/overlay.svelte';
-	import { onMount, tick } from 'svelte';
+	import { onMount, onDestroy, tick } from 'svelte';
 	import CostBreakdown from './CostBreakdown.svelte';
 	import EditableTextField from '../common/EditableTextField.svelte';
+	import { startDrag } from '$lib/utils/dragControls';
 
 	interface Props {
 		recipe: RecipeDoc;
@@ -36,6 +37,14 @@
 
 	let addBtnElement: HTMLButtonElement | undefined;
 	let addPopupId = $state<string | undefined>(undefined);
+
+	let draggingId = $state<string | null>(null);
+	const ingredientEls: Record<string, HTMLElement> = {};
+
+	const swap = (from: number, to: number) => {
+		const moved = recipe.ingredients.splice(from, 1)[0];
+		recipe.ingredients.splice(to, 0, moved);
+	};
 
 	const openAddPopup = (btn: HTMLButtonElement) => {
 		addBtnElement = btn;
@@ -116,12 +125,46 @@
 			<h3>Ingredient Breakdown:</h3>
 			{#if recipe.ingredients.length > 0}
 				<div class="ingredient-list">
-					{#each recipe.ingredients as ingredient}
+					{#each recipe.ingredients as ingredient, idx (ingredient.id)}
 						<div
+							bind:this={ingredientEls[ingredient.id]}
 							class="ingredient-cost-item"
+							role="listitem"
+							data-id={ingredient.id}
 							class:compound={ingredient.id in compounds}
 							class:hidden={ingredient.hidden}
+							class:dragging={ingredient.id === draggingId}
 						>
+							<span
+								class="drag-handle"
+								role="button"
+								tabindex="-1"
+								aria-label="Drag to reorder"
+								title="Drag to reorder"
+								onpointerdown={(e) => {
+									draggingId = ingredient.id;
+									startDrag(
+										e,
+										(moveEvent) => {
+											moveEvent.preventDefault();
+											const targetEl = document.elementFromPoint(
+												moveEvent.clientX,
+												moveEvent.clientY
+											) as HTMLElement;
+											const targetId = targetEl.dataset.id;
+											if (targetId && targetId !== ingredient.id) {
+												swap(
+													idx,
+													recipe.ingredients.findIndex((i) => i.id === targetId)
+												);
+											}
+										},
+										() => (draggingId = null)
+									);
+								}}
+							>
+								<i class="fa-solid fa-grip-vertical"></i>
+							</span>
 							<div class="ingredient-details">
 								<span class="ingredient-name">{allCosts[ingredient.id].name}</span>
 								<div class="amount-input-group">
@@ -279,6 +322,18 @@
 		font-size: 12px;
 	}
 
+	.drag-handle {
+		cursor: grab;
+		margin-right: 8px;
+		color: var(--text-secondary);
+		display: flex;
+		align-items: center;
+	}
+
+	.drag-handle:active {
+		cursor: grabbing;
+	}
+
 	.ingredient-details {
 		display: flex;
 		align-items: center;
@@ -339,5 +394,9 @@
 
 	.ingredient-cost-item.compound {
 		border-color: var(--accent-warning, #ff9500);
+	}
+
+	.ingredient-cost-item.dragging {
+		opacity: 0.5;
 	}
 </style>
