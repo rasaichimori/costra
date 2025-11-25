@@ -1,11 +1,22 @@
 <script lang="ts">
-	import type { CompoundIngredientDoc, IngredientDoc, RecipeDoc } from '$lib/data/schema';
-	import { calculateRecipeCosts, getTotalRecipeCost } from '$lib/utils/costCalculatorUtils';
+	import type {
+		CompoundIngredientDoc,
+		IngredientDoc,
+		RecipeDoc,
+		UnitConversion
+	} from '$lib/data/schema';
+	import {
+		calculateRecipeCosts,
+		getAllCosts,
+		getTotalRecipeCost
+	} from '$lib/utils/costCalculatorUtils';
 	import RecipeListItem from './RecipeListItem.svelte';
 
 	interface Props {
 		recipes: Record<string, RecipeDoc>;
 		costs: Record<string, IngredientDoc>;
+		compounds: Record<string, CompoundIngredientDoc>;
+		unitConversions: UnitConversion[];
 		selectedRecipeId?: string;
 		setIsEditingName: (isEditing: boolean) => void;
 	}
@@ -14,6 +25,8 @@
 		recipes = $bindable(),
 		selectedRecipeId = $bindable(),
 		costs,
+		compounds,
+		unitConversions,
 		setIsEditingName
 	}: Props = $props();
 
@@ -52,6 +65,14 @@
 		selectedRecipeId = newId;
 		setIsEditingName(true);
 	};
+
+	const getRecipeCost = (recipe: RecipeDoc) => {
+		const allCosts = getAllCosts(costs, compounds, unitConversions);
+
+		// Reactive calculations
+		const recipeCosts = calculateRecipeCosts(recipe, allCosts, unitConversions);
+		return getTotalRecipeCost(recipeCosts);
+	};
 </script>
 
 <div class="recipes-list">
@@ -59,7 +80,7 @@
 		<RecipeListItem
 			label={recipe.name}
 			selected={id === selectedRecipeId}
-			cost={getTotalRecipeCost(calculateRecipeCosts(recipe, costs))}
+			cost={getRecipeCost(recipe)}
 			onclick={() => {
 				selectedRecipeId = id;
 				setIsEditingName(false);

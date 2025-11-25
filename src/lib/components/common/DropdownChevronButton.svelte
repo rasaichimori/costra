@@ -24,8 +24,6 @@
 		disabled = false
 	}: Props<T> = $props();
 
-	// Derived string labels for dropdown
-	const optionLabels = $derived(options.map((o) => o.label));
 	const selectedOption = $derived(options.find((o) => o.value === value));
 
 	let searchTerm = $state(searchable && value !== undefined ? (selectedOption?.label ?? '') : '');

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
-	import type { IngredientDoc, RecipeDoc } from '$lib/data/schema';
+	import type { IngredientDoc, RecipeDoc, UnitConversion } from '$lib/data/schema';
 	import type { Chart, ChartData, ChartOptions, Plugin } from 'chart.js';
 	import { calculateRecipeCosts } from '$lib/utils/costCalculatorUtils';
 
@@ -61,12 +61,13 @@
 	interface Props {
 		recipe: RecipeDoc;
 		costs: Record<string, IngredientDoc>;
+		unitConversions: UnitConversion[];
 	}
 
-	let { recipe = $bindable(), costs }: Props = $props();
+	let { recipe = $bindable(), costs, unitConversions }: Props = $props();
 
 	// Derived recipeCosts and colors
-	const recipeCosts = $derived(calculateRecipeCosts(recipe, costs));
+	const recipeCosts = $derived(calculateRecipeCosts(recipe, costs, unitConversions));
 
 	// Helper to access all ingredient names in recipe order
 	const labelsAll = $derived(recipe.ingredients.map((ing) => costs[ing.id].name));

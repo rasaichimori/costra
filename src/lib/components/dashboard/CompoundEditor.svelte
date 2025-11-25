@@ -4,75 +4,58 @@
 		getTotalRecipeCost,
 		getAvailableIngredients
 	} from '../../utils/costCalculatorUtils';
-	import type { CompoundIngredientDoc, IngredientDoc, RecipeDoc } from '$lib/data/schema';
-	import { convertUnit, units, type Unit } from '$lib/utils/unit';
-	import SelectInput from '../common/SelectInput.svelte';
+	import type { CompoundIngredientDoc, IngredientDoc, UnitConversion } from '$lib/data/schema';
+	import {
+		getConversionFactor,
+		massUnitLabels,
+		volumeUnitLabels,
+		type UnitOption
+	} from '$lib/utils/unit';
 	import TextInput from '../common/TextInput.svelte';
 	import ModernButton from '../common/ModernButton.svelte';
-	import AddIngredientsButton from './AddIngredientsPopup.svelte';
-	import { getOverlayContext } from '$lib/contexts/overlay.svelte';
-	import { onMount, tick } from 'svelte';
 	import CostBreakdown from './CostBreakdown.svelte';
 	import EditableTextField from '../common/EditableTextField.svelte';
-	import DropdownChevronButton from '../common/DropdownChevronButton.svelte';
+	import AddRecipeIngredientsButton from './AddRecipeIngredientsButton.svelte';
+	import UnitSelectButton from './UnitSelectButton.svelte';
+	import UnitChevronDropdownButton from './UnitChevronDropdownButton.svelte';
 
 	interface Props {
 		recipe: CompoundIngredientDoc;
 		costs: Record<string, IngredientDoc>;
 		isEditingName: boolean;
+		unitConversions: UnitConversion[];
+		customUnitLabels: Record<string, string>;
 		onDelete?: () => void;
 	}
 
-	let { recipe = $bindable(), costs, onDelete, isEditingName = $bindable() }: Props = $props();
-
-	const { openOverlay, updateOverlay } = getOverlayContext();
-
-	let addBtnElement: HTMLButtonElement | undefined;
-	let addPopupId = $state<string | undefined>(undefined);
-
-	const openAddPopup = (btn: HTMLButtonElement) => {
-		addBtnElement = btn;
-		addPopupId = openOverlay(
-			AddIngredientsButton,
-			{
-				availableIngredients,
-				recipe,
-				onAddIngredient: async () => {
-					await tick();
-					updateAddPopup();
-				}
-			},
-			{ transparentBackground: true, position: addBtnElement.getBoundingClientRect() }
-		);
-		updateAddPopup();
-	};
-
-	const updateAddPopup = () => {
-		if (!addPopupId || !addBtnElement) return;
-		updateOverlay(
-			addPopupId,
-			{ availableIngredients, recipe },
-			{ position: addBtnElement.getBoundingClientRect() }
-		);
-	};
-
-	onMount(() => {
-		window.addEventListener('scroll', updateAddPopup, true);
-		window.addEventListener('resize', updateAddPopup);
-		return () => {
-			window.removeEventListener('scroll', updateAddPopup, true);
-			window.removeEventListener('resize', updateAddPopup);
-		};
-	});
+	let {
+		recipe = $bindable(),
+		costs,
+		unitConversions,
+		onDelete,
+		customUnitLabels,
+		isEditingName = $bindable()
+	}: Props = $props();
 
 	// Reactive calculations
-	const recipeCosts = $derived(calculateRecipeCosts(recipe, costs));
+	const recipeCosts = $derived(calculateRecipeCosts(recipe, costs, unitConversions));
 	const totalCost = $derived(getTotalRecipeCost(recipeCosts));
 	const availableIngredients = $derived(getAvailableIngredients(recipe, costs));
 	const convertedYield = $derived(
-		convertUnit(recipe.yield.amount, recipe.yield.unit, recipe.viewedUnit)
+		getConversionFactor(recipe.yield.unitId, recipe.viewedUnit, recipe.id, unitConversions) *
+			recipe.yield.amount
 	);
 	const perUnitCost = $derived(totalCost / convertedYield);
+
+	const customUnitOptions = $derived(
+		Object.entries(customUnitLabels).map(([id, label]) => ({ label, id }))
+	);
+
+	const unitLabels = $derived<Record<string, string>>({
+		...volumeUnitLabels,
+		...massUnitLabels,
+		...customUnitLabels
+	});
 </script>
 
 <div class="recipe-cost-calculator">
@@ -89,13 +72,13 @@
 					/>
 				</div>
 				<div class="cost-amount">
-					¥{perUnitCost.toFixed(0)} / {recipe.viewedUnit}
-					<DropdownChevronButton
-						size="small"
-						options={[...units.map((unit) => ({ label: unit, value: unit }))]}
-						value={recipe.viewedUnit}
-						onchange={(value) => {
-							recipe.viewedUnit = value;
+					¥{perUnitCost.toFixed(0)} / {unitLabels[recipe.viewedUnit]}
+					<UnitChevronDropdownButton
+						{customUnitOptions}
+						selectedUnitId={recipe.viewedUnit}
+						selectUnit={(unitOption: UnitOption) => (recipe.viewedUnit = unitOption.id)}
+						addNewUnit={(unitOption: UnitOption) => {
+							customUnitLabels[unitOption.id] = unitOption.label;
 						}}
 					/>
 				</div>
@@ -127,14 +110,12 @@
 							/>
 						</div>
 						<div class="unit-input-group">
-							<SelectInput
-								value={recipe.yield.unit}
-								options={[...units]}
-								placeholder="Select unit..."
-								size="small"
-								searchable={false}
-								onchange={(newUnit) => {
-									recipe.yield.unit = newUnit as Unit;
+							<UnitSelectButton
+								{customUnitOptions}
+								selectedUnitId={recipe.yield.unitId}
+								selectUnit={(unitOption: UnitOption) => (recipe.yield.unitId = unitOption.id)}
+								addNewUnit={(unitOption: UnitOption) => {
+									customUnitLabels[unitOption.id] = unitOption.label;
 								}}
 							/>
 						</div>
@@ -169,7 +150,7 @@
 											ingredient.portion.amount = value;
 										}}
 										oninput={(value) => {
-											recipe.yield.amount = value;
+											ingredient.portion.amount = value;
 										}}
 										size="small"
 										variant="inline"
@@ -179,14 +160,13 @@
 									/>
 								</div>
 								<div class="unit-input-group">
-									<SelectInput
-										value={ingredient.portion.unit}
-										options={[...units]}
-										placeholder="Select unit..."
-										size="small"
-										searchable={false}
-										onchange={(newUnit) => {
-											ingredient.portion.unit = newUnit as Unit;
+									<UnitSelectButton
+										{customUnitOptions}
+										selectedUnitId={ingredient.portion.unitId}
+										selectUnit={(unitOption: UnitOption) =>
+											(ingredient.portion.unitId = unitOption.id)}
+										addNewUnit={(unitOption: UnitOption) => {
+											customUnitLabels[unitOption.id] = unitOption.label;
 										}}
 									/>
 								</div>
@@ -227,15 +207,9 @@
 			{:else}
 				<div class="no-ingredients-message">No ingredients added yet</div>
 			{/if}
-			<ModernButton
-				onclick={(e) => openAddPopup(e.currentTarget as HTMLButtonElement)}
-				style="width: fit-content;"
-			>
-				<i class="fa-solid fa-plus"></i>
-				Add Ingredients
-			</ModernButton>
+			<AddRecipeIngredientsButton {availableIngredients} {recipe} />
 		</div>
-		<CostBreakdown bind:recipe {costs} />
+		<CostBreakdown bind:recipe {costs} {unitConversions} />
 	</div>
 </div>
 

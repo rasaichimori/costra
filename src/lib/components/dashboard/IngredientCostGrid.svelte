@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { units } from '$lib/utils/unit';
-	import type { IngredientDoc, RecipeDoc } from '$lib/data/schema';
+	import { type UnitOption } from '$lib/utils/unit';
+	import type { IngredientDoc, RecipeDoc, UnitConversion } from '$lib/data/schema';
 	import {
 		getRecipesUsingIngredient,
 		removeIngredientFromAllRecipes
@@ -12,13 +12,16 @@
 	import EditableTextField from '../common/EditableTextField.svelte';
 	import { getOverlayContext } from '$lib/contexts/overlay.svelte';
 	import { randomLightColorHex } from '$lib/utils/color';
+	import UnitSelectButton from './UnitSelectButton.svelte';
 
 	let {
 		costs = $bindable(),
-		recipes = $bindable({})
+		recipes = $bindable({}),
+		customUnitLabels = $bindable({})
 	}: {
 		costs: Record<string, IngredientDoc>;
 		recipes?: Record<string, RecipeDoc>;
+		customUnitLabels?: Record<string, string>;
 	} = $props();
 
 	const { openOverlay, closeOverlay } = getOverlayContext();
@@ -44,6 +47,11 @@
 			(value) => value !== undefined && value !== ''
 		)
 	);
+
+	const customUnitOptions = $derived(
+		Object.entries(customUnitLabels).map(([id, label]) => ({ label, id }))
+	);
+
 	const getCategoryCount = $derived((category: string) => {
 		return Object.values(costs).filter((ingredient) => ingredient.category === category).length;
 	});
@@ -60,6 +68,16 @@
 		costs[ingredientId] = {
 			...costs[ingredientId],
 			category: newCategory
+		};
+	};
+
+	const updateUnit = (ingredientId: string, newUnitId: string) => {
+		costs[ingredientId] = {
+			...costs[ingredientId],
+			product: {
+				...costs[ingredientId].product,
+				unit: newUnitId
+			}
 		};
 	};
 
@@ -231,12 +249,13 @@
 								/>
 							</td>
 							<td class="unit-cell">
-								<SelectInput
-									bind:value={costs[ingredientId].product.unit}
-									options={[...units]}
-									placeholder="Select unit..."
-									size="small"
-									searchable={false}
+								<UnitSelectButton
+									{customUnitOptions}
+									selectedUnitId={costs[ingredientId].product.unit}
+									selectUnit={(unitOption: UnitOption) => updateUnit(ingredientId, unitOption.id)}
+									addNewUnit={(unitOption: UnitOption) => {
+										customUnitLabels[unitOption.id] = unitOption.label;
+									}}
 								/>
 							</td>
 							<td class="actions-cell">

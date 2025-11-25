@@ -1,40 +1,50 @@
-<script lang="ts" generics="T">
-	type Option<T> = { label: string; value: T };
-	interface Props<T> {
-		options: Option<T>[];
+<script lang="ts">
+	import { massUnits, volumeUnits } from '$lib/utils/unit';
+
+	type Option = { label: string; value: string };
+	type OptionList = { title: string; options: Option[] };
+	interface Props {
+		options: Option[];
 		// The label acts as the search term. If value is not provided, the new option will not be added to the dropdown.
-		newOption?: Option<T>;
-		selectOption: (option: Option<T>) => void;
+		newOption?: Option;
+		selectOption: (option: Option) => void;
 	}
 
-	let { options, newOption, selectOption }: Props<T> = $props();
+	let { options, newOption, selectOption }: Props = $props();
+
+	const allOptions = $derived<OptionList[]>([
+		{ title: 'Custom', options: options },
+		{ title: 'Volume', options: volumeUnits.map((unit) => ({ label: unit, value: unit })) },
+		{ title: 'Mass', options: massUnits.map((unit) => ({ label: unit, value: unit })) }
+	]);
 
 	// Filter options based on search term
-	const filteredOptions = $derived(
-		newOption?.label
-			? options.filter((option) =>
-					option.label.toLowerCase().includes(newOption.label.toLowerCase())
-				)
-			: options
+	const filteredLists = $derived(
+		allOptions
+			.map((list) => {
+				list.options.filter((option) =>
+					option.label.toLowerCase().includes(newOption?.label?.toLowerCase() ?? '')
+				);
+			})
+			.filter((list) => list.options.length > 0)
 	);
 </script>
 
 <div class="dropdown-options">
 	{#if newOption && newOption.value !== undefined && !options.some((option) => option.label === newOption.label) && newOption.label !== ''}
-		<button
-			class="option add-new-option"
-			onclick={() => selectOption(newOption as Option<T>)}
-			tabindex="-1"
-		>
+		<button class="option add-new-option" onclick={() => selectOption(newOption)} tabindex="-1">
 			<i class="fa-solid fa-plus"></i>
 			"{newOption.label}"
 		</button>
 	{/if}
 
-	{#each filteredOptions as option}
-		<button class="option" onclick={() => selectOption(option)} tabindex="-1">
-			{option.label}
-		</button>
+	{#each filteredLists as list}
+		<div class="li-title">{list.title}</div>
+		{#each list.options as option}
+			<button class="option" onclick={() => selectOption(option)} tabindex="-1">
+				{option.label}
+			</button>
+		{/each}
 	{/each}
 </div>
 
