@@ -31,7 +31,7 @@
 	let {
 		recipe = $bindable(),
 		costs,
-		unitConversions,
+		unitConversions = $bindable(),
 		onDelete,
 		customUnitLabels,
 		isEditingName = $bindable()
@@ -110,7 +110,7 @@
 							/>
 						</div>
 						<div class="unit-input-group">
-							<UnitSelectButton
+							<UnitChevronDropdownButton
 								{customUnitOptions}
 								selectedUnitId={recipe.yield.unitId}
 								selectUnit={(unitOption: UnitOption) => (recipe.yield.unitId = unitOption.id)}
@@ -161,13 +161,10 @@
 								</div>
 								<div class="unit-input-group">
 									<UnitSelectButton
-										{customUnitOptions}
-										selectedUnitId={ingredient.portion.unitId}
-										selectUnit={(unitOption: UnitOption) =>
-											(ingredient.portion.unitId = unitOption.id)}
-										addNewUnit={(unitOption: UnitOption) => {
-											customUnitLabels[unitOption.id] = unitOption.label;
-										}}
+										bind:recipePortion={ingredient.portion}
+										bind:ingredientDoc={costs[ingredient.id]}
+										bind:unitConversions
+										bind:customUnitLabels
 									/>
 								</div>
 							</div>

@@ -7,6 +7,8 @@
 
 	let { entry }: { entry: OverlayEntry<any, any> } = $props();
 
+	$inspect(entry.id);
+
 	const Comp = $derived(entry?.component as OverlayComponent<any, any>);
 
 	const { closeOverlay } = getOverlayContext();

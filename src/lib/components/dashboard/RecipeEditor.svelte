@@ -11,8 +11,7 @@
 		CompoundIngredientDoc,
 		UnitConversion
 	} from '$lib/data/schema';
-	import { volumeUnits, massUnits, type Unit, type UnitOption } from '$lib/utils/unit';
-	import SelectInput from '../common/SelectInput.svelte';
+	import type { UnitOption } from '$lib/utils/unit';
 	import TextInput from '../common/TextInput.svelte';
 	import ModernButton from '../common/ModernButton.svelte';
 	import CostBreakdown from './CostBreakdown.svelte';
@@ -35,7 +34,7 @@
 		recipe = $bindable(),
 		costs,
 		compounds,
-		unitConversions,
+		unitConversions = $bindable(),
 		customUnitLabels,
 		onDelete,
 		isEditingName = $bindable()
@@ -57,10 +56,6 @@
 	const availableIngredients = $derived(getAvailableIngredients(recipe, costs));
 	const availableCompounds = $derived(
 		Object.values(compounds).filter((c) => !recipe.ingredients.some((i) => i.id === c.id))
-	);
-
-	const customUnitOptions = $derived(
-		Object.entries(customUnitLabels).map(([id, label]) => ({ label, id }))
 	);
 </script>
 
@@ -153,13 +148,10 @@
 								</div>
 								<div class="unit-input-group">
 									<UnitSelectButton
-										{customUnitOptions}
-										selectedUnitId={ingredient.portion.unitId}
-										selectUnit={(unitOption: UnitOption) =>
-											(ingredient.portion.unitId = unitOption.id)}
-										addNewUnit={(unitOption: UnitOption) => {
-											customUnitLabels[unitOption.id] = unitOption.label;
-										}}
+										bind:recipePortion={ingredient.portion}
+										bind:ingredientDoc={allCosts[ingredient.id]}
+										bind:unitConversions
+										bind:customUnitLabels
 									/>
 								</div>
 							</div>

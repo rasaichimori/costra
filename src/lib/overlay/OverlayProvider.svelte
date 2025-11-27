@@ -9,6 +9,8 @@
 
 	// instantiate API and provide it
 	createOverlayContext();
+
+	$inspect(overlays.map((e) => e.id));
 </script>
 
 {@render children?.()}

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { type UnitOption } from '$lib/utils/unit';
+	import { volumeUnitLabels, type UnitOption, type VolumeUnit } from '$lib/utils/unit';
 	import type { IngredientDoc, RecipeDoc, UnitConversion } from '$lib/data/schema';
 	import {
 		getRecipesUsingIngredient,
@@ -17,11 +17,13 @@
 	let {
 		costs = $bindable(),
 		recipes = $bindable({}),
-		customUnitLabels = $bindable({})
+		customUnitLabels = $bindable({}),
+		unitConversions = $bindable([])
 	}: {
 		costs: Record<string, IngredientDoc>;
 		recipes?: Record<string, RecipeDoc>;
 		customUnitLabels?: Record<string, string>;
+		unitConversions?: UnitConversion[];
 	} = $props();
 
 	const { openOverlay, closeOverlay } = getOverlayContext();
@@ -68,16 +70,6 @@
 		costs[ingredientId] = {
 			...costs[ingredientId],
 			category: newCategory
-		};
-	};
-
-	const updateUnit = (ingredientId: string, newUnitId: string) => {
-		costs[ingredientId] = {
-			...costs[ingredientId],
-			product: {
-				...costs[ingredientId].product,
-				unit: newUnitId
-			}
 		};
 	};
 
@@ -249,14 +241,15 @@
 								/>
 							</td>
 							<td class="unit-cell">
-								<UnitSelectButton
-									{customUnitOptions}
+								{volumeUnitLabels[costs[ingredientId].product.unit as VolumeUnit]}
+								<!-- <UnitSelectButton
 									selectedUnitId={costs[ingredientId].product.unit}
-									selectUnit={(unitOption: UnitOption) => updateUnit(ingredientId, unitOption.id)}
+									bind:ingredientDoc={costs[ingredientId]}
+									bind:unitConversions
 									addNewUnit={(unitOption: UnitOption) => {
 										customUnitLabels[unitOption.id] = unitOption.label;
 									}}
-								/>
+								/> -->
 							</td>
 							<td class="actions-cell">
 								<ModernButton

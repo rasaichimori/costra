@@ -3,22 +3,32 @@
 	import { onMount } from 'svelte';
 	import UnitSelectPopup from './UnitSelectPopup.svelte';
 	import {
+		hasConversion,
 		massUnitLabels,
 		massUnits,
 		volumeUnitLabels,
 		volumeUnits,
 		type UnitOption,
-		type UnitOptionGroup
+		type UnitOptionGroup,
+		type Portion
 	} from '$lib/utils/unit';
+	import type { IngredientDoc, UnitConversion } from '$lib/data/schema';
+	import AddUnitConversionModal from '../modals/AddUnitConversionModal.svelte';
 
 	interface Props {
-		customUnitOptions: UnitOption[];
-		selectedUnitId: string;
-		selectUnit: (option: UnitOption) => void;
-		addNewUnit: (option: UnitOption) => void;
+		recipePortion: Portion;
+		ingredientDoc: IngredientDoc;
+		unitConversions: UnitConversion[];
+		customUnitLabels: Record<string, string>;
 	}
 
-	let { customUnitOptions, selectedUnitId, selectUnit, addNewUnit }: Props = $props();
+	let {
+		recipePortion = $bindable(),
+		ingredientDoc = $bindable(),
+		unitConversions = $bindable(),
+		customUnitLabels = $bindable()
+	}: Props = $props();
+
 	const { openOverlay, updateOverlay, closeOverlay } = getOverlayContext();
 
 	let unitBtnElement: HTMLButtonElement | undefined;
@@ -31,15 +41,66 @@
 		massUnits.map((unit) => ({ label: massUnitLabels[unit], id: unit }))
 	);
 
+	const customUnitOptions = $derived(
+		Object.entries(customUnitLabels).map(([id, label]) => ({ label, id }))
+	);
+
 	const allUnitGroups = $derived<UnitOptionGroup[]>([
 		{ label: 'Volume', options: volumeOptions },
 		{ label: 'Mass', options: massOptions },
 		{ label: 'Custom', options: customUnitOptions }
 	]);
 
-	const selectAndClose = (unitOption: UnitOption) => {
-		selectUnit(unitOption);
-		closeOverlay(unitPopupId);
+	// Build unitLabels from customUnitOptions + standard labels
+	const unitLabels = $derived<Record<string, string>>({
+		...volumeUnitLabels,
+		...massUnitLabels,
+		...customUnitOptions.reduce(
+			(acc, opt) => {
+				acc[opt.id] = opt.label;
+				return acc;
+			},
+			{} as Record<string, string>
+		)
+	});
+
+	const addNewUnit = (unitOption: UnitOption) => {
+		customUnitLabels[unitOption.id] = unitOption.label;
+	};
+
+	const handleUnitSelection = (unitOption: UnitOption) => {
+		const newUnitId = unitOption.id;
+		const targetUnitId = ingredientDoc.product.unit;
+		const ingredientId = ingredientDoc.id;
+
+		// Check if conversion is needed
+		if (
+			newUnitId !== targetUnitId &&
+			!hasConversion(newUnitId, targetUnitId, ingredientId, unitConversions)
+		) {
+			// Open conversion modal
+			const conversionModalId = openOverlay(AddUnitConversionModal, {
+				ingredientId,
+				ingredientName: ingredientDoc.name,
+				inputUnit: newUnitId,
+				outputUnit: targetUnitId,
+				unitLabels,
+				onSave: (conversion: UnitConversion) => {
+					unitConversions = [...unitConversions, conversion];
+					recipePortion.unitId = newUnitId;
+					closeOverlay(conversionModalId);
+				},
+				onclose: () => {
+					closeOverlay(conversionModalId);
+				}
+			});
+		} else {
+			// No conversion needed, update immediately and close popup
+			recipePortion.unitId = newUnitId;
+			if (unitPopupId) {
+				closeOverlay(unitPopupId);
+			}
+		}
 	};
 
 	const openUnitPopup = (btn: HTMLButtonElement) => {
@@ -48,9 +109,9 @@
 			UnitSelectPopup,
 			{
 				unitGroups: allUnitGroups,
-				selectedUnitId,
+				selectedUnitId: recipePortion.unitId,
 				addNewUnit,
-				selectUnit: selectAndClose
+				selectUnit: handleUnitSelection
 			},
 			{ transparentBackground: true, position: unitBtnElement.getBoundingClientRect() }
 		);
@@ -63,9 +124,9 @@
 			unitPopupId,
 			{
 				allUnitOptions: allUnitGroups,
-				selectedUnitId,
+				selectedUnitId: recipePortion.unitId,
 				addNewUnit,
-				selectUnit: selectAndClose
+				selectUnit: handleUnitSelection
 			},
 			{ position: unitBtnElement.getBoundingClientRect() }
 		);
@@ -79,14 +140,10 @@
 			window.removeEventListener('resize', updateUnitPopup);
 		};
 	});
-
-	const selectedUnit = $derived(
-		allUnitGroups.flatMap((group) => group.options).find((option) => option.id === selectedUnitId)
-	);
 </script>
 
 <button onclick={(e) => openUnitPopup(e.currentTarget as HTMLButtonElement)}>
-	{selectedUnit?.label}</button
+	{unitLabels[recipePortion.unitId]}</button
 >
 
 <style>

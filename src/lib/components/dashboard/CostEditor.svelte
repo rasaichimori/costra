@@ -88,7 +88,7 @@
 				bind:unitConversions
 				bind:customUnitLabels
 			/>
-			<IngredientCostGrid bind:costs bind:recipes bind:customUnitLabels />
+			<IngredientCostGrid bind:costs bind:recipes bind:customUnitLabels bind:unitConversions />
 		</div>
 	</div>
 </div>
