@@ -711,8 +711,8 @@ export const mockData = {
 		}
 	},
 	compoundIngredients: {
-		acaiBase: {
-			id: 'acaiBase',
+		acaiBaseCompound: {
+			id: 'acaiBaseCompound',
 			name: 'Acai Base',
 			category: 'Compound',
 			color: '#b6a29c',
@@ -764,8 +764,8 @@ export const mockData = {
 				}
 			]
 		},
-		mangoBase: {
-			id: 'mangoBase',
+		mangoBaseCompound: {
+			id: 'mangoBaseCompound',
 			name: 'Mango Base',
 			category: 'Compound',
 			color: '#ddba87',
@@ -801,8 +801,8 @@ export const mockData = {
 				}
 			]
 		},
-		coconutBase: {
-			id: 'coconutBase',
+		coconutBaseCompound: {
+			id: 'coconutBaseCompound',
 			name: 'Coconut Base',
 			category: 'Compound',
 			color: '#cdb2b5',

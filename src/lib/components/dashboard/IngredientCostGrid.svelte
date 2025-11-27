@@ -1,6 +1,10 @@
 <script lang="ts">
-	import { volumeUnitLabels, type UnitOption, type VolumeUnit } from '$lib/utils/unit';
-	import type { IngredientDoc, RecipeDoc, UnitConversion } from '$lib/data/schema';
+	import type {
+		CompoundIngredientDoc,
+		IngredientDoc,
+		RecipeDoc,
+		UnitConversion
+	} from '$lib/data/schema';
 	import {
 		getRecipesUsingIngredient,
 		removeIngredientFromAllRecipes
@@ -12,19 +16,27 @@
 	import EditableTextField from '../common/EditableTextField.svelte';
 	import { getOverlayContext } from '$lib/contexts/overlay.svelte';
 	import { randomLightColorHex } from '$lib/utils/color';
-	import UnitSelectButton from './UnitSelectButton.svelte';
+	import ProductUnitSelectButton from './ProductUnitSelectButton.svelte';
 
 	let {
 		costs = $bindable(),
 		recipes = $bindable({}),
+		compoundIngredients = $bindable({}),
 		customUnitLabels = $bindable({}),
 		unitConversions = $bindable([])
 	}: {
 		costs: Record<string, IngredientDoc>;
 		recipes?: Record<string, RecipeDoc>;
+		compoundIngredients?: Record<string, CompoundIngredientDoc>;
 		customUnitLabels?: Record<string, string>;
 		unitConversions?: UnitConversion[];
 	} = $props();
+
+	// Merge recipes and compound ingredients for checking portion units
+	const allRecipes = $derived<Record<string, RecipeDoc>>({
+		...recipes,
+		...compoundIngredients
+	});
 
 	const { openOverlay, closeOverlay } = getOverlayContext();
 
@@ -48,10 +60,6 @@
 		[...new Set(Object.values(costs).map((d) => d.category))].filter(
 			(value) => value !== undefined && value !== ''
 		)
-	);
-
-	const customUnitOptions = $derived(
-		Object.entries(customUnitLabels).map(([id, label]) => ({ label, id }))
 	);
 
 	const getCategoryCount = $derived((category: string) => {
@@ -241,15 +249,12 @@
 								/>
 							</td>
 							<td class="unit-cell">
-								{volumeUnitLabels[costs[ingredientId].product.unit as VolumeUnit]}
-								<!-- <UnitSelectButton
-									selectedUnitId={costs[ingredientId].product.unit}
+								<ProductUnitSelectButton
 									bind:ingredientDoc={costs[ingredientId]}
+									recipes={allRecipes}
 									bind:unitConversions
-									addNewUnit={(unitOption: UnitOption) => {
-										customUnitLabels[unitOption.id] = unitOption.label;
-									}}
-								/> -->
+									bind:customUnitLabels
+								/>
 							</td>
 							<td class="actions-cell">
 								<ModernButton

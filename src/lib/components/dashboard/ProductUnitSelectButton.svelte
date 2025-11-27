@@ -2,23 +2,30 @@
 	import { getOverlayContext } from '$lib/contexts/overlay.svelte';
 	import { onMount } from 'svelte';
 	import UnitSelectPopup from './UnitSelectPopup.svelte';
-	import { hasConversion, type UnitOption, type Portion } from '$lib/utils/unit';
-	import type { IngredientDoc, UnitConversion } from '$lib/data/schema';
-	import AddUnitConversionModal from '../modals/AddUnitConversionModal.svelte';
-	import { buildUnitGroups, buildUnitLabels } from '$lib/utils/unitSelectUtils';
+	import type { UnitOption } from '$lib/utils/unit';
+	import type { IngredientDoc, RecipeDoc, UnitConversion } from '$lib/data/schema';
+	import {
+		buildUnitGroups,
+		buildUnitLabels,
+		findMissingConversions,
+		getPortionUnitsForIngredient
+	} from '$lib/utils/unitSelectUtils';
+	import AddBatchUnitConversionModal from '../modals/AddBatchUnitConversionModal.svelte';
 
 	interface Props {
-		recipePortion: Portion;
 		ingredientDoc: IngredientDoc;
+		recipes: Record<string, RecipeDoc>;
 		unitConversions: UnitConversion[];
 		customUnitLabels: Record<string, string>;
+		onUnitChange?: (newUnit: string) => void;
 	}
 
 	let {
-		recipePortion = $bindable(),
 		ingredientDoc = $bindable(),
+		recipes,
 		unitConversions = $bindable(),
-		customUnitLabels = $bindable()
+		customUnitLabels = $bindable(),
+		onUnitChange
 	}: Props = $props();
 
 	const { openOverlay, updateOverlay, closeOverlay } = getOverlayContext();
@@ -35,33 +42,43 @@
 
 	const handleUnitSelection = (unitOption: UnitOption) => {
 		const newUnitId = unitOption.id;
-		const targetUnitId = ingredientDoc.product.unit;
 		const ingredientId = ingredientDoc.id;
 
-		// Check if conversion is needed
-		if (
-			newUnitId !== targetUnitId &&
-			!hasConversion(newUnitId, targetUnitId, ingredientId, unitConversions)
-		) {
-			// Open conversion modal
-			const conversionModalId = openOverlay(AddUnitConversionModal, {
+		// Get all portion units used for this ingredient across recipes
+		const portionUnits = getPortionUnitsForIngredient(ingredientId, recipes);
+
+		// Find missing conversions from portion units to the new product unit
+		const missingConversions = findMissingConversions(
+			portionUnits,
+			newUnitId,
+			ingredientId,
+			unitConversions
+		);
+
+		if (missingConversions.length > 0) {
+			// Open batch conversion modal
+			const conversionModalId = openOverlay(AddBatchUnitConversionModal, {
 				ingredientId,
 				ingredientName: ingredientDoc.name,
-				inputUnit: newUnitId,
-				outputUnit: targetUnitId,
+				missingConversions,
 				unitLabels,
-				onSave: (conversion: UnitConversion) => {
-					unitConversions = [...unitConversions, conversion];
-					recipePortion.unitId = newUnitId;
+				onSave: (conversions: UnitConversion[]) => {
+					unitConversions = [...unitConversions, ...conversions];
+					ingredientDoc.product.unit = newUnitId;
+					onUnitChange?.(newUnitId);
 					closeOverlay(conversionModalId);
+					if (unitPopupId) {
+						closeOverlay(unitPopupId);
+					}
 				},
 				onclose: () => {
 					closeOverlay(conversionModalId);
 				}
 			});
 		} else {
-			// No conversion needed, update immediately and close popup
-			recipePortion.unitId = newUnitId;
+			// No conversion needed, update immediately
+			ingredientDoc.product.unit = newUnitId;
+			onUnitChange?.(newUnitId);
 			if (unitPopupId) {
 				closeOverlay(unitPopupId);
 			}
@@ -74,7 +91,7 @@
 			UnitSelectPopup,
 			{
 				unitGroups: allUnitGroups,
-				selectedUnitId: recipePortion.unitId,
+				selectedUnitId: ingredientDoc.product.unit as string,
 				addNewUnit,
 				selectUnit: handleUnitSelection
 			},
@@ -88,8 +105,8 @@
 		updateOverlay(
 			unitPopupId,
 			{
-				allUnitOptions: allUnitGroups,
-				selectedUnitId: recipePortion.unitId,
+				unitGroups: allUnitGroups,
+				selectedUnitId: ingredientDoc.product.unit as string,
 				addNewUnit,
 				selectUnit: handleUnitSelection
 			},
@@ -108,8 +125,8 @@
 </script>
 
 <button onclick={(e) => openUnitPopup(e.currentTarget as HTMLButtonElement)}>
-	{unitLabels[recipePortion.unitId]}</button
->
+	{unitLabels[ingredientDoc.product.unit as string] || ingredientDoc.product.unit}
+</button>
 
 <style>
 	button {
@@ -129,3 +146,4 @@
 		text-overflow: ellipsis;
 	}
 </style>
+
