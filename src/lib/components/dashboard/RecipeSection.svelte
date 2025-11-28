@@ -53,8 +53,8 @@
 			{costs}
 			{compounds}
 			onDelete={() => deleteRecipe(selectedRecipeId!)}
-			{unitConversions}
-			{customUnitLabels}
+			bind:unitConversions
+			bind:customUnitLabels
 			bind:isEditingName
 		/>
 	{:else}

@@ -12,13 +12,17 @@
 		ingredientDoc: IngredientDoc;
 		unitConversions: UnitConversion[];
 		customUnitLabels: Record<string, string>;
+		updateRecipePortionUnit: (unitId: string) => void;
+		updateIngredientProductUnit: (unitId: string) => void;
 	}
 
 	let {
-		recipePortion = $bindable(),
-		ingredientDoc = $bindable(),
+		recipePortion,
+		ingredientDoc,
 		unitConversions = $bindable(),
-		customUnitLabels = $bindable()
+		customUnitLabels = $bindable(),
+		updateRecipePortionUnit,
+		updateIngredientProductUnit
 	}: Props = $props();
 
 	const { openOverlay, updateOverlay, closeOverlay } = getOverlayContext();
@@ -52,8 +56,10 @@
 				unitLabels,
 				onSave: (conversion: UnitConversion) => {
 					unitConversions = [...unitConversions, conversion];
-					recipePortion.unitId = newUnitId;
+					updateRecipePortionUnit(newUnitId);
+					updateIngredientProductUnit(newUnitId);
 					closeOverlay(conversionModalId);
+					closeOverlay(unitPopupId);
 				},
 				onclose: () => {
 					closeOverlay(conversionModalId);
@@ -61,7 +67,7 @@
 			});
 		} else {
 			// No conversion needed, update immediately and close popup
-			recipePortion.unitId = newUnitId;
+			updateRecipePortionUnit(newUnitId);
 			if (unitPopupId) {
 				closeOverlay(unitPopupId);
 			}

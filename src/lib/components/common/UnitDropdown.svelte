@@ -22,9 +22,12 @@
 	const filteredLists = $derived(
 		allOptions
 			.map((list) => {
-				list.options.filter((option) =>
-					option.label.toLowerCase().includes(newOption?.label?.toLowerCase() ?? '')
-				);
+				return {
+					title: list.title,
+					options: list.options.filter((option) =>
+						option.label.toLowerCase().includes(newOption?.label?.toLowerCase() ?? '')
+					)
+				};
 			})
 			.filter((list) => list.options.length > 0)
 	);

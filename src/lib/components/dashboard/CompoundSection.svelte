@@ -16,7 +16,7 @@
 		unitConversions?: UnitConversion[];
 	} = $props();
 
-	let selectedRecipeId = $state<string | undefined>(Object.values(recipes)[0].id);
+	let selectedRecipeId = $state<string | undefined>(Object.values(recipes)?.[0]?.id);
 	let isEditingName = $state(false);
 
 	const deleteRecipe = (id: string) => {
@@ -43,8 +43,8 @@
 		<CompoundEditor
 			bind:recipe={recipes[selectedRecipeId]}
 			{costs}
-			{unitConversions}
-			{customUnitLabels}
+			bind:unitConversions
+			bind:customUnitLabels
 			onDelete={() => deleteRecipe(selectedRecipeId!)}
 			bind:isEditingName
 		/>

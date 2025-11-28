@@ -69,6 +69,22 @@ export const getPortionUnitsForIngredient = (
 };
 
 /**
+ * Find all recipes that use an ingredient with a specific unit
+ */
+export const getRecipesUsingIngredientWithUnit = (
+	ingredientId: string,
+	unitId: string,
+	recipes: Record<string, RecipeDoc>
+): RecipeDoc[] => {
+	return Object.values(recipes).filter((recipe) =>
+		recipe.ingredients.some(
+			(ingredient) =>
+				ingredient.id === ingredientId && !ingredient.hidden && ingredient.portion.unitId === unitId
+		)
+	);
+};
+
+/**
  * Find all missing conversions between portion units and a target unit
  * Returns conversions needed FROM each portion unit TO the target unit
  */

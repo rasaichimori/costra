@@ -41,7 +41,6 @@ export const createOverlayContext = () => {
 		options?: OverlayOptions
 	): string => {
 		const id = crypto.randomUUID();
-		console.log('openOverlay', id);
 		overlays.push({
 			id,
 			component,

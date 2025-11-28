@@ -16,8 +16,9 @@
 	import CostBreakdown from './CostBreakdown.svelte';
 	import EditableTextField from '../common/EditableTextField.svelte';
 	import AddRecipeIngredientsButton from './AddRecipeIngredientsButton.svelte';
-	import UnitSelectButton from './UnitSelectButton.svelte';
+	import UnitSelectButton from './RecipeUnitSelectButton.svelte';
 	import UnitChevronDropdownButton from './UnitChevronDropdownButton.svelte';
+	import RecipeUnitSelectButton from './RecipeUnitSelectButton.svelte';
 
 	interface Props {
 		recipe: CompoundIngredientDoc;
@@ -33,7 +34,7 @@
 		costs,
 		unitConversions = $bindable(),
 		onDelete,
-		customUnitLabels,
+		customUnitLabels = $bindable(),
 		isEditingName = $bindable()
 	}: Props = $props();
 
@@ -160,11 +161,17 @@
 									/>
 								</div>
 								<div class="unit-input-group">
-									<UnitSelectButton
-										bind:recipePortion={ingredient.portion}
-										bind:ingredientDoc={costs[ingredient.id]}
+									<RecipeUnitSelectButton
+										recipePortion={ingredient.portion}
+										ingredientDoc={costs[ingredient.id]}
 										bind:unitConversions
 										bind:customUnitLabels
+										updateRecipePortionUnit={(unitId: string) => {
+											ingredient.portion.unitId = unitId;
+										}}
+										updateIngredientProductUnit={(unitId: string) => {
+											costs[ingredient.id].product.unit = unitId;
+										}}
 									/>
 								</div>
 							</div>

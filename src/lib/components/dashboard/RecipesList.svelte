@@ -80,7 +80,7 @@
 		<RecipeListItem
 			label={recipe.name}
 			selected={id === selectedRecipeId}
-			cost={0}
+			cost={getRecipeCost(recipe)}
 			onclick={() => {
 				selectedRecipeId = id;
 				setIsEditingName(false);

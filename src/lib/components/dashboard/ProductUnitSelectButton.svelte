@@ -43,13 +43,21 @@
 	const handleUnitSelection = (unitOption: UnitOption) => {
 		const newUnitId = unitOption.id;
 		const ingredientId = ingredientDoc.id;
+		const oldUnitId = ingredientDoc.product.unit as string;
 
 		// Get all portion units used for this ingredient across recipes
 		const portionUnits = getPortionUnitsForIngredient(ingredientId, recipes);
 
+		// Always include the old product unit in the check, as it might be used as a portion unit
+		// in compounds or other recipes, and we need conversions from old unit to new unit
+		const allPortionUnits = [...portionUnits];
+		if (oldUnitId !== newUnitId && !allPortionUnits.includes(oldUnitId)) {
+			allPortionUnits.push(oldUnitId);
+		}
+
 		// Find missing conversions from portion units to the new product unit
 		const missingConversions = findMissingConversions(
-			portionUnits,
+			allPortionUnits,
 			newUnitId,
 			ingredientId,
 			unitConversions
@@ -62,6 +70,7 @@
 				ingredientName: ingredientDoc.name,
 				missingConversions,
 				unitLabels,
+				recipes,
 				onSave: (conversions: UnitConversion[]) => {
 					unitConversions = [...unitConversions, ...conversions];
 					ingredientDoc.product.unit = newUnitId;
@@ -146,4 +155,3 @@
 		text-overflow: ellipsis;
 	}
 </style>
-

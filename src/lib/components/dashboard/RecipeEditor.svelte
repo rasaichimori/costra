@@ -18,7 +18,8 @@
 	import EditableTextField from '../common/EditableTextField.svelte';
 	import { startDrag } from '$lib/utils/dragControls';
 	import AddRecipeIngredientsButton from './AddRecipeIngredientsButton.svelte';
-	import UnitSelectButton from './UnitSelectButton.svelte';
+	import UnitSelectButton from './RecipeUnitSelectButton.svelte';
+	import RecipeUnitSelectButton from './RecipeUnitSelectButton.svelte';
 
 	interface Props {
 		recipe: RecipeDoc;
@@ -35,13 +36,13 @@
 		costs,
 		compounds,
 		unitConversions = $bindable(),
-		customUnitLabels,
+		customUnitLabels = $bindable(),
 		onDelete,
 		isEditingName = $bindable()
 	}: Props = $props();
 
 	let draggingId = $state<string | null>(null);
-	const ingredientEls: Record<string, HTMLElement> = {};
+	const ingredientEls: Record<string, HTMLElement> = $state({});
 
 	const swap = (from: number, to: number) => {
 		const moved = recipe.ingredients.splice(from, 1)[0];
@@ -147,11 +148,17 @@
 									/>
 								</div>
 								<div class="unit-input-group">
-									<UnitSelectButton
-										bind:recipePortion={ingredient.portion}
-										bind:ingredientDoc={allCosts[ingredient.id]}
+									<RecipeUnitSelectButton
+										recipePortion={ingredient.portion}
+										ingredientDoc={allCosts[ingredient.id]}
 										bind:unitConversions
 										bind:customUnitLabels
+										updateRecipePortionUnit={(unitId: string) => {
+											ingredient.portion.unitId = unitId;
+										}}
+										updateIngredientProductUnit={(unitId: string) => {
+											allCosts[ingredient.id].product.unit = unitId;
+										}}
 									/>
 								</div>
 							</div>
