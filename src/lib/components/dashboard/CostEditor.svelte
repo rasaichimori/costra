@@ -1,5 +1,10 @@
 <script lang="ts">
-	import type { CompoundIngredientDoc, IngredientDoc, RecipeDoc } from '$lib/data/schema';
+	import type {
+		CompoundIngredientDoc,
+		IngredientDoc,
+		RecipeDoc,
+		UnitConversion
+	} from '$lib/data/schema';
 	import IngredientCostGrid from './IngredientCostGrid.svelte';
 	import { getOverlayContext } from '$lib/contexts/overlay.svelte';
 	import ExportDataModal from '../modals/ExportDataModal.svelte';
@@ -16,12 +21,14 @@
 		mockData.compoundIngredients
 	);
 	let recipes = $state<Record<string, RecipeDoc>>(mockData.recipes);
+	let customUnitLabels = $state<Record<string, string>>(mockData.unitLabels);
+	let unitConversions = $state<UnitConversion[]>(mockData.unitConversions);
 
 	const { openOverlay, closeOverlay } = getOverlayContext();
 
 	const exportData = () => {
 		openOverlay(ExportDataModal, {
-			data: { costs, recipes, compoundIngredients },
+			data: { costs, recipes, compoundIngredients, unitConversions, customUnitLabels },
 			onclose: () => closeOverlay()
 		});
 	};
@@ -32,11 +39,19 @@
 				costs: Record<string, IngredientDoc>;
 				recipes: Record<string, RecipeDoc>;
 				compoundIngredients?: Record<string, CompoundIngredientDoc>;
+				unitConversions?: UnitConversion[];
+				customUnitLabels?: Record<string, string>;
 			}) => {
 				costs = d.costs;
 				recipes = d.recipes;
 				if (d.compoundIngredients) {
 					compoundIngredients = d.compoundIngredients;
+				}
+				if (d.unitConversions) {
+					unitConversions = d.unitConversions;
+				}
+				if (d.customUnitLabels) {
+					customUnitLabels = d.customUnitLabels;
 				}
 			},
 			onclose: () => closeOverlay()
@@ -48,6 +63,9 @@
 			onConfirm: () => {
 				costs = {};
 				recipes = {};
+				compoundIngredients = {};
+				unitConversions = [];
+				customUnitLabels = {};
 			},
 			onclose: () => closeOverlay()
 		});
@@ -66,11 +84,22 @@
 	</div>
 	<div class="content">
 		<h2>Recipes</h2>
-		<RecipeSection bind:recipes {costs} compounds={compoundIngredients} />
+		<RecipeSection
+			bind:recipes
+			{costs}
+			compounds={compoundIngredients}
+			bind:unitConversions
+			bind:customUnitLabels
+		/>
 		<h2>Ingredients</h2>
 		<div class="ingredients">
-			<CompoundSection bind:recipes={compoundIngredients} {costs} />
-			<IngredientCostGrid bind:costs bind:recipes />
+			<CompoundSection
+				bind:recipes={compoundIngredients}
+				{costs}
+				bind:unitConversions
+				bind:customUnitLabels
+			/>
+			<IngredientCostGrid bind:costs bind:recipes bind:compoundIngredients bind:customUnitLabels bind:unitConversions />
 		</div>
 	</div>
 </div>

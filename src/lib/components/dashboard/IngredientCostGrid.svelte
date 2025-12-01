@@ -1,6 +1,10 @@
 <script lang="ts">
-	import { units } from '$lib/utils/unit';
-	import type { IngredientDoc, RecipeDoc } from '$lib/data/schema';
+	import type {
+		CompoundIngredientDoc,
+		IngredientDoc,
+		RecipeDoc,
+		UnitConversion
+	} from '$lib/data/schema';
 	import {
 		getRecipesUsingIngredient,
 		removeIngredientFromAllRecipes
@@ -12,14 +16,27 @@
 	import EditableTextField from '../common/EditableTextField.svelte';
 	import { getOverlayContext } from '$lib/contexts/overlay.svelte';
 	import { randomLightColorHex } from '$lib/utils/color';
+	import ProductUnitSelectButton from './ProductUnitSelectButton.svelte';
 
 	let {
 		costs = $bindable(),
-		recipes = $bindable({})
+		recipes = $bindable({}),
+		compoundIngredients = $bindable({}),
+		customUnitLabels = $bindable({}),
+		unitConversions = $bindable([])
 	}: {
 		costs: Record<string, IngredientDoc>;
 		recipes?: Record<string, RecipeDoc>;
+		compoundIngredients?: Record<string, CompoundIngredientDoc>;
+		customUnitLabels?: Record<string, string>;
+		unitConversions?: UnitConversion[];
 	} = $props();
+
+	// Merge recipes and compound ingredients for checking portion units
+	const allRecipes = $derived<Record<string, RecipeDoc>>({
+		...recipes,
+		...compoundIngredients
+	});
 
 	const { openOverlay, closeOverlay } = getOverlayContext();
 
@@ -44,6 +61,7 @@
 			(value) => value !== undefined && value !== ''
 		)
 	);
+
 	const getCategoryCount = $derived((category: string) => {
 		return Object.values(costs).filter((ingredient) => ingredient.category === category).length;
 	});
@@ -231,12 +249,11 @@
 								/>
 							</td>
 							<td class="unit-cell">
-								<SelectInput
-									bind:value={costs[ingredientId].product.unit}
-									options={[...units]}
-									placeholder="Select unit..."
-									size="small"
-									searchable={false}
+								<ProductUnitSelectButton
+									bind:ingredientDoc={costs[ingredientId]}
+									recipes={allRecipes}
+									bind:unitConversions
+									bind:customUnitLabels
 								/>
 							</td>
 							<td class="actions-cell">

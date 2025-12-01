@@ -1,5 +1,10 @@
-import type { CompoundIngredientDoc, IngredientDoc, RecipeDoc } from '$lib/data/schema';
-import { convertUnit, type Unit } from '$lib/utils/unit';
+import type {
+	CompoundIngredientDoc,
+	IngredientDoc,
+	RecipeDoc,
+	UnitConversion
+} from '$lib/data/schema';
+import { getConversionFactor, type Unit } from '$lib/utils/unit';
 
 export type IngredientProduct = {
 	cost: number;
@@ -9,14 +14,16 @@ export type IngredientProduct = {
 
 export const getAllCosts = (
 	costs: Record<string, IngredientDoc>,
-	compounds: Record<string, CompoundIngredientDoc>
+	compounds: Record<string, CompoundIngredientDoc>,
+	conversions: UnitConversion[]
 ): Record<string, IngredientDoc> => {
-	return { ...costs, ...compoundsToIngredients(compounds, costs) };
+	return { ...costs, ...compoundsToIngredients(compounds, costs, conversions) };
 };
 
 export const compoundsToIngredients = (
 	compounds: Record<string, CompoundIngredientDoc>,
-	costs: Record<string, IngredientDoc>
+	costs: Record<string, IngredientDoc>,
+	conversions: UnitConversion[]
 ): Record<string, IngredientDoc> => {
 	return Object.values(compounds).reduce(
 		(acc, compound) => ({
@@ -24,9 +31,9 @@ export const compoundsToIngredients = (
 			[compound.id]: {
 				...compound,
 				product: {
-					cost: getTotalRecipeCost(calculateRecipeCosts(compound, costs)),
+					cost: getTotalRecipeCost(calculateRecipeCosts(compound, costs, conversions)),
 					amount: compound.yield.amount,
-					unit: compound.yield.unit
+					unit: compound.yield.unitId
 				}
 			}
 		}),
@@ -37,20 +44,30 @@ export const compoundsToIngredients = (
 /**
  * Calculate costs for a specific recipe.
  */
-export const calculateRecipeCosts = (recipe: RecipeDoc, costs: Record<string, IngredientDoc>) => {
+export const calculateRecipeCosts = (
+	recipe: RecipeDoc,
+	costs: Record<string, IngredientDoc>,
+	conversions: UnitConversion[]
+) => {
 	const recipeCosts: Record<string, number> = {};
 
 	recipe.ingredients.forEach((ingredient) => {
 		if (ingredient.hidden) return; // Skip hidden ingredients
 		const ingredientDoc = costs[ingredient.id];
-		if (!ingredientDoc) return;
+		if (!ingredientDoc) {
+			console.trace();
+			throw Error(`Ingredient ${ingredient.id} should exist but is not found`);
+		}
 
 		const ingredientPrice = ingredientDoc.product.cost;
-		const productUnitPortion = convertUnit(
-			ingredient.portion.amount,
-			ingredient.portion.unit,
-			ingredientDoc.product.unit
+		const conversionFactor = getConversionFactor(
+			ingredient.portion.unitId,
+			ingredientDoc.product.unit,
+			ingredient.id,
+			conversions
 		);
+
+		const productUnitPortion = conversionFactor * ingredient.portion.amount;
 		const ratioUsed = productUnitPortion / ingredientDoc.product.amount;
 		recipeCosts[ingredient.id] = ingredientPrice * ratioUsed;
 	});

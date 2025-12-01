@@ -56,8 +56,8 @@ function sampleData() {
 		id: 'r1',
 		name: 'Cake',
 		ingredients: [
-			{ id: 'flour', portion: { amount: 100, unit: 'g' }, hidden: false },
-			{ id: 'sugar', portion: { amount: 50, unit: 'g' }, hidden: false }
+			{ id: 'flour', portion: { amount: 100, unitId: 'g' }, hidden: false },
+			{ id: 'sugar', portion: { amount: 50, unitId: 'g' }, hidden: false }
 		]
 	};
 	return { recipe, costs };

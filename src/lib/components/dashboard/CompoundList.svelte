@@ -1,13 +1,14 @@
 <script lang="ts">
-	import type { CompoundIngredientDoc, IngredientDoc } from '$lib/data/schema';
+	import type { CompoundIngredientDoc, IngredientDoc, UnitConversion } from '$lib/data/schema';
 	import { randomLightColorHex } from '$lib/utils/color';
 	import { calculateRecipeCosts, getTotalRecipeCost } from '$lib/utils/costCalculatorUtils';
-	import { convertUnit } from '$lib/utils/unit';
+	import { getConversionFactor } from '$lib/utils/unit';
 	import RecipeListItem from './RecipeListItem.svelte';
 
 	interface Props {
 		recipes: Record<string, CompoundIngredientDoc>;
 		costs: Record<string, IngredientDoc>;
+		unitConversions?: UnitConversion[];
 		selectedRecipeId?: string;
 		setIsEditingName: (isEditing: boolean) => void;
 	}
@@ -16,6 +17,7 @@
 		recipes = $bindable(),
 		selectedRecipeId = $bindable(),
 		costs,
+		unitConversions = [],
 		setIsEditingName
 	}: Props = $props();
 
@@ -49,7 +51,7 @@
 			ingredients: [],
 			yield: {
 				amount: 1,
-				unit: 'pint'
+				unitId: 'pint'
 			},
 			viewedUnit: 'pint',
 			category: 'Compound',
@@ -62,6 +64,15 @@
 		selectedRecipeId = newId;
 		setIsEditingName(true);
 	};
+
+	const getPerUnitCost = (recipe: CompoundIngredientDoc) => {
+		const recipeCosts = calculateRecipeCosts(recipe, costs, unitConversions);
+		const totalCost = getTotalRecipeCost(recipeCosts);
+		const convertedYield =
+			getConversionFactor(recipe.yield.unitId, recipe.viewedUnit, recipe.id, unitConversions) *
+			recipe.yield.amount;
+		return totalCost / convertedYield;
+	};
 </script>
 
 <div class="recipes-list">
@@ -69,8 +80,7 @@
 		<RecipeListItem
 			label={recipe.name}
 			selected={id === selectedRecipeId}
-			cost={getTotalRecipeCost(calculateRecipeCosts(recipe, costs)) /
-				convertUnit(recipe.yield.amount, recipe.yield.unit, recipe.viewedUnit)}
+			cost={getPerUnitCost(recipe)}
 			unit={recipe.viewedUnit}
 			onclick={() => {
 				selectedRecipeId = id;

@@ -1,7 +1,22 @@
 <script lang="ts">
+	import type {
+		CompoundIngredientDoc,
+		IngredientDoc,
+		RecipeDoc,
+		UnitConversion
+	} from '$lib/data/schema';
 	import ModernButton from '../common/ModernButton.svelte';
 	import Toast from '../common/Toast.svelte';
-	let { data = {}, onclose = () => {} } = $props();
+	let {
+		data = {} as {
+			costs: Record<string, IngredientDoc>;
+			recipes: Record<string, RecipeDoc>;
+			compoundIngredients?: Record<string, CompoundIngredientDoc>;
+			unitConversions?: UnitConversion[];
+			customUnitLabels?: Record<string, string>;
+		},
+		onclose = () => {}
+	} = $props();
 	const jsonString = JSON.stringify(data, null, 2);
 
 	let showToast = $state(false);

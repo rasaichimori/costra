@@ -1,8 +1,17 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
-	import type { IngredientDoc, RecipeDoc } from '$lib/data/schema';
+	import type {
+		CompoundIngredientDoc,
+		IngredientDoc,
+		RecipeDoc,
+		UnitConversion
+	} from '$lib/data/schema';
 	import type { Chart, ChartData, ChartOptions, Plugin } from 'chart.js';
-	import { calculateRecipeCosts } from '$lib/utils/costCalculatorUtils';
+	import {
+		calculateRecipeCosts,
+		compoundsToIngredients,
+		getAllCosts
+	} from '$lib/utils/costCalculatorUtils';
 
 	import { Chart as ChartJS } from 'chart.js/auto';
 
@@ -61,22 +70,27 @@
 	interface Props {
 		recipe: RecipeDoc;
 		costs: Record<string, IngredientDoc>;
+		compounds?: Record<string, CompoundIngredientDoc>;
+		unitConversions: UnitConversion[];
 	}
 
-	let { recipe = $bindable(), costs }: Props = $props();
+	let { recipe = $bindable(), costs, compounds, unitConversions }: Props = $props();
 
-	// Derived recipeCosts and colors
-	const recipeCosts = $derived(calculateRecipeCosts(recipe, costs));
+	// Merge costs and compounds into a single record
+	const allCosts = $derived(getAllCosts(costs, compounds ?? {}, unitConversions));
+
+	// Derived recipeCosts using merged costs (includes compounds)
+	const recipeCosts = $derived(calculateRecipeCosts(recipe, allCosts, unitConversions));
 
 	// Helper to access all ingredient names in recipe order
-	const labelsAll = $derived(recipe.ingredients.map((ing) => costs[ing.id].name));
+	const labelsAll = $derived(recipe.ingredients.map((ing) => allCosts[ing.id]?.name ?? ''));
 
 	// Data array reflecting hidden visibility (0 when hidden)
 	const chartDataValues = $derived(
 		recipe.ingredients.map((ing) => (ing.hidden ? 0 : (recipeCosts[ing.id] ?? 0)))
 	);
 
-	const colors = $derived(recipe.ingredients.map((ing) => costs[ing.id].color));
+	const colors = $derived(recipe.ingredients.map((ing) => allCosts[ing.id]?.color ?? '#000000'));
 
 	let canvas: HTMLCanvasElement;
 	let chart = $state<Chart<'doughnut'> | undefined>(undefined);

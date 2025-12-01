@@ -17,7 +17,6 @@
 				)
 			: options
 	);
-	$inspect(options, filteredOptions);
 </script>
 
 <div class="dropdown-options">
