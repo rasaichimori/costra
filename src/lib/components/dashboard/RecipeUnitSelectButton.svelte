@@ -13,7 +13,6 @@
 		unitConversions: UnitConversion[];
 		customUnitLabels: Record<string, string>;
 		updateRecipePortionUnit: (unitId: string) => void;
-		updateIngredientProductUnit: (unitId: string) => void;
 	}
 
 	let {
@@ -21,8 +20,7 @@
 		ingredientDoc,
 		unitConversions = $bindable(),
 		customUnitLabels = $bindable(),
-		updateRecipePortionUnit,
-		updateIngredientProductUnit
+		updateRecipePortionUnit
 	}: Props = $props();
 
 	const { openOverlay, updateOverlay, closeOverlay } = getOverlayContext();
@@ -57,7 +55,6 @@
 				onSave: (conversion: UnitConversion) => {
 					unitConversions = [...unitConversions, conversion];
 					updateRecipePortionUnit(newUnitId);
-					updateIngredientProductUnit(newUnitId);
 					closeOverlay(conversionModalId);
 					closeOverlay(unitPopupId);
 				},
@@ -94,7 +91,7 @@
 		updateOverlay(
 			unitPopupId,
 			{
-				allUnitOptions: allUnitGroups,
+				unitGroups: allUnitGroups,
 				selectedUnitId: recipePortion.unitId,
 				addNewUnit,
 				selectUnit: handleUnitSelection

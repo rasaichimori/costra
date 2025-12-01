@@ -72,7 +72,6 @@ export const createOverlayContext = () => {
 	// Close the topmost overlay (default) or a specific overlay by id. All
 	// overlays above the target index will be closed as well (cascade).
 	const closeOverlay = (id?: string): void => {
-		console.log('closeOverlay', id);
 		if (!overlays.length) return;
 		const idx = id ? overlays.findIndex((e) => e.id === id) : overlays.length - 1;
 		if (idx === -1) return;

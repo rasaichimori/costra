@@ -11,14 +11,12 @@
 		CompoundIngredientDoc,
 		UnitConversion
 	} from '$lib/data/schema';
-	import type { UnitOption } from '$lib/utils/unit';
 	import TextInput from '../common/TextInput.svelte';
 	import ModernButton from '../common/ModernButton.svelte';
 	import CostBreakdown from './CostBreakdown.svelte';
 	import EditableTextField from '../common/EditableTextField.svelte';
 	import { startDrag } from '$lib/utils/dragControls';
 	import AddRecipeIngredientsButton from './AddRecipeIngredientsButton.svelte';
-	import UnitSelectButton from './RecipeUnitSelectButton.svelte';
 	import RecipeUnitSelectButton from './RecipeUnitSelectButton.svelte';
 
 	interface Props {
@@ -156,9 +154,6 @@
 										updateRecipePortionUnit={(unitId: string) => {
 											ingredient.portion.unitId = unitId;
 										}}
-										updateIngredientProductUnit={(unitId: string) => {
-											allCosts[ingredient.id].product.unit = unitId;
-										}}
 									/>
 								</div>
 							</div>
@@ -211,7 +206,7 @@
 			{/if}
 			<AddRecipeIngredientsButton {availableIngredients} {availableCompounds} {recipe} />
 		</div>
-		<CostBreakdown bind:recipe costs={allCosts} {unitConversions} />
+		<CostBreakdown bind:recipe costs={allCosts} {compounds} {unitConversions} />
 	</div>
 </div>
 

@@ -23,7 +23,7 @@
 		unitConversions?: UnitConversion[];
 	} = $props();
 
-	let selectedRecipeId = $state<string | undefined>(Object.values(recipes)[0].id);
+	let selectedRecipeId = $state<string | undefined>(Object.values(recipes)?.[0]?.id);
 	let isEditingName = $state(false);
 
 	const deleteRecipe = (id: string) => {

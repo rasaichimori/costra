@@ -3,6 +3,7 @@
 	import { onMount } from 'svelte';
 	import UnitSelectPopup from './UnitSelectPopup.svelte';
 	import {
+		hasConversion,
 		massUnitLabels,
 		massUnits,
 		volumeUnitLabels,
@@ -11,15 +12,25 @@
 		type UnitOptionGroup
 	} from '$lib/utils/unit';
 	import ModernButton from '../common/ModernButton.svelte';
+	import type { IngredientDoc, UnitConversion } from '$lib/data/schema';
+	import { buildUnitLabels } from '$lib/utils/unitSelectUtils';
+	import AddUnitConversionModal from '../modals/AddUnitConversionModal.svelte';
 
 	interface Props {
-		customUnitOptions: UnitOption[];
+		customUnitLabels: Record<string, string>;
+		unitConversions: UnitConversion[];
 		selectedUnitId: string;
-		selectUnit: (option: UnitOption) => void;
-		addNewUnit: (option: UnitOption) => void;
+		ingredientDoc: IngredientDoc;
+		selectUnit: (unitId: string) => void;
 	}
 
-	let { customUnitOptions, selectedUnitId, selectUnit, addNewUnit }: Props = $props();
+	let {
+		customUnitLabels = $bindable(),
+		unitConversions = $bindable(),
+		selectedUnitId,
+		ingredientDoc,
+		selectUnit
+	}: Props = $props();
 	const { openOverlay, updateOverlay, closeOverlay } = getOverlayContext();
 
 	let containerElement: HTMLElement;
@@ -33,16 +44,55 @@
 	const massOptions = $derived(
 		massUnits.map((unit) => ({ label: massUnitLabels[unit], id: unit }))
 	);
+	const customUnitOptions = $derived(
+		Object.entries(customUnitLabels).map(([id, label]) => ({ label, id }))
+	);
 
 	const allUnitGroups = $derived<UnitOptionGroup[]>([
 		{ label: 'Volume', options: volumeOptions },
 		{ label: 'Mass', options: massOptions },
 		{ label: 'Custom', options: customUnitOptions }
 	]);
+	const unitLabels = $derived(buildUnitLabels(customUnitLabels));
 
-	const selectAndClose = (unitOption: UnitOption) => {
-		selectUnit(unitOption);
-		closeOverlay(unitPopupId);
+	const handleViewedUnitSelection = (unitOption: UnitOption) => {
+		const newUnitId = unitOption.id;
+		const targetUnitId = ingredientDoc.product.unit;
+		const ingredientId = ingredientDoc.id;
+
+		// Check if conversion is needed
+		if (
+			newUnitId !== targetUnitId &&
+			!hasConversion(newUnitId, targetUnitId, ingredientId, unitConversions)
+		) {
+			// Open conversion modal
+			const conversionModalId = openOverlay(AddUnitConversionModal, {
+				ingredientId,
+				ingredientName: ingredientDoc.name,
+				inputUnit: newUnitId,
+				outputUnit: targetUnitId,
+				unitLabels,
+				onSave: (conversion: UnitConversion) => {
+					unitConversions = [...unitConversions, conversion];
+					selectUnit(newUnitId);
+					closeOverlay(conversionModalId);
+					closeOverlay(unitPopupId);
+				},
+				onclose: () => {
+					closeOverlay(conversionModalId);
+				}
+			});
+		} else {
+			// No conversion needed, update immediately and close popup
+			selectUnit(newUnitId);
+			if (unitPopupId) {
+				closeOverlay(unitPopupId);
+			}
+		}
+	};
+
+	const addNewUnit = (unitOption: UnitOption) => {
+		customUnitLabels[unitOption.id] = unitOption.label;
 	};
 
 	const openUnitPopup = (btn: HTMLButtonElement) => {
@@ -53,7 +103,7 @@
 				unitGroups: allUnitGroups,
 				selectedUnitId,
 				addNewUnit,
-				selectUnit: selectAndClose
+				selectUnit: handleViewedUnitSelection
 			},
 			{ transparentBackground: true, position: unitBtnElement.getBoundingClientRect() }
 		);
@@ -68,7 +118,7 @@
 				allUnitOptions: allUnitGroups,
 				selectedUnitId,
 				addNewUnit,
-				selectUnit: selectAndClose
+				selectUnit: handleViewedUnitSelection
 			},
 			{ position: unitBtnElement.getBoundingClientRect() }
 		);
@@ -82,10 +132,6 @@
 			window.removeEventListener('resize', updateUnitPopup);
 		};
 	});
-
-	const selectedUnit = $derived(
-		allUnitGroups.flatMap((group) => group.options).find((option) => option.id === selectedUnitId)
-	);
 </script>
 
 <div class="dropdown-chevron-button" bind:this={containerElement}>

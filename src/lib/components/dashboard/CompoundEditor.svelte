@@ -2,7 +2,8 @@
 	import {
 		calculateRecipeCosts,
 		getTotalRecipeCost,
-		getAvailableIngredients
+		getAvailableIngredients,
+		compoundsToIngredients
 	} from '../../utils/costCalculatorUtils';
 	import type { CompoundIngredientDoc, IngredientDoc, UnitConversion } from '$lib/data/schema';
 	import {
@@ -16,7 +17,6 @@
 	import CostBreakdown from './CostBreakdown.svelte';
 	import EditableTextField from '../common/EditableTextField.svelte';
 	import AddRecipeIngredientsButton from './AddRecipeIngredientsButton.svelte';
-	import UnitSelectButton from './RecipeUnitSelectButton.svelte';
 	import UnitChevronDropdownButton from './UnitChevronDropdownButton.svelte';
 	import RecipeUnitSelectButton from './RecipeUnitSelectButton.svelte';
 
@@ -48,15 +48,15 @@
 	);
 	const perUnitCost = $derived(totalCost / convertedYield);
 
-	const customUnitOptions = $derived(
-		Object.entries(customUnitLabels).map(([id, label]) => ({ label, id }))
-	);
-
 	const unitLabels = $derived<Record<string, string>>({
 		...volumeUnitLabels,
 		...massUnitLabels,
 		...customUnitLabels
 	});
+
+	const compoundDoc = $derived(
+		compoundsToIngredients({ [recipe.id]: recipe }, costs, unitConversions)[recipe.id]
+	);
 </script>
 
 <div class="recipe-cost-calculator">
@@ -75,12 +75,11 @@
 				<div class="cost-amount">
 					¥{perUnitCost.toFixed(0)} / {unitLabels[recipe.viewedUnit]}
 					<UnitChevronDropdownButton
-						{customUnitOptions}
+						bind:customUnitLabels
+						bind:unitConversions
 						selectedUnitId={recipe.viewedUnit}
-						selectUnit={(unitOption: UnitOption) => (recipe.viewedUnit = unitOption.id)}
-						addNewUnit={(unitOption: UnitOption) => {
-							customUnitLabels[unitOption.id] = unitOption.label;
-						}}
+						ingredientDoc={compoundDoc}
+						selectUnit={(unitId: string) => (recipe.viewedUnit = unitId)}
 					/>
 				</div>
 			</div>
@@ -111,12 +110,13 @@
 							/>
 						</div>
 						<div class="unit-input-group">
-							<UnitChevronDropdownButton
-								{customUnitOptions}
-								selectedUnitId={recipe.yield.unitId}
-								selectUnit={(unitOption: UnitOption) => (recipe.yield.unitId = unitOption.id)}
-								addNewUnit={(unitOption: UnitOption) => {
-									customUnitLabels[unitOption.id] = unitOption.label;
+							<RecipeUnitSelectButton
+								recipePortion={recipe.yield}
+								ingredientDoc={compoundDoc}
+								bind:unitConversions
+								bind:customUnitLabels
+								updateRecipePortionUnit={(unitId: string) => {
+									recipe.yield.unitId = unitId;
 								}}
 							/>
 						</div>
@@ -168,9 +168,6 @@
 										bind:customUnitLabels
 										updateRecipePortionUnit={(unitId: string) => {
 											ingredient.portion.unitId = unitId;
-										}}
-										updateIngredientProductUnit={(unitId: string) => {
-											costs[ingredient.id].product.unit = unitId;
 										}}
 									/>
 								</div>
