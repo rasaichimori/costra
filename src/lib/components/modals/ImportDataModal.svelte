@@ -7,7 +7,7 @@
 	let jsonText = $state<string>('');
 	let error = $state<string>('');
 
-	const placeholder = '{"costs": { ... }, "recipes": { ... }}';
+	const placeholder = '{"costs": { ... }, "recipes": { ... }, "compoundIngredients": { ... }, "unitConversions": [ ... ], "customUnitLabels": { ... }}';
 
 	const handleLoad = () => {
 		error = '';

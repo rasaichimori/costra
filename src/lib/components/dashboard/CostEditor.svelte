@@ -28,7 +28,7 @@
 
 	const exportData = () => {
 		openOverlay(ExportDataModal, {
-			data: { costs, recipes, compoundIngredients },
+			data: { costs, recipes, compoundIngredients, unitConversions, customUnitLabels },
 			onclose: () => closeOverlay()
 		});
 	};
@@ -39,11 +39,19 @@
 				costs: Record<string, IngredientDoc>;
 				recipes: Record<string, RecipeDoc>;
 				compoundIngredients?: Record<string, CompoundIngredientDoc>;
+				unitConversions?: UnitConversion[];
+				customUnitLabels?: Record<string, string>;
 			}) => {
 				costs = d.costs;
 				recipes = d.recipes;
 				if (d.compoundIngredients) {
 					compoundIngredients = d.compoundIngredients;
+				}
+				if (d.unitConversions) {
+					unitConversions = d.unitConversions;
+				}
+				if (d.customUnitLabels) {
+					customUnitLabels = d.customUnitLabels;
 				}
 			},
 			onclose: () => closeOverlay()
@@ -55,6 +63,9 @@
 			onConfirm: () => {
 				costs = {};
 				recipes = {};
+				compoundIngredients = {};
+				unitConversions = [];
+				customUnitLabels = {};
 			},
 			onclose: () => closeOverlay()
 		});
