@@ -505,7 +505,7 @@ export const mockData = {
 					id: 'acaiPaste',
 					portion: {
 						amount: 0.25,
-						unitId: 'pack'
+						unit: 'pack'
 					},
 					hidden: false
 				},
@@ -513,7 +513,7 @@ export const mockData = {
 					id: 'frozenMango',
 					portion: {
 						amount: 1,
-						unitId: 'cup'
+						unit: 'cup'
 					},
 					hidden: false
 				},
@@ -521,7 +521,7 @@ export const mockData = {
 					id: 'frozenBlueberry',
 					portion: {
 						amount: 1,
-						unitId: 'cup'
+						unit: 'cup'
 					},
 					hidden: false
 				},
@@ -529,7 +529,7 @@ export const mockData = {
 					id: 'agave',
 					portion: {
 						amount: 1,
-						unitId: 'tbs'
+						unit: 'tbs'
 					},
 					hidden: false
 				},
@@ -537,7 +537,7 @@ export const mockData = {
 					id: 'appleJuice',
 					portion: {
 						amount: 1,
-						unitId: 'cup'
+						unit: 'cup'
 					},
 					hidden: false
 				}
@@ -551,7 +551,7 @@ export const mockData = {
 					id: 'frozenMango',
 					portion: {
 						amount: 1,
-						unitId: 'cup'
+						unit: 'cup'
 					},
 					hidden: false
 				},
@@ -559,7 +559,7 @@ export const mockData = {
 					id: 'agave',
 					portion: {
 						amount: 1,
-						unitId: 'tsp'
+						unit: 'tsp'
 					},
 					hidden: false
 				},
@@ -567,7 +567,7 @@ export const mockData = {
 					id: 'appleJuice',
 					portion: {
 						amount: 1,
-						unitId: 'cup'
+						unit: 'cup'
 					},
 					hidden: false
 				}
@@ -581,7 +581,7 @@ export const mockData = {
 					id: 'coconutCream',
 					portion: {
 						amount: 2,
-						unitId: 'tbs'
+						unit: 'tbs'
 					},
 					hidden: false
 				},
@@ -589,7 +589,7 @@ export const mockData = {
 					id: 'coconutMilk',
 					portion: {
 						amount: 1,
-						unitId: 'cup'
+						unit: 'cup'
 					},
 					hidden: false
 				},
@@ -597,7 +597,7 @@ export const mockData = {
 					id: 'agave',
 					portion: {
 						amount: 1,
-						unitId: 'tbs'
+						unit: 'tbs'
 					},
 					hidden: false
 				}
@@ -611,7 +611,7 @@ export const mockData = {
 					id: 'katifi',
 					portion: {
 						amount: 45,
-						unitId: 'g'
+						unit: 'g'
 					},
 					hidden: false
 				},
@@ -619,7 +619,7 @@ export const mockData = {
 					id: 'pistachioCream',
 					portion: {
 						amount: 45,
-						unitId: 'g'
+						unit: 'g'
 					},
 					hidden: false
 				},
@@ -627,7 +627,7 @@ export const mockData = {
 					id: 'strawberry',
 					portion: {
 						amount: 48,
-						unitId: 'g'
+						unit: 'g'
 					},
 					hidden: false
 				},
@@ -635,7 +635,7 @@ export const mockData = {
 					id: 'nutella',
 					portion: {
 						amount: 3,
-						unitId: 'tbs'
+						unit: 'tbs'
 					},
 					hidden: false
 				}
@@ -649,7 +649,7 @@ export const mockData = {
 					id: 'chicory',
 					portion: {
 						amount: 10,
-						unitId: 'g'
+						unit: 'g'
 					},
 					hidden: false
 				},
@@ -657,7 +657,7 @@ export const mockData = {
 					id: 'wholeMilk',
 					portion: {
 						amount: 300,
-						unitId: 'ml'
+						unit: 'ml'
 					},
 					hidden: false
 				},
@@ -665,7 +665,7 @@ export const mockData = {
 					id: 'agave',
 					portion: {
 						amount: 2,
-						unitId: 'tsp'
+						unit: 'tsp'
 					},
 					hidden: false
 				}
@@ -679,7 +679,7 @@ export const mockData = {
 					id: 'vanHoutenCocoa',
 					portion: {
 						amount: 1.5,
-						unitId: 'tbs'
+						unit: 'tbs'
 					},
 					hidden: false
 				},
@@ -687,7 +687,7 @@ export const mockData = {
 					id: 'wholeMilk',
 					portion: {
 						amount: 300,
-						unitId: 'ml'
+						unit: 'ml'
 					},
 					hidden: false
 				},
@@ -695,7 +695,7 @@ export const mockData = {
 					id: 'agave',
 					portion: {
 						amount: 1.5,
-						unitId: 'tbs'
+						unit: 'tbs'
 					},
 					hidden: false
 				},
@@ -703,7 +703,7 @@ export const mockData = {
 					id: 'whippedCream',
 					portion: {
 						amount: 3,
-						unitId: 'g'
+						unit: 'g'
 					},
 					hidden: false
 				}
@@ -718,7 +718,7 @@ export const mockData = {
 			color: '#b6a29c',
 			yield: {
 				amount: 1,
-				unitId: 'pint'
+				unit: 'pint'
 			},
 			viewedUnit: 'cup',
 			ingredients: [
@@ -726,7 +726,7 @@ export const mockData = {
 					id: 'acaiPaste',
 					portion: {
 						amount: 0.25,
-						unitId: 'pack'
+						unit: 'pack'
 					},
 					hidden: false
 				},
@@ -734,7 +734,7 @@ export const mockData = {
 					id: 'frozenMango',
 					portion: {
 						amount: 1,
-						unitId: 'cup'
+						unit: 'cup'
 					},
 					hidden: false
 				},
@@ -742,7 +742,7 @@ export const mockData = {
 					id: 'frozenBlueberry',
 					portion: {
 						amount: 1,
-						unitId: 'cup'
+						unit: 'cup'
 					},
 					hidden: false
 				},
@@ -750,7 +750,7 @@ export const mockData = {
 					id: 'agave',
 					portion: {
 						amount: 1,
-						unitId: 'tbs'
+						unit: 'tbs'
 					},
 					hidden: false
 				},
@@ -758,7 +758,7 @@ export const mockData = {
 					id: 'appleJuice',
 					portion: {
 						amount: 1,
-						unitId: 'cup'
+						unit: 'cup'
 					},
 					hidden: false
 				}
@@ -771,7 +771,7 @@ export const mockData = {
 			color: '#ddba87',
 			yield: {
 				amount: 1,
-				unitId: 'pint'
+				unit: 'pint'
 			},
 			viewedUnit: 'cup',
 			ingredients: [
@@ -779,7 +779,7 @@ export const mockData = {
 					id: 'frozenMango',
 					portion: {
 						amount: 1,
-						unitId: 'cup'
+						unit: 'cup'
 					},
 					hidden: false
 				},
@@ -787,7 +787,7 @@ export const mockData = {
 					id: 'agave',
 					portion: {
 						amount: 1,
-						unitId: 'tsp'
+						unit: 'tsp'
 					},
 					hidden: false
 				},
@@ -795,7 +795,7 @@ export const mockData = {
 					id: 'appleJuice',
 					portion: {
 						amount: 1,
-						unitId: 'cup'
+						unit: 'cup'
 					},
 					hidden: false
 				}
@@ -808,7 +808,7 @@ export const mockData = {
 			color: '#cdb2b5',
 			yield: {
 				amount: 1,
-				unitId: 'pint'
+				unit: 'pint'
 			},
 			viewedUnit: 'cup',
 			ingredients: [
@@ -816,7 +816,7 @@ export const mockData = {
 					id: 'coconutCream',
 					portion: {
 						amount: 2,
-						unitId: 'tbs'
+						unit: 'tbs'
 					},
 					hidden: false
 				},
@@ -824,7 +824,7 @@ export const mockData = {
 					id: 'coconutMilk',
 					portion: {
 						amount: 1,
-						unitId: 'cup'
+						unit: 'cup'
 					},
 					hidden: false
 				},
@@ -832,7 +832,7 @@ export const mockData = {
 					id: 'agave',
 					portion: {
 						amount: 1,
-						unitId: 'tbs'
+						unit: 'tbs'
 					},
 					hidden: false
 				}

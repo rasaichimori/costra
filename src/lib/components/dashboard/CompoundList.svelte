@@ -51,7 +51,7 @@
 			ingredients: [],
 			yield: {
 				amount: 1,
-				unitId: 'pint'
+				unit: 'pint'
 			},
 			viewedUnit: 'pint',
 			category: 'Compound',
@@ -69,7 +69,7 @@
 		const recipeCosts = calculateRecipeCosts(recipe, costs, unitConversions);
 		const totalCost = getTotalRecipeCost(recipeCosts);
 		const convertedYield =
-			getConversionFactor(recipe.yield.unitId, recipe.viewedUnit, recipe.id, unitConversions) *
+			getConversionFactor(recipe.yield.unit, recipe.viewedUnit, recipe.id, unitConversions) *
 			recipe.yield.amount;
 		return totalCost / convertedYield;
 	};

@@ -89,14 +89,14 @@
 							const compound = ingredient as CompoundIngredientDoc;
 							recipe.ingredients.push({
 								id: compound.id,
-								portion: { amount: 1, unitId: compound.viewedUnit },
+								portion: { amount: 1, unit: compound.viewedUnit },
 								hidden: false
 							});
 						} else {
 							// regular ingredient
 							recipe.ingredients.push({
 								id: ingredient.id,
-								portion: { amount: 1, unitId: ingredient.product.unit },
+								portion: { amount: 1, unit: ingredient.product.unit },
 								hidden: false
 							});
 						}

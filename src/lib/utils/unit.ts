@@ -24,7 +24,7 @@ export type Unit = VolumeUnit | MassUnit;
 
 export type Portion = {
 	amount: number;
-	unitId: Unit | string;
+	unit: Unit | string;
 };
 
 export type UnitOption = { id: string; label: string };

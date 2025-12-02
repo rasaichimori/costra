@@ -10,11 +10,14 @@
 	import ExportDataModal from '../modals/ExportDataModal.svelte';
 	import ImportDataModal from '../modals/ImportDataModal.svelte';
 	import ClearAllModal from '../modals/ClearAllModal.svelte';
+	import AddBatchUnitConversionModal from '../modals/AddBatchUnitConversionModal.svelte';
 	import ModernButton from '../common/ModernButton.svelte';
 	import ThemeToggle from '../common/ThemeToggle.svelte';
 	import { mockData } from '$lib/data/mockData';
 	import RecipeSection from './RecipeSection.svelte';
 	import CompoundSection from './CompoundSection.svelte';
+	import { findAllMissingConversionsFromImport } from '$lib/utils/unitSelectUtils';
+	import { buildUnitLabels } from '$lib/utils/unitSelectUtils';
 
 	let costs = $state<Record<string, IngredientDoc>>(mockData.costs);
 	let compoundIngredients = $state<Record<string, CompoundIngredientDoc>>(
@@ -34,7 +37,7 @@
 	};
 
 	const importData = () => {
-		openOverlay(ImportDataModal, {
+		const importModalId = openOverlay(ImportDataModal, {
 			onLoad: (d: {
 				costs: Record<string, IngredientDoc>;
 				recipes: Record<string, RecipeDoc>;
@@ -42,16 +45,84 @@
 				unitConversions?: UnitConversion[];
 				customUnitLabels?: Record<string, string>;
 			}) => {
-				costs = d.costs;
-				recipes = d.recipes;
-				if (d.compoundIngredients) {
-					compoundIngredients = d.compoundIngredients;
+				// First, set the imported data temporarily
+				const importedCosts = d.costs;
+				const importedRecipes = d.recipes;
+				const importedCompoundIngredients = d.compoundIngredients || {};
+				const importedConversions = d.unitConversions || [];
+				const importedCustomUnitLabels = d.customUnitLabels || {};
+
+				// Filter out any recipe ingredients that don't exist
+				const allAvailableIds = new Set([
+					...Object.keys(importedCosts),
+					...Object.keys(importedCompoundIngredients)
+				]);
+
+				// Clean up recipes to remove invalid ingredient references
+				const cleanedRecipes: Record<string, RecipeDoc> = {};
+				for (const [recipeId, recipe] of Object.entries(importedRecipes)) {
+					cleanedRecipes[recipeId] = {
+						...recipe,
+						ingredients: recipe.ingredients.filter((ing) => allAvailableIds.has(ing.id))
+					};
 				}
-				if (d.unitConversions) {
-					unitConversions = d.unitConversions;
-				}
-				if (d.customUnitLabels) {
-					customUnitLabels = d.customUnitLabels;
+
+				// Check for missing conversions
+				const missingConversionsMap = findAllMissingConversionsFromImport(
+					importedCosts,
+					cleanedRecipes,
+					importedCompoundIngredients,
+					importedConversions
+				);
+
+				if (missingConversionsMap.size > 0) {
+					console.log('missing conversions found, importing batch conversions');
+
+					// Show batch conversion modals for each ingredient with missing conversions
+					const ingredientEntries = Array.from(missingConversionsMap.entries());
+					let currentIndex = 0;
+
+					const showNextConversionModal = () => {
+						if (currentIndex >= ingredientEntries.length) {
+							// All conversions added, complete the import
+							costs = importedCosts;
+							recipes = cleanedRecipes;
+							compoundIngredients = importedCompoundIngredients;
+							unitConversions = importedConversions;
+							customUnitLabels = importedCustomUnitLabels;
+							console.log('done importing batch conversions');
+							return;
+						}
+
+						const [ingredientId, { ingredientName, missingConversions }] =
+							ingredientEntries[currentIndex];
+						const unitLabels = buildUnitLabels(importedCustomUnitLabels);
+
+						const conversionModalId = openOverlay(AddBatchUnitConversionModal, {
+							ingredientId,
+							ingredientName,
+							missingConversions,
+							unitLabels,
+							recipes: cleanedRecipes,
+							onSave: (conversions: UnitConversion[]) => {
+								importedConversions.push(...conversions);
+								closeOverlay(conversionModalId);
+								currentIndex++;
+								showNextConversionModal();
+							},
+							onclose: () => closeOverlay(conversionModalId)
+						});
+					};
+
+					showNextConversionModal();
+				} else {
+					console.log('No missing conversions, importing directly');
+					// No missing conversions, import directly
+					costs = importedCosts;
+					recipes = cleanedRecipes;
+					compoundIngredients = importedCompoundIngredients;
+					unitConversions = importedConversions;
+					customUnitLabels = importedCustomUnitLabels;
 				}
 			},
 			onclose: () => closeOverlay()
@@ -99,7 +170,13 @@
 				bind:unitConversions
 				bind:customUnitLabels
 			/>
-			<IngredientCostGrid bind:costs bind:recipes bind:compoundIngredients bind:customUnitLabels bind:unitConversions />
+			<IngredientCostGrid
+				bind:costs
+				bind:recipes
+				bind:compoundIngredients
+				bind:customUnitLabels
+				bind:unitConversions
+			/>
 		</div>
 	</div>
 </div>

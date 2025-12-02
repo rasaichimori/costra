@@ -77,7 +77,7 @@
 			UnitSelectPopup,
 			{
 				unitGroups: allUnitGroups,
-				selectedUnitId: recipePortion.unitId,
+				selectedUnitId: recipePortion.unit,
 				addNewUnit,
 				selectUnit: handleUnitSelection
 			},
@@ -92,7 +92,7 @@
 			unitPopupId,
 			{
 				unitGroups: allUnitGroups,
-				selectedUnitId: recipePortion.unitId,
+				selectedUnitId: recipePortion.unit,
 				addNewUnit,
 				selectUnit: handleUnitSelection
 			},
@@ -111,7 +111,7 @@
 </script>
 
 <button onclick={(e) => openUnitPopup(e.currentTarget as HTMLButtonElement)}>
-	{unitLabels[recipePortion.unitId]}</button
+	{unitLabels[recipePortion.unit]}</button
 >
 
 <style>

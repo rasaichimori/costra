@@ -39,7 +39,7 @@
 		}}
 		{unitConversions}
 	/>
-	{#if selectedRecipeId}
+	{#if selectedRecipeId && recipes[selectedRecipeId]}
 		<CompoundEditor
 			bind:recipe={recipes[selectedRecipeId]}
 			{costs}

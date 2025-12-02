@@ -131,7 +131,8 @@
 								<i class="fa-solid fa-grip-vertical"></i>
 							</span>
 							<div class="ingredient-details">
-								<span class="ingredient-name">{allCosts[ingredient.id].name}</span>
+								<span class="ingredient-name">{allCosts[ingredient.id]?.name ?? ingredient.id}</span
+								>
 								<div class="amount-input-group">
 									<TextInput
 										value={ingredient.portion.amount}
@@ -146,33 +147,39 @@
 									/>
 								</div>
 								<div class="unit-input-group">
-									<RecipeUnitSelectButton
-										recipePortion={ingredient.portion}
-										ingredientDoc={allCosts[ingredient.id]}
-										bind:unitConversions
-										bind:customUnitLabels
-										updateRecipePortionUnit={(unitId: string) => {
-											ingredient.portion.unitId = unitId;
-										}}
-									/>
+									{#if allCosts[ingredient.id]}
+										<RecipeUnitSelectButton
+											recipePortion={ingredient.portion}
+											ingredientDoc={allCosts[ingredient.id]}
+											bind:unitConversions
+											bind:customUnitLabels
+											updateRecipePortionUnit={(unitId: string) => {
+												ingredient.portion.unit = unitId;
+											}}
+										/>
+									{:else}
+										<span class="error-text">Missing ingredient: {ingredient.id}</span>
+									{/if}
 								</div>
 							</div>
 							<div class="ingredient-cost">
 								¥{recipeCosts[ingredient.id]?.toFixed(0) || '0'}
 							</div>
 							<div class="color-input-group">
-								<input
-									type="color"
-									class="color-picker"
-									value={allCosts[ingredient.id].color}
-									oninput={(e) => {
-										if (ingredient.id in compounds) {
-											compounds[ingredient.id].color = e.currentTarget.value;
-										} else if (ingredient.id in costs) {
-											costs[ingredient.id].color = e.currentTarget.value;
-										}
-									}}
-								/>
+								{#if allCosts[ingredient.id]}
+									<input
+										type="color"
+										class="color-picker"
+										value={allCosts[ingredient.id].color}
+										oninput={(e) => {
+											if (ingredient.id in compounds) {
+												compounds[ingredient.id].color = e.currentTarget.value;
+											} else if (ingredient.id in costs) {
+												costs[ingredient.id].color = e.currentTarget.value;
+											}
+										}}
+									/>
+								{/if}
 							</div>
 							<!-- Hide/Show Button -->
 							<ModernButton

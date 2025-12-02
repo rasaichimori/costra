@@ -43,7 +43,7 @@
 	const totalCost = $derived(getTotalRecipeCost(recipeCosts));
 	const availableIngredients = $derived(getAvailableIngredients(recipe, costs));
 	const convertedYield = $derived(
-		getConversionFactor(recipe.yield.unitId, recipe.viewedUnit, recipe.id, unitConversions) *
+		getConversionFactor(recipe.yield.unit, recipe.viewedUnit, recipe.id, unitConversions) *
 			recipe.yield.amount
 	);
 	const perUnitCost = $derived(totalCost / convertedYield);
@@ -116,7 +116,7 @@
 								bind:unitConversions
 								bind:customUnitLabels
 								updateRecipePortionUnit={(unitId: string) => {
-									recipe.yield.unitId = unitId;
+									recipe.yield.unit = unitId;
 								}}
 							/>
 						</div>
@@ -143,7 +143,7 @@
 					{#each recipe.ingredients as ingredient}
 						<div class="ingredient-cost-item" class:hidden={ingredient.hidden}>
 							<div class="ingredient-details">
-								<span class="ingredient-name">{costs[ingredient.id].name}</span>
+								<span class="ingredient-name">{costs[ingredient.id]?.name ?? ingredient.id}</span>
 								<div class="amount-input-group">
 									<TextInput
 										value={ingredient.portion.amount}
@@ -161,22 +161,32 @@
 									/>
 								</div>
 								<div class="unit-input-group">
-									<RecipeUnitSelectButton
-										recipePortion={ingredient.portion}
-										ingredientDoc={costs[ingredient.id]}
-										bind:unitConversions
-										bind:customUnitLabels
-										updateRecipePortionUnit={(unitId: string) => {
-											ingredient.portion.unitId = unitId;
-										}}
-									/>
+									{#if costs[ingredient.id]}
+										<RecipeUnitSelectButton
+											recipePortion={ingredient.portion}
+											ingredientDoc={costs[ingredient.id]}
+											bind:unitConversions
+											bind:customUnitLabels
+											updateRecipePortionUnit={(unitId: string) => {
+												ingredient.portion.unit = unitId;
+											}}
+										/>
+									{:else}
+										<span class="error-text">Missing: {ingredient.id}</span>
+									{/if}
 								</div>
 							</div>
 							<div class="ingredient-cost">
 								¥{recipeCosts[ingredient.id]?.toFixed(0) || '0'}
 							</div>
 							<div class="color-input-group">
-								<input type="color" class="color-picker" bind:value={costs[ingredient.id].color} />
+								{#if costs[ingredient.id]}
+									<input
+										type="color"
+										class="color-picker"
+										bind:value={costs[ingredient.id].color}
+									/>
+								{/if}
 							</div>
 							<!-- Hide/Show Button -->
 							<ModernButton

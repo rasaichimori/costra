@@ -10,7 +10,7 @@
 		findMissingConversions,
 		getPortionUnitsForIngredient
 	} from '$lib/utils/unitSelectUtils';
-	import AddBatchUnitConversionModal from '../modals/AddBatchUnitConversionModal.svelte';
+	import AddBatchUnitConversionModal from '$lib/components/modals/AddBatchUnitConversionModal.svelte';
 
 	interface Props {
 		ingredientDoc: IngredientDoc;

@@ -33,7 +33,7 @@ export const compoundsToIngredients = (
 				product: {
 					cost: getTotalRecipeCost(calculateRecipeCosts(compound, costs, conversions)),
 					amount: compound.yield.amount,
-					unit: compound.yield.unitId
+					unit: compound.yield.unit
 				}
 			}
 		}),
@@ -55,13 +55,14 @@ export const calculateRecipeCosts = (
 		if (ingredient.hidden) return; // Skip hidden ingredients
 		const ingredientDoc = costs[ingredient.id];
 		if (!ingredientDoc) {
-			console.trace();
-			throw Error(`Ingredient ${ingredient.id} should exist but is not found`);
+			// Skip missing ingredients instead of throwing
+			console.warn(`Ingredient ${ingredient.id} not found in costs, skipping cost calculation`);
+			return;
 		}
 
 		const ingredientPrice = ingredientDoc.product.cost;
 		const conversionFactor = getConversionFactor(
-			ingredient.portion.unitId,
+			ingredient.portion.unit,
 			ingredientDoc.product.unit,
 			ingredient.id,
 			conversions

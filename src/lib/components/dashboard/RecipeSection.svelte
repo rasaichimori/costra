@@ -47,7 +47,7 @@
 			isEditingName = isEditing;
 		}}
 	/>
-	{#if selectedRecipeId}
+	{#if selectedRecipeId && recipes[selectedRecipeId]}
 		<RecipeEditor
 			bind:recipe={recipes[selectedRecipeId]}
 			{costs}
