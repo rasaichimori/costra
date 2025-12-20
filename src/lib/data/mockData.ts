@@ -863,12 +863,6 @@ export const mockData = {
 			conversionFactor: 21
 		},
 		{
-			ingredientId: 'agave',
-			inputUnit: 'tsp',
-			outputUnit: 'g',
-			conversionFactor: 7
-		},
-		{
 			ingredientId: 'coconutMilk',
 			inputUnit: 'cup',
 			outputUnit: 'can',

@@ -17,6 +17,7 @@
 		spinner?: boolean;
 		autofocus?: boolean;
 		clearable?: boolean;
+		style?: string;
 		onchange?: (value: T) => void;
 		oninput?: (value: T) => void;
 		onfocus?: (event: FocusEvent) => void;
@@ -41,6 +42,7 @@
 		spinner = false,
 		autofocus = false,
 		clearable = false,
+		style,
 		onchange,
 		oninput,
 		onkeydown,
@@ -82,7 +84,7 @@
 	};
 </script>
 
-<div class="input-container input-{variant} input-{size}">
+<div class="input-container input-{variant} input-{size}" {style}>
 	{#if label}
 		<label class="input-label" for={ariaLabel}>
 			{label}
