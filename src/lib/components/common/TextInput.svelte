@@ -61,6 +61,22 @@
 			(isNumeric && displayValue.length > 0)
 	);
 
+	// Sync displayValue with value prop changes (important for undo/redo)
+	$effect(() => {
+		if (isNumeric && typeof value === 'number') {
+			// Only update if the input is not focused (user is not actively typing)
+			// and the displayValue doesn't match the current value
+			const isFocused = inputRef === document.activeElement;
+			const expectedDisplay = value.toString();
+			const currentDisplayMatches =
+				displayValue === expectedDisplay || isIncompleteDecimal(displayValue);
+
+			if (!isFocused && !currentDisplayMatches) {
+				displayValue = expectedDisplay;
+			}
+		}
+	});
+
 	const isIncompleteDecimal = (inputStr: string): boolean => {
 		const trimmed = inputStr.trim();
 		// Check if it ends with a decimal point (e.g., "0.", "123.")

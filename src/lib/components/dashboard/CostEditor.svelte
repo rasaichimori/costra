@@ -15,6 +15,9 @@
 	import SettingsSection from './SettingsSection.svelte';
 	import { findAllMissingConversionsFromImport } from '$lib/utils/unitSelectUtils';
 	import { buildUnitLabels } from '$lib/utils/unitSelectUtils';
+	import { historyManager } from '$lib/utils/history';
+	import { onMount, untrack, tick } from 'svelte';
+	import ModernButton from '../common/ModernButton.svelte';
 
 	type TabId = 'dashboard' | 'conversions' | 'settings';
 	let activeTab = $state<TabId>('dashboard');
@@ -28,12 +31,173 @@
 	let unitConversions = $state<UnitConversion[]>(mockData.unitConversions);
 
 	const { openOverlay, closeOverlay } = getOverlayContext();
+
+	// Undo/redo state
+	let isRestoring = $state(false);
+	let canUndo = $state(false);
+	let canRedo = $state(false);
+
+	// Initialize history with initial state
+	onMount(() => {
+		historyManager.initialize({
+			costs,
+			compoundIngredients,
+			recipes,
+			customUnitLabels,
+			unitConversions
+		});
+		updateUndoRedoState();
+		isInitialized = true;
+
+		// Set up keyboard shortcuts
+		const handleKeyDown = (event: KeyboardEvent) => {
+			// Check if we're in an input field (allow native browser undo/redo in text inputs)
+			const target = event.target as HTMLElement;
+			const isTextInput =
+				(target.tagName === 'INPUT' && (target as HTMLInputElement).type !== 'button') ||
+				target.tagName === 'TEXTAREA' ||
+				(target.isContentEditable && target.closest('[contenteditable="true"]'));
+
+			// Only handle undo/redo shortcuts when NOT in a text input field
+			// This allows native browser undo/redo to work in text inputs
+			if (isTextInput) {
+				return;
+			}
+
+			// Ctrl+Z or Cmd+Z for undo
+			if ((event.ctrlKey || event.metaKey) && event.key === 'z' && !event.shiftKey) {
+				event.preventDefault();
+				handleUndo();
+			}
+			// Ctrl+Y or Ctrl+Shift+Z or Cmd+Shift+Z for redo
+			else if (
+				(event.ctrlKey || event.metaKey) &&
+				(event.key === 'y' || (event.key === 'z' && event.shiftKey))
+			) {
+				event.preventDefault();
+				handleRedo();
+			}
+		};
+
+		document.addEventListener('keydown', handleKeyDown);
+		return () => {
+			document.removeEventListener('keydown', handleKeyDown);
+		};
+	});
+
+	// Track state changes and save to history (debounced)
+	let saveTimeout: ReturnType<typeof setTimeout> | null = null;
+	let isInitialized = $state(false);
+
+	$effect(() => {
+		// Skip saving if we're restoring from history or not yet initialized
+		if (isRestoring || !isInitialized) {
+			return;
+		}
+
+		// Access all state variables to track changes
+		costs;
+		compoundIngredients;
+		recipes;
+		customUnitLabels;
+		unitConversions;
+
+		// Debounce saves to avoid too many history entries
+		if (saveTimeout) {
+			clearTimeout(saveTimeout);
+		}
+
+		saveTimeout = setTimeout(() => {
+			historyManager.saveState({
+				costs,
+				compoundIngredients,
+				recipes,
+				customUnitLabels,
+				unitConversions
+			});
+			updateUndoRedoState();
+		}, 300);
+	});
+
+	const updateUndoRedoState = () => {
+		canUndo = historyManager.canUndo();
+		canRedo = historyManager.canRedo();
+	};
+
+	const restoreState = async (state: {
+		costs: Record<string, IngredientDoc>;
+		compoundIngredients: Record<string, CompoundIngredientDoc>;
+		recipes: Record<string, RecipeDoc>;
+		customUnitLabels: Record<string, string>;
+		unitConversions: UnitConversion[];
+	}) => {
+		// Use untrack to prevent the effect from running during restore
+		untrack(() => {
+			isRestoring = true;
+		});
+
+		// Directly assign new object references to ensure Svelte tracks the changes
+		// This creates completely new objects, which will properly update all bindings
+		costs = state.costs;
+		compoundIngredients = state.compoundIngredients;
+		recipes = state.recipes;
+		customUnitLabels = state.customUnitLabels;
+		unitConversions = state.unitConversions;
+
+		// Wait for DOM to update
+		await tick();
+
+		// Reset flag after state is updated and DOM has rendered
+		untrack(() => {
+			isRestoring = false;
+		});
+	};
+
+	const handleUndo = () => {
+		if (!canUndo) return;
+		const state = historyManager.getUndoState();
+		if (state) {
+			restoreState(state);
+			updateUndoRedoState();
+		}
+	};
+
+	const handleRedo = () => {
+		if (!canRedo) return;
+		const state = historyManager.getRedoState();
+		if (state) {
+			restoreState(state);
+			updateUndoRedoState();
+		}
+	};
 </script>
 
 <div class="cost-editor">
 	<div class="editor-header">
 		<h2>COSTRA</h2>
 		<div class="header-actions">
+			<div class="undo-redo-buttons">
+				<ModernButton
+					variant="icon"
+					size="small"
+					disabled={!canUndo}
+					onclick={handleUndo}
+					ariaLabel="Undo"
+					title="Undo (Ctrl+Z)"
+				>
+					<i class="fa-solid fa-rotate-left"></i>
+				</ModernButton>
+				<ModernButton
+					variant="icon"
+					size="small"
+					disabled={!canRedo}
+					onclick={handleRedo}
+					ariaLabel="Redo"
+					title="Redo (Ctrl+Y)"
+				>
+					<i class="fa-solid fa-rotate-right"></i>
+				</ModernButton>
+			</div>
 			<ThemeToggle />
 		</div>
 	</div>
@@ -144,6 +308,12 @@
 	.header-actions {
 		display: flex;
 		gap: 8px;
+		align-items: center;
+	}
+
+	.undo-redo-buttons {
+		display: flex;
+		gap: 4px;
 	}
 
 	.tabs {
