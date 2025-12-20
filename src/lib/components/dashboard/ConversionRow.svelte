@@ -115,22 +115,24 @@
 	}
 
 	.category-badge {
-		padding: 4px 10px;
-		border-radius: 6px;
-		font-size: 11px;
-		font-weight: 600;
+		background: var(--bg-active);
+		color: var(--text-secondary);
+		font-size: 10px;
+		font-weight: 500;
+		padding: 2px 6px;
+		border-radius: 8px;
 		text-transform: uppercase;
 		letter-spacing: 0.5px;
 	}
 
 	.category-badge.input {
-		background: var(--accent-secondary);
-		color: var(--text-primary);
+		background: var(--bg-active);
+		color: var(--text-secondary);
 	}
 
 	.category-badge.output {
-		background: var(--accent-tertiary);
-		color: var(--text-primary);
+		background: var(--bg-active);
+		color: var(--text-secondary);
 	}
 
 	.arrow {

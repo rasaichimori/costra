@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { getCurrencyContext } from '$lib/contexts/currency.svelte';
+
 	interface Props {
 		label: string;
 		selected?: boolean;
@@ -8,12 +10,13 @@
 	}
 
 	let { label, selected = false, cost, unit, onclick }: Props = $props();
+	const currencyContext = getCurrencyContext();
 </script>
 
 <button class="recipe-list-item {selected ? 'selected' : ''}" {onclick}>
 	<span class="label">{label}</span>
 	{#if cost !== undefined}
-		<span class="cost">¥{cost.toFixed(0)}</span>
+		<span class="cost">{currencyContext.currency}{cost.toFixed(0)}</span>
 	{/if}
 	{#if unit !== undefined}
 		{' / '}

@@ -84,12 +84,14 @@
 	}
 
 	.conversion-count {
-		background: var(--accent-primary);
-		color: white;
-		font-size: 11px;
-		font-weight: 600;
-		padding: 2px 8px;
-		border-radius: 12px;
+		background: var(--bg-active);
+		color: var(--text-secondary);
+		font-size: 10px;
+		font-weight: 500;
+		padding: 2px 6px;
+		border-radius: 8px;
+		min-width: 16px;
+		text-align: center;
 	}
 
 	.conversions-list {
@@ -97,4 +99,3 @@
 		flex-direction: column;
 	}
 </style>
-

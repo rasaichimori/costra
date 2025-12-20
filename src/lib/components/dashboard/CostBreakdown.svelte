@@ -12,6 +12,7 @@
 		compoundsToIngredients,
 		getAllCosts
 	} from '$lib/utils/costCalculatorUtils';
+	import { getCurrencyContext } from '$lib/contexts/currency.svelte';
 
 	import { Chart as ChartJS } from 'chart.js/auto';
 
@@ -75,6 +76,7 @@
 	}
 
 	let { recipe = $bindable(), costs, compounds, unitConversions }: Props = $props();
+	const currencyContext = getCurrencyContext();
 
 	// Merge costs and compounds into a single record
 	const allCosts = $derived(getAllCosts(costs, compounds ?? {}, unitConversions));
@@ -174,8 +176,8 @@
 							const total = dataset.reduce((a, b) => (a as number) + (b as number), 0 as number);
 							const percent = ((context.parsed as number) / total) * 100;
 							const showName = percent < 5; // name only if slice too small to display
-							const yen = `¥${(context.parsed as number).toFixed(0)}`;
-							return showName ? `${context.label}: ${yen}` : yen;
+							const currency = `${currencyContext.currency}${(context.parsed as number).toFixed(0)}`;
+							return showName ? `${context.label}: ${currency}` : currency;
 						}
 					}
 				}

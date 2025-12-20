@@ -1,4 +1,4 @@
-import { volumeUnits, massUnits, volumeUnitLabels, massUnitLabels } from '$lib/utils/unit';
+import { massUnitLabels, massUnits, volumeUnitLabels, volumeUnits } from '$lib/utils/unit';
 
 export type UnitCategory = 'Volume' | 'Mass' | 'Custom';
 
@@ -27,4 +27,3 @@ export const getUnitsByCategory = (
 	// Custom units
 	return Object.entries(customUnitLabels).map(([id, label]) => ({ id, label }));
 };
-

@@ -18,6 +18,7 @@
 	import { startDrag } from '$lib/utils/dragControls';
 	import AddRecipeIngredientsButton from './AddRecipeIngredientsButton.svelte';
 	import RecipeUnitSelectButton from './RecipeUnitSelectButton.svelte';
+	import { getCurrencyContext } from '$lib/contexts/currency.svelte';
 
 	interface Props {
 		recipe: RecipeDoc;
@@ -56,6 +57,7 @@
 	const availableCompounds = $derived(
 		Object.values(compounds).filter((c) => !recipe.ingredients.some((i) => i.id === c.id))
 	);
+	const currencyContext = getCurrencyContext();
 </script>
 
 <div class="recipe-cost-calculator">
@@ -71,7 +73,7 @@
 				/>
 			</div>
 			<div class="cost-amount">
-				¥{totalCost.toFixed(0)}
+				{currencyContext.currency}{totalCost.toFixed(0)}
 			</div>
 		</div>
 		<ModernButton
@@ -163,7 +165,7 @@
 								</div>
 							</div>
 							<div class="ingredient-cost">
-								¥{recipeCosts[ingredient.id]?.toFixed(0) || '0'}
+								{currencyContext.currency}{recipeCosts[ingredient.id]?.toFixed(0) || '0'}
 							</div>
 							<div class="color-input-group">
 								{#if allCosts[ingredient.id]}

@@ -19,6 +19,7 @@
 	import AddRecipeIngredientsButton from './AddRecipeIngredientsButton.svelte';
 	import UnitChevronDropdownButton from './UnitChevronDropdownButton.svelte';
 	import RecipeUnitSelectButton from './RecipeUnitSelectButton.svelte';
+	import { getCurrencyContext } from '$lib/contexts/currency.svelte';
 
 	interface Props {
 		recipe: CompoundIngredientDoc;
@@ -57,6 +58,7 @@
 	const compoundDoc = $derived(
 		compoundsToIngredients({ [recipe.id]: recipe }, costs, unitConversions)[recipe.id]
 	);
+	const currencyContext = getCurrencyContext();
 </script>
 
 <div class="recipe-cost-calculator">
@@ -73,7 +75,7 @@
 					/>
 				</div>
 				<div class="cost-amount">
-					¥{perUnitCost.toFixed(0)} / {unitLabels[recipe.viewedUnit]}
+					{currencyContext.currency}{perUnitCost.toFixed(0)} / {unitLabels[recipe.viewedUnit]}
 					<UnitChevronDropdownButton
 						bind:customUnitLabels
 						bind:unitConversions
@@ -88,7 +90,7 @@
 					<div class="total-cost-row">
 						<span>Total Cost:</span>
 						<div class="ingredient-cost">
-							¥{totalCost.toFixed(0)}
+							{currencyContext.currency}{totalCost.toFixed(0)}
 						</div>
 					</div>
 					<div class="yield-row-item">
@@ -177,7 +179,7 @@
 								</div>
 							</div>
 							<div class="ingredient-cost">
-								¥{recipeCosts[ingredient.id]?.toFixed(0) || '0'}
+								{currencyContext.currency}{recipeCosts[ingredient.id]?.toFixed(0) || '0'}
 							</div>
 							<div class="color-input-group">
 								{#if costs[ingredient.id]}

@@ -15,6 +15,7 @@
 	import SelectInput from '../common/SelectInput.svelte';
 	import EditableTextField from '../common/EditableTextField.svelte';
 	import { getOverlayContext } from '$lib/contexts/overlay.svelte';
+	import { getCurrencyContext } from '$lib/contexts/currency.svelte';
 	import { randomLightColorHex } from '$lib/utils/color';
 	import ProductUnitSelectButton from './ProductUnitSelectButton.svelte';
 
@@ -39,6 +40,7 @@
 	});
 
 	const { openOverlay, closeOverlay } = getOverlayContext();
+	const currencyContext = getCurrencyContext();
 
 	let selectedFilters = $state<string[]>([]);
 	let newlyCreatedIngredients = $state<Set<string>>(new Set());
@@ -194,7 +196,7 @@
 				<tr>
 					<th class="ingredient-header">Ingredient</th>
 					<th class="category-header">Category</th>
-					<th class="cost-header">Total Cost (¥)</th>
+					<th class="cost-header">Total Cost ({currencyContext.currency})</th>
 					<th class="amount-header">Amount</th>
 					<th class="unit-header">Unit</th>
 					<th class="actions-header">Actions</th>
@@ -230,7 +232,7 @@
 							</td>
 							<td class="cost-cell">
 								<div class="cost-input-container">
-									<span class="currency">¥</span>
+									<span class="currency">{currencyContext.currency}</span>
 									<TextInput
 										bind:value={costs[ingredientId].product.cost}
 										size="small"

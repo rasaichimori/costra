@@ -4,6 +4,7 @@
 	import Sidebar from '$lib/components/common/Sidebar.svelte';
 	import ThemeToggle from '$lib/components/common/ThemeToggle.svelte';
 	import { setThemeContext } from '$lib/contexts/theme.svelte';
+	import { setCurrencyContext } from '$lib/contexts/currency.svelte';
 	import { page } from '$app/state';
 	import '../app.css';
 
@@ -11,6 +12,8 @@
 
 	// Initialize theme context
 	setThemeContext();
+	// Initialize currency context
+	setCurrencyContext();
 </script>
 
 <svelte:head>
