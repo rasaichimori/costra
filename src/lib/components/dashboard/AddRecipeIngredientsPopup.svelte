@@ -1,19 +1,41 @@
 <script lang="ts">
-	import type { IngredientDoc, RecipeDoc, CompoundIngredientDoc } from '$lib/data/schema';
+	import type {
+		IngredientDoc,
+		RecipeDoc,
+		CompoundIngredientDoc,
+		UnitConversion
+	} from '$lib/data/schema';
 	import ModernButton from '../common/ModernButton.svelte';
 	import TextInput from '../common/TextInput.svelte';
+	import { getOverlayContext } from '$lib/contexts/overlay.svelte';
+	import CreateIngredientPopup from './CreateIngredientPopup.svelte';
 
 	interface Props {
 		availableIngredients: IngredientDoc[];
 		availableCompounds?: CompoundIngredientDoc[];
 		recipe: RecipeDoc;
+		costs?: Record<string, IngredientDoc>;
+		recipes?: Record<string, RecipeDoc>;
+		unitConversions?: UnitConversion[];
+		customUnitLabels?: Record<string, string>;
 		onAddIngredient?: (ingredientId: string) => void;
 	}
 
-	let { availableIngredients, availableCompounds = [], recipe, onAddIngredient }: Props = $props();
+	let {
+		availableIngredients,
+		availableCompounds = [],
+		recipe,
+		costs,
+		recipes = {},
+		unitConversions = [],
+		customUnitLabels = {},
+		onAddIngredient
+	}: Props = $props();
 	let searchTerm = $state('');
 	// allow multiple category filters
 	let selectedFilters: string[] = $state([]);
+
+	const { openOverlay, closeOverlay } = getOverlayContext();
 
 	const categories = $derived([
 		...Array.from(new Set(availableCompounds.map((i) => i.category))).sort(),
@@ -38,6 +60,40 @@
 
 	const clearFilters = () => {
 		selectedFilters = [];
+	};
+
+	const openCreateIngredientPopup = () => {
+		if (!costs) return;
+
+		const firstCategory = selectedFilters.length > 0 ? selectedFilters[0] : '';
+
+		openOverlay(
+			CreateIngredientPopup,
+			{
+				costs,
+				recipes,
+				unitConversions,
+				customUnitLabels,
+				initialCategory: firstCategory,
+				initialName: searchTerm.trim(),
+				onclose: (createdIngredientId) => {
+					if (createdIngredientId) {
+						// Add the newly created ingredient to the recipe
+						const newIngredient = costs[createdIngredientId];
+						if (newIngredient) {
+							recipe.ingredients.push({
+								id: createdIngredientId,
+								portion: { amount: 1, unit: newIngredient.product.unit },
+								hidden: false
+							});
+							onAddIngredient?.(createdIngredientId);
+						}
+					}
+					closeOverlay();
+				}
+			},
+			{ transparentBackground: true }
+		);
 	};
 </script>
 
@@ -109,6 +165,16 @@
 				</button>
 			{/each}
 		</div>
+	{:else if searchTerm.trim()}
+		<div class="no-results">
+			<p class="no-ingredients-message">No ingredients found matching "{searchTerm}"</p>
+			{#if costs}
+				<ModernButton variant="primary" onclick={openCreateIngredientPopup}>
+					<i class="fa-solid fa-plus"></i>
+					Create "{searchTerm}"
+				</ModernButton>
+			{/if}
+		</div>
 	{:else}
 		<p class="no-ingredients-message">No ingredients left to add</p>
 	{/if}
@@ -137,6 +203,14 @@
 		color: var(--text-secondary);
 		font-style: italic;
 		text-align: center;
+		padding: 20px;
+	}
+
+	.no-results {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 12px;
 		padding: 20px;
 	}
 

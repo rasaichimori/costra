@@ -213,7 +213,15 @@
 			{:else}
 				<div class="no-ingredients-message">No ingredients added yet</div>
 			{/if}
-			<AddRecipeIngredientsButton {availableIngredients} {availableCompounds} {recipe} />
+			<AddRecipeIngredientsButton
+				{availableIngredients}
+				{availableCompounds}
+				{recipe}
+				{costs}
+				recipes={{}}
+				{unitConversions}
+				{customUnitLabels}
+			/>
 		</div>
 		<CostBreakdown bind:recipe costs={allCosts} {compounds} {unitConversions} />
 	</div>

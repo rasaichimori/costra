@@ -3,15 +3,32 @@
 	import { onMount, tick } from 'svelte';
 	import ModernButton from '../common/ModernButton.svelte';
 	import AddRecipeIngredientsPopup from './AddRecipeIngredientsPopup.svelte';
-	import type { CompoundIngredientDoc, IngredientDoc, RecipeDoc } from '$lib/data/schema';
+	import type {
+		CompoundIngredientDoc,
+		IngredientDoc,
+		RecipeDoc,
+		UnitConversion
+	} from '$lib/data/schema';
 
 	interface Props {
 		availableIngredients: IngredientDoc[];
 		availableCompounds?: CompoundIngredientDoc[];
 		recipe: RecipeDoc;
+		costs?: Record<string, IngredientDoc>;
+		recipes?: Record<string, RecipeDoc>;
+		unitConversions?: UnitConversion[];
+		customUnitLabels?: Record<string, string>;
 	}
 
-	let { availableIngredients, availableCompounds, recipe }: Props = $props();
+	let {
+		availableIngredients,
+		availableCompounds,
+		recipe,
+		costs,
+		recipes = {},
+		unitConversions = [],
+		customUnitLabels = {}
+	}: Props = $props();
 	const { openOverlay, updateOverlay } = getOverlayContext();
 
 	let addBtnElement: HTMLButtonElement | undefined;
@@ -25,6 +42,10 @@
 				availableIngredients,
 				availableCompounds,
 				recipe,
+				costs,
+				recipes,
+				unitConversions,
+				customUnitLabels,
 				onAddIngredient: async () => {
 					await tick();
 					updateAddPopup();
@@ -39,7 +60,15 @@
 		if (!addPopupId || !addBtnElement) return;
 		updateOverlay(
 			addPopupId,
-			{ availableIngredients, availableCompounds, recipe },
+			{
+				availableIngredients,
+				availableCompounds,
+				recipe,
+				costs,
+				recipes,
+				unitConversions,
+				customUnitLabels
+			},
 			{ position: addBtnElement.getBoundingClientRect() }
 		);
 	};
