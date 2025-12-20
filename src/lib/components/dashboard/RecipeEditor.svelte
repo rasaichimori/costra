@@ -143,7 +143,7 @@
 										}}
 										size="small"
 										variant="inline"
-										min={1}
+										min={0}
 										step={1}
 										spinner={true}
 									/>

@@ -1,5 +1,7 @@
 <script lang="ts" generics="T extends string | number">
 	import { onMount } from 'svelte';
+	import { parseFraction } from '$lib/utils/math';
+	import { clamp } from '$lib/utils/math';
 	interface Props<T> {
 		value?: T;
 		placeholder?: string;
@@ -51,8 +53,19 @@
 	}: Props<T> = $props();
 
 	let inputRef: HTMLInputElement;
+	let displayValue = $state<string>('');
 
-	const hasText = $derived(typeof value === 'string' && (value as string).length > 0);
+	const isNumeric = $derived(typeof value === 'number');
+	const hasText = $derived(
+		(typeof value === 'string' && (value as string).length > 0) ||
+			(isNumeric && displayValue.length > 0)
+	);
+
+	const isIncompleteDecimal = (inputStr: string): boolean => {
+		const trimmed = inputStr.trim();
+		// Check if it ends with a decimal point (e.g., "0.", "123.")
+		return trimmed.endsWith('.') && /^-?\d+\.$/.test(trimmed);
+	};
 
 	const clearValue = () => {
 		if (typeof value === 'string') {
@@ -61,6 +74,12 @@
 			oninput?.('' as T);
 			onchange?.('' as T);
 			inputRef?.focus();
+		} else if (isNumeric) {
+			displayValue = '';
+			value = 0 as T;
+			oninput?.(0 as T);
+			onchange?.(0 as T);
+			inputRef?.focus();
 		}
 	};
 
@@ -68,20 +87,70 @@
 		if (autofocus && inputRef) {
 			inputRef.focus();
 		}
+		// Initialize displayValue from value prop
+		if (isNumeric) {
+			displayValue = (value as number).toString();
+		}
 	});
+
+	const parseAndValidate = (inputStr: string): number => {
+		const parsed = parseFraction(inputStr);
+		let validated = parsed;
+		if (min !== undefined) {
+			validated = Math.max(validated, min);
+		}
+		if (max !== undefined) {
+			validated = Math.min(validated, max);
+		}
+		return validated;
+	};
 
 	const handleInput = (e: Event) => {
 		const target = e.target as HTMLInputElement;
-		const newValue = typeof value === 'number' ? parseFloat(target.value) || 0 : target.value;
-		value = newValue as T;
-		oninput?.(newValue as T);
+		if (isNumeric) {
+			// For numeric inputs, keep the raw string for display
+			displayValue = target.value;
+			// If it's an incomplete decimal (ends with "."), don't parse yet
+			if (isIncompleteDecimal(target.value)) {
+				// Keep the previous numeric value, just update display
+				oninput?.(value as T);
+			} else {
+				// Parse and update the numeric value
+				const parsed = parseAndValidate(target.value);
+				value = parsed as T;
+				oninput?.(parsed as T);
+			}
+		} else {
+			value = target.value as T;
+			oninput?.(target.value as T);
+		}
 	};
 
 	const handleChange = (e: Event) => {
 		const target = e.target as HTMLInputElement;
-		const newValue = typeof value === 'number' ? parseFloat(target.value) || 0 : target.value;
-		onchange?.(newValue as T);
+		if (isNumeric) {
+			// Parse, validate, and update both display and value
+			const parsed = parseAndValidate(target.value);
+			displayValue = parsed.toString();
+			value = parsed as T;
+			onchange?.(parsed as T);
+		} else {
+			value = target.value as T;
+			onchange?.(target.value as T);
+		}
 	};
+
+	const handleBlur = (e: FocusEvent) => {
+		if (isNumeric) {
+			// On blur, ensure display value matches the parsed numeric value
+			const parsed = parseAndValidate(displayValue);
+			displayValue = parsed.toString();
+			value = parsed as T;
+		}
+		onblur?.(e);
+	};
+
+	const inputValue = $derived(isNumeric ? displayValue : (value as string));
 </script>
 
 <div class="input-container input-{variant} input-{size}" {style}>
@@ -97,21 +166,18 @@
 		class="input"
 		class:error={!!error}
 		class:no-spinner={!spinner}
-		type={typeof value === 'number' ? 'number' : 'text'}
-		{value}
+		type="text"
+		value={inputValue}
 		{placeholder}
 		{disabled}
 		{readonly}
-		{min}
-		{max}
-		{step}
 		{required}
 		aria-label={ariaLabel || label}
 		oninput={handleInput}
 		onchange={handleChange}
+		onblur={handleBlur}
 		{onkeydown}
 		{onfocus}
-		{onblur}
 	/>
 
 	{#if clearable && hasText}
@@ -213,17 +279,6 @@
 	.input-large .input {
 		padding: 12px 16px;
 		font-size: 1rem;
-	}
-
-	/* Hide native number input spinners when spinner prop is false */
-	.input.no-spinner::-webkit-outer-spin-button,
-	.input.no-spinner::-webkit-inner-spin-button {
-		-webkit-appearance: none;
-		margin: 0;
-	}
-
-	.input.no-spinner[type='number'] {
-		-moz-appearance: textfield;
 	}
 
 	.clear-btn {
