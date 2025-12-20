@@ -43,10 +43,13 @@
 	const currencyContext = getCurrencyContext();
 
 	let selectedFilters = $state<string[]>([]);
+	let searchTerm = $state('');
 	let newlyCreatedIngredients = $state<Set<string>>(new Set());
 	const filteredIngredients = $derived.by(() => {
 		const allIds = Object.values(costs).map((d) => d.id);
 		let filtered: string[];
+
+		// Filter by category
 		if (selectedFilters.length === 0) {
 			filtered = allIds;
 		} else {
@@ -55,6 +58,16 @@
 				return ingredient && selectedFilters.includes(ingredient.category);
 			});
 		}
+
+		// Filter by search term
+		if (searchTerm.trim()) {
+			const searchLower = searchTerm.toLowerCase().trim();
+			filtered = filtered.filter((ingredientId) => {
+				const ingredient = costs[ingredientId];
+				return ingredient && ingredient.name.toLowerCase().includes(searchLower);
+			});
+		}
+
 		return filtered;
 	});
 
@@ -163,6 +176,16 @@
 
 <div class="ingredient-cost-section">
 	<div class="filter-section">
+		<div class="search-section">
+			<TextInput
+				bind:value={searchTerm}
+				size="medium"
+				variant="inline"
+				placeholder={!searchTerm ? 'Search ingredients...' : ''}
+				clearable={true}
+				icon="fa-solid fa-magnifying-glass"
+			/>
+		</div>
 		<h3>Filter by Type:</h3>
 		<div class="filter-pills">
 			{#each categories as category}
@@ -297,6 +320,11 @@
 		display: flex;
 		flex-direction: column;
 		gap: 16px;
+	}
+
+	.search-section {
+		width: 100%;
+		max-width: 400px;
 	}
 
 	.filter-section h3 {

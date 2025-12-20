@@ -19,6 +19,7 @@
 		spinner?: boolean;
 		autofocus?: boolean;
 		clearable?: boolean;
+		icon?: string;
 		style?: string;
 		onchange?: (value: T) => void;
 		oninput?: (value: T) => void;
@@ -44,6 +45,7 @@
 		spinner = false,
 		autofocus = false,
 		clearable = false,
+		icon,
 		style,
 		onchange,
 		oninput,
@@ -177,28 +179,34 @@
 		</label>
 	{/if}
 
-	<input
-		bind:this={inputRef}
-		class="input"
-		class:error={!!error}
-		class:no-spinner={!spinner}
-		type="text"
-		value={inputValue}
-		{placeholder}
-		{disabled}
-		{readonly}
-		{required}
-		aria-label={ariaLabel || label}
-		oninput={handleInput}
-		onchange={handleChange}
-		onblur={handleBlur}
-		{onkeydown}
-		{onfocus}
-	/>
+	<div class="input-wrapper" class:has-icon={!!icon}>
+		{#if icon}
+			<i class="{icon} input-icon"></i>
+		{/if}
+		<input
+			bind:this={inputRef}
+			class="input"
+			class:error={!!error}
+			class:no-spinner={!spinner}
+			class:has-icon={!!icon}
+			type="text"
+			value={inputValue}
+			{placeholder}
+			{disabled}
+			{readonly}
+			{required}
+			aria-label={ariaLabel || label}
+			oninput={handleInput}
+			onchange={handleChange}
+			onblur={handleBlur}
+			{onkeydown}
+			{onfocus}
+		/>
 
-	{#if clearable && hasText}
-		<button type="button" class="clear-btn" onclick={clearValue} aria-label="Clear">×</button>
-	{/if}
+		{#if clearable && hasText}
+			<button type="button" class="clear-btn" onclick={clearValue} aria-label="Clear">×</button>
+		{/if}
+	</div>
 
 	{#if error}
 		<span class="error-message">{error}</span>
@@ -234,6 +242,26 @@
 	.required {
 		color: var(--danger);
 		margin-left: 2px;
+	}
+
+	.input-wrapper {
+		position: relative;
+		width: 100%;
+		display: flex;
+		align-items: center;
+	}
+
+	.input-icon {
+		position: absolute;
+		left: 12px;
+		color: var(--text-secondary);
+		font-size: 14px;
+		pointer-events: none;
+		z-index: 1;
+	}
+
+	.input-wrapper.has-icon .input {
+		padding-left: 36px;
 	}
 
 	.input {
@@ -287,14 +315,36 @@
 		font-size: 0.75rem;
 	}
 
+	.input-small .input-wrapper.has-icon .input {
+		padding-left: 28px;
+	}
+
+	.input-small .input-icon {
+		left: 8px;
+		font-size: 12px;
+	}
+
 	.input-medium .input {
 		padding: 8px 12px;
 		font-size: 0.875rem;
 	}
 
+	.input-medium .input-wrapper.has-icon .input {
+		padding-left: 36px;
+	}
+
 	.input-large .input {
 		padding: 12px 16px;
 		font-size: 1rem;
+	}
+
+	.input-large .input-wrapper.has-icon .input {
+		padding-left: 44px;
+	}
+
+	.input-large .input-icon {
+		left: 16px;
+		font-size: 16px;
 	}
 
 	.clear-btn {

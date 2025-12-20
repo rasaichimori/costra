@@ -75,6 +75,7 @@
 		placeholder={!searchTerm ? 'Search ingredients...' : ''}
 		autofocus={true}
 		clearable={true}
+		icon="fa-solid fa-magnifying-glass"
 	/>
 
 	{#if filteredIngredients.length > 0}

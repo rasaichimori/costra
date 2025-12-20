@@ -71,6 +71,7 @@
 			placeholder={!searchTerm ? 'Search unit...' : ''}
 			autofocus={true}
 			clearable={true}
+			icon="fa-solid fa-magnifying-glass"
 		/>
 	</div>
 	{#if searchTerm !== '' && !unitGroups
