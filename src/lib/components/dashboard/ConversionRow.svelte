@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { UnitConversion } from '$lib/data/schema';
 	import { getUnitCategory, getUnitsByCategory } from '$lib/utils/unitCategoryUtils';
+	import { isSmallerUnit } from '$lib/utils/unit';
 	import ModernButton from '../common/ModernButton.svelte';
 	import TextInput from '../common/TextInput.svelte';
 
@@ -26,11 +27,31 @@
 		onDelete: () => void;
 	} = $props();
 
-	const inputCategory = $derived(getUnitCategory(conversion.inputUnit as string));
-	const outputCategory = $derived(getUnitCategory(conversion.outputUnit as string));
+	// Determine display order: smaller unit first
+	// Normalize for display if needed (for backwards compatibility with non-normalized conversions)
+	const outputIsSmaller = isSmallerUnit(conversion.outputUnit, conversion.inputUnit);
+	const isNormalized = $derived(outputIsSmaller === false || outputIsSmaller === null);
+
+	const displayInputUnit = $derived(!isNormalized ? conversion.outputUnit : conversion.inputUnit);
+	const displayOutputUnit = $derived(!isNormalized ? conversion.inputUnit : conversion.outputUnit);
+	const displayFactor = $derived(
+		!isNormalized ? 1 / conversion.conversionFactor : conversion.conversionFactor
+	);
+
+	// For display: show "X smallerUnit = Y largerUnit"
+	// If normalized: inputUnit (smaller) × factor = outputUnit (larger)
+	// If not normalized: outputUnit (smaller) × (1/factor) = inputUnit (larger)
+	const displayInputAmount = $derived(
+		!isNormalized ? inputAmount * conversion.conversionFactor : inputAmount
+	);
+	const displayOutputAmount = $derived(
+		!isNormalized ? inputAmount : inputAmount * conversion.conversionFactor
+	);
+
+	const inputCategory = $derived(getUnitCategory(displayInputUnit as string));
+	const outputCategory = $derived(getUnitCategory(displayOutputUnit as string));
 	const inputUnits = $derived(getUnitsByCategory(inputCategory, customUnitLabels));
 	const outputUnits = $derived(getUnitsByCategory(outputCategory, customUnitLabels));
-	const outputAmount = $derived(inputAmount * conversion.conversionFactor);
 </script>
 
 <div class="conversion-row">
@@ -42,18 +63,36 @@
 	<div class="conversion-editor">
 		<div class="conversion-part">
 			<TextInput
-				value={inputAmount}
+				value={displayInputAmount}
 				size="small"
 				variant="inline"
 				min={0.001}
 				step={0.001}
-				onchange={(newVal) => onInputAmountChange(newVal as number)}
+				onchange={(newVal) => {
+					// Convert display amount back to stored format
+					if (!isNormalized) {
+						// Stored as larger → smaller, display as smaller → larger
+						// displayInputAmount is the smaller unit (outputUnit in stored)
+						// Convert back: stored outputAmount = displayInputAmount
+						onOutputAmountChange(newVal as number);
+					} else {
+						// Already normalized: stored inputUnit is smaller
+						onInputAmountChange(newVal as number);
+					}
+				}}
 				style="width:fit-content;"
 			/>
 			<select
 				class="unit-select"
-				value={conversion.inputUnit}
-				onchange={(e) => onInputUnitChange(e.currentTarget.value)}
+				value={displayInputUnit}
+				onchange={(e) => {
+					// Convert display unit back to stored format
+					if (!isNormalized) {
+						onOutputUnitChange(e.currentTarget.value);
+					} else {
+						onInputUnitChange(e.currentTarget.value);
+					}
+				}}
 			>
 				{#each inputUnits as unit}
 					<option value={unit.id}>{unit.label}</option>
@@ -63,17 +102,34 @@
 		</div>
 		<div class="conversion-part">
 			<TextInput
-				value={outputAmount}
+				value={displayOutputAmount}
 				size="small"
 				variant="inline"
 				min={0.001}
 				step={0.001}
-				onchange={(newVal) => onOutputAmountChange(newVal as number)}
+				onchange={(newVal) => {
+					// Convert display amount back to stored format
+					if (!isNormalized) {
+						// Stored as larger → smaller, display as smaller → larger
+						// displayOutputAmount is the larger unit (inputUnit in stored)
+						onInputAmountChange(newVal as number);
+					} else {
+						// Already normalized: stored outputUnit is larger
+						onOutputAmountChange(newVal as number);
+					}
+				}}
 			/>
 			<select
 				class="unit-select"
-				value={conversion.outputUnit}
-				onchange={(e) => onOutputUnitChange(e.currentTarget.value)}
+				value={displayOutputUnit}
+				onchange={(e) => {
+					// Convert display unit back to stored format
+					if (!isNormalized) {
+						onInputUnitChange(e.currentTarget.value);
+					} else {
+						onOutputUnitChange(e.currentTarget.value);
+					}
+				}}
 			>
 				{#each outputUnits as unit}
 					<option value={unit.id}>{unit.label}</option>

@@ -168,6 +168,8 @@
 							compoundIngredients = importedCompoundIngredients;
 							unitConversions = importedConversions;
 							customUnitLabels = importedCustomUnitLabels;
+							// Close the import modal after all conversions are done
+							closeOverlay(importModalId);
 							console.log('done importing batch conversions');
 							return;
 						}
@@ -201,6 +203,8 @@
 					compoundIngredients = importedCompoundIngredients;
 					unitConversions = importedConversions;
 					customUnitLabels = importedCustomUnitLabels;
+					// Close the import modal
+					closeOverlay(importModalId);
 				}
 			},
 			onclose: () => closeOverlay()

@@ -2,6 +2,7 @@
 	import type { UnitConversion } from '$lib/data/schema';
 	import ModernButton from '../common/ModernButton.svelte';
 	import TextInput from '../common/TextInput.svelte';
+	import { isSmallerUnit } from '$lib/utils/unit';
 
 	interface Props {
 		ingredientId: string;
@@ -13,8 +14,26 @@
 		onclose?: () => void;
 	}
 
-	let { ingredientId, ingredientName, inputUnit, outputUnit, unitLabels, onSave, onclose }: Props =
-		$props();
+	let {
+		ingredientId,
+		ingredientName,
+		inputUnit: originalInputUnit,
+		outputUnit: originalOutputUnit,
+		unitLabels,
+		onSave,
+		onclose
+	}: Props = $props();
+
+	// Determine which unit is smaller for display purposes
+	const outputIsSmaller = isSmallerUnit(originalOutputUnit, originalInputUnit);
+
+	// Determine display order: smaller unit first if we can determine sizes
+	const smallerUnit = $derived(outputIsSmaller === true ? originalOutputUnit : originalInputUnit);
+	const largerUnit = $derived(outputIsSmaller === true ? originalInputUnit : originalOutputUnit);
+
+	// If outputUnit is smaller, we need to invert the factor for display
+	// (because we're asking "how many smaller in one larger")
+	const needsInvertedFactor = $derived(outputIsSmaller === true);
 
 	let conversionFactor = $state<number>(1);
 	let error = $state<string>('');
@@ -29,11 +48,19 @@
 			return;
 		}
 
+		// Store normalized: smaller unit first
+		// If outputIsSmaller is true, we're displaying smaller → larger, so store it that way
+		// The factor represents: 1 largerUnit = factor smallerUnit
+		// So: smallerUnit × factor = largerUnit, meaning inputUnit × factor = outputUnit
+		const finalInputUnit = smallerUnit;
+		const finalOutputUnit = largerUnit;
+		const finalFactor = conversionFactor;
+
 		const conversion: UnitConversion = {
 			ingredientId,
-			inputUnit,
-			outputUnit,
-			conversionFactor
+			inputUnit: finalInputUnit,
+			outputUnit: finalOutputUnit,
+			conversionFactor: finalFactor
 		};
 
 		onSave(conversion);
@@ -51,8 +78,8 @@
 <div class="conversion-modal">
 	<h3>Add Unit Conversion</h3>
 	<p class="description">
-		How many <strong>{unitLabels[inputUnit] || inputUnit}</strong> equals{' '}
-		<strong>{unitLabels[outputUnit] || outputUnit}</strong> for <strong>{ingredientName}</strong>?
+		How many <strong>{unitLabels[smallerUnit] || smallerUnit}</strong> is in one{' '}
+		<strong>{unitLabels[largerUnit] || largerUnit}</strong> for <strong>{ingredientName}</strong>?
 	</p>
 	<div class="input-group">
 		<TextInput
@@ -66,8 +93,8 @@
 			{error}
 		/>
 		<p class="hint">
-			{unitLabels[inputUnit] || inputUnit} × {conversionFactor} ={' '}
-			{unitLabels[outputUnit] || outputUnit}
+			1 {unitLabels[largerUnit] || largerUnit} = {conversionFactor}{' '}
+			{unitLabels[smallerUnit] || smallerUnit}
 		</p>
 	</div>
 	<div class="actions">

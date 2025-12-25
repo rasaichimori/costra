@@ -10,8 +10,10 @@ import {
 	massUnits,
 	volumeUnitLabels,
 	volumeUnits,
+	type MassUnit,
 	type UnitOption,
-	type UnitOptionGroup
+	type UnitOptionGroup,
+	type VolumeUnit
 } from '$lib/utils/unit';
 
 /**
@@ -90,8 +92,21 @@ export const getRecipesUsingIngredientWithUnit = (
 };
 
 /**
+ * Get the unit category type
+ */
+const getUnitType = (unit: string): 'volume' | 'mass' | 'custom' => {
+	if (volumeUnits.includes(unit as VolumeUnit)) return 'volume';
+	if (massUnits.includes(unit as MassUnit)) return 'mass';
+	return 'custom';
+};
+
+/**
  * Find all missing conversions between portion units and a target unit
  * Returns conversions needed FROM each portion unit TO the target unit
+ *
+ * Smart deduplication: If multiple conversions are needed between the same
+ * unit types (e.g., tbs→g and cup→g), only one is requested since standard
+ * conversions within a type can derive the others.
  */
 export const findMissingConversions = (
 	portionUnits: string[],
@@ -107,12 +122,34 @@ export const findMissingConversions = (
 		outputUnit: string;
 	}[] = [];
 
+	const targetType = getUnitType(targetUnit);
+
+	// Track which cross-type conversions we've already added
+	// Key: "fromType:toType" e.g. "volume:mass"
+	const crossTypeConversionsAdded = new Set<string>();
+
 	for (const portionUnit of portionUnits) {
 		if (portionUnit === targetUnit) {
 			continue;
 		}
 
 		if (!hasConversion(portionUnit, targetUnit, ingredientId, conversions)) {
+			const portionType = getUnitType(portionUnit);
+
+			// For cross-type conversions, only add one representative
+			if (portionType !== targetType && portionType !== 'custom' && targetType !== 'custom') {
+				const crossTypeKey = `${portionType}:${targetType}`;
+				const reverseKey = `${targetType}:${portionType}`;
+
+				if (
+					crossTypeConversionsAdded.has(crossTypeKey) ||
+					crossTypeConversionsAdded.has(reverseKey)
+				) {
+					continue;
+				}
+				crossTypeConversionsAdded.add(crossTypeKey);
+			}
+
 			missing.push({
 				inputUnit: portionUnit,
 				outputUnit: targetUnit
@@ -126,6 +163,10 @@ export const findMissingConversions = (
 /**
  * Find all missing conversions needed for imported data
  * Returns a map of ingredientId -> missing conversions array
+ *
+ * Smart deduplication: If multiple conversions are needed between the same
+ * unit types (e.g., g→tbs and g→cup), only one is requested since standard
+ * conversions within a type can derive the others.
  */
 export const findAllMissingConversionsFromImport = (
 	costs: Record<string, IngredientDoc>,
@@ -147,13 +188,36 @@ export const findAllMissingConversionsFromImport = (
 		}
 	>();
 
-	// Helper to add a missing conversion
+	// Track which cross-type conversions we've already added per ingredient
+	// Key: "ingredientId:fromType:toType" e.g. "abc123:mass:volume"
+	const crossTypeConversionsAdded = new Set<string>();
+
+	// Helper to add a missing conversion (with smart deduplication)
 	const addMissingConversion = (
 		ingredientId: string,
 		ingredientName: string,
 		inputUnit: string,
 		outputUnit: string
 	) => {
+		const inputType = getUnitType(inputUnit);
+		const outputType = getUnitType(outputUnit);
+
+		// For cross-type conversions (e.g., mass↔volume), only add one representative
+		// since standard conversions within a type can derive the others
+		if (inputType !== outputType && inputType !== 'custom' && outputType !== 'custom') {
+			const crossTypeKey = `${ingredientId}:${inputType}:${outputType}`;
+			const reverseKey = `${ingredientId}:${outputType}:${inputType}`;
+
+			// If we already have a conversion between these types, skip
+			if (
+				crossTypeConversionsAdded.has(crossTypeKey) ||
+				crossTypeConversionsAdded.has(reverseKey)
+			) {
+				return;
+			}
+			crossTypeConversionsAdded.add(crossTypeKey);
+		}
+
 		const existing = missingMap.get(ingredientId);
 		const conversion = { inputUnit, outputUnit };
 

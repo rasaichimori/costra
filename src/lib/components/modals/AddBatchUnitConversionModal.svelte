@@ -3,6 +3,7 @@
 	import ModernButton from '../common/ModernButton.svelte';
 	import TextInput from '../common/TextInput.svelte';
 	import { getRecipesUsingIngredientWithUnit } from '$lib/utils/unitSelectUtils';
+	import { isSmallerUnit } from '$lib/utils/unit';
 
 	interface Props {
 		ingredientId: string;
@@ -53,12 +54,21 @@
 			return;
 		}
 
-		const conversions: UnitConversion[] = missingConversions.map((missing, index) => ({
-			ingredientId,
-			inputUnit: missing.inputUnit,
-			outputUnit: missing.outputUnit,
-			conversionFactor: conversionFactors[index]
-		}));
+		const conversions: UnitConversion[] = missingConversions.map((missing, index) => {
+			// Determine display order: smaller unit first
+			const outputIsSmaller = isSmallerUnit(missing.outputUnit, missing.inputUnit);
+			const smallerUnit = outputIsSmaller === true ? missing.outputUnit : missing.inputUnit;
+			const largerUnit = outputIsSmaller === true ? missing.inputUnit : missing.outputUnit;
+
+			// Store normalized: smaller unit first
+			// The factor represents: 1 largerUnit = factor smallerUnit
+			return {
+				ingredientId,
+				inputUnit: smallerUnit,
+				outputUnit: largerUnit,
+				conversionFactor: conversionFactors[index]
+			};
+		});
 
 		onSave(conversions);
 	};
@@ -99,10 +109,13 @@
 	<div class="conversions-list">
 		{#each missingConversions as missing, index}
 			{@const recipesUsingUnit = getRecipesForUnit(missing.inputUnit)}
+			{@const outputIsSmaller = isSmallerUnit(missing.outputUnit, missing.inputUnit)}
+			{@const smallerUnit = outputIsSmaller === true ? missing.outputUnit : missing.inputUnit}
+			{@const largerUnit = outputIsSmaller === true ? missing.inputUnit : missing.outputUnit}
 			<div class="conversion-row">
 				<p class="conversion-question">
-					How many <strong>{getUnitLabel(missing.inputUnit)}</strong> equals 1
-					<strong>{getUnitLabel(missing.outputUnit)}</strong>?
+					How many <strong>{getUnitLabel(smallerUnit)}</strong> is in one{' '}
+					<strong>{getUnitLabel(largerUnit)}</strong>?
 				</p>
 				{#if recipesUsingUnit.length > 0}
 					<div class="recipes-list">
@@ -130,9 +143,8 @@
 						error={errors[index]}
 					/>
 					<span class="hint">
-						{getUnitLabel(missing.inputUnit)} × {conversionFactors[index]} = {getUnitLabel(
-							missing.outputUnit
-						)}
+						1 {getUnitLabel(largerUnit)} = {conversionFactors[index]}{' '}
+						{getUnitLabel(smallerUnit)}
 					</span>
 				</div>
 			</div>

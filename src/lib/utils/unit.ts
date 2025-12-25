@@ -184,3 +184,64 @@ export const getConversionFactor = (
 		`No conversion path found from ${inputUnit} to ${outputUnit} for ingredient ${ingredientId}`
 	);
 };
+
+/**
+ * Determines if unit1 is smaller than unit2 based on standard conversion factors.
+ * Returns null if comparison cannot be determined (custom units).
+ *
+ * For cross-type conversions (mass ↔ volume), mass is considered "smaller"
+ * since 1 cup ≈ 240g, making "How many grams in one cup?" the natural question.
+ */
+export const isSmallerUnit = (unit1: Unit | string, unit2: Unit | string): boolean | null => {
+	const unit1IsVolume = volumeUnits.includes(unit1 as VolumeUnit);
+	const unit1IsMass = massUnits.includes(unit1 as MassUnit);
+	const unit2IsVolume = volumeUnits.includes(unit2 as VolumeUnit);
+	const unit2IsMass = massUnits.includes(unit2 as MassUnit);
+
+	// Check if both are volume units
+	if (unit1IsVolume && unit2IsVolume) {
+		const factor1 = TbsMultipliers[unit1 as VolumeUnit];
+		const factor2 = TbsMultipliers[unit2 as VolumeUnit];
+		return factor1 < factor2;
+	}
+
+	// Check if both are mass units
+	if (unit1IsMass && unit2IsMass) {
+		const factor1 = MassUnitConversionFactors[unit1 as MassUnit];
+		const factor2 = MassUnitConversionFactors[unit2 as MassUnit];
+		return factor1 < factor2;
+	}
+
+	// Cross-type conversion: mass is considered "smaller" than volume
+	// This makes "How many grams in one cup?" the natural question format
+	if (unit1IsMass && unit2IsVolume) {
+		return true; // mass < volume
+	}
+	if (unit1IsVolume && unit2IsMass) {
+		return false; // volume > mass
+	}
+
+	// Cannot determine for custom units
+	return null;
+};
+
+/**
+ * Normalizes a unit conversion so that the smaller unit comes first.
+ * If the output unit is smaller, swaps the units and inverts the factor.
+ */
+export const normalizeUnitConversion = (conversion: UnitConversion): UnitConversion => {
+	const outputIsSmaller = isSmallerUnit(conversion.outputUnit, conversion.inputUnit);
+
+	if (outputIsSmaller === true) {
+		// Swap units and invert factor
+		return {
+			...conversion,
+			inputUnit: conversion.outputUnit,
+			outputUnit: conversion.inputUnit,
+			conversionFactor: 1 / conversion.conversionFactor
+		};
+	}
+
+	// Already in correct order
+	return conversion;
+};

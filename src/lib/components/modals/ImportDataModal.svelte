@@ -1,7 +1,13 @@
 <script lang="ts">
-	import type { CompoundIngredientDoc, IngredientDoc, RecipeDoc } from '$lib/data/schema';
+	import type {
+		CompoundIngredientDoc,
+		IngredientDoc,
+		RecipeDoc,
+		UnitConversion
+	} from '$lib/data/schema';
 	import ModernButton from '../common/ModernButton.svelte';
 	import Toast from '../common/Toast.svelte';
+	import { normalizeUnitConversion } from '$lib/utils/unit';
 
 	// Props expected: onLoad callback to pass parsed data back, onclose to inform parent
 	let { onLoad, onclose } = $props();
@@ -241,6 +247,14 @@
 				setTimeout(() => (showToast = false), 3000);
 				return;
 			}
+
+			// Normalize unit conversions to have smaller unit first
+			if (data.unitConversions && Array.isArray(data.unitConversions)) {
+				data.unitConversions = data.unitConversions.map((conv: UnitConversion) =>
+					normalizeUnitConversion(conv)
+				);
+			}
+
 			onLoad(data);
 		} catch (e) {
 			error = e instanceof Error ? `Invalid JSON format: ${e.message}` : 'Invalid JSON format.';
