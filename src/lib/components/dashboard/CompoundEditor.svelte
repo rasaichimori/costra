@@ -75,7 +75,8 @@
 					/>
 				</div>
 				<div class="cost-amount">
-					{currencyContext.currency}{perUnitCost.toFixed(0)} / {unitLabels[recipe.viewedUnit]}
+					{currencyContext.currency}{perUnitCost.toFixed(0)} / {unitLabels[recipe.viewedUnit] ||
+						recipe.viewedUnit}
 					<UnitChevronDropdownButton
 						bind:customUnitLabels
 						bind:unitConversions

@@ -111,7 +111,7 @@
 </script>
 
 <button onclick={(e) => openUnitPopup(e.currentTarget as HTMLButtonElement)}>
-	{unitLabels[recipePortion.unit]}</button
+	{unitLabels[recipePortion.unit] || recipePortion.unit}</button
 >
 
 <style>

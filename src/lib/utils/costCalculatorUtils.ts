@@ -61,16 +61,25 @@ export const calculateRecipeCosts = (
 		}
 
 		const ingredientPrice = ingredientDoc.product.cost;
-		const conversionFactor = getConversionFactor(
-			ingredient.portion.unit,
-			ingredientDoc.product.unit,
-			ingredient.id,
-			conversions
-		);
+		try {
+			const conversionFactor = getConversionFactor(
+				ingredient.portion.unit,
+				ingredientDoc.product.unit,
+				ingredient.id,
+				conversions
+			);
 
-		const productUnitPortion = conversionFactor * ingredient.portion.amount;
-		const ratioUsed = productUnitPortion / ingredientDoc.product.amount;
-		recipeCosts[ingredient.id] = ingredientPrice * ratioUsed;
+			const productUnitPortion = conversionFactor * ingredient.portion.amount;
+			const ratioUsed = productUnitPortion / ingredientDoc.product.amount;
+			recipeCosts[ingredient.id] = ingredientPrice * ratioUsed;
+		} catch (error) {
+			console.warn(
+				`Failed to convert ${ingredient.portion.unit} to ${ingredientDoc.product.unit} for ingredient ${ingredient.id}:`,
+				error
+			);
+			// Set cost to 0 if conversion fails
+			recipeCosts[ingredient.id] = 0;
+		}
 	});
 
 	return recipeCosts;

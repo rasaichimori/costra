@@ -142,9 +142,14 @@ export const getConversionFactor = (
 	// Add custom conversions from the conversions array
 	for (const conv of conversions) {
 		if (conv.ingredientId === ingredientId) {
-			// Add forward direction
+			// The stored conversion factor represents: inputAmount × factor = outputAmount
+			// Example: inputUnit="g", outputUnit="cup", factor=140 means "gAmount × 140 = cupAmount"
+			// This means: 140g = 1 cup, or equivalently: 1g = (1/140) cup
+			// To convert from inputUnit to outputUnit: outputAmount = inputAmount × factor
+			// To convert from outputUnit to inputUnit: inputAmount = outputAmount / factor = outputAmount × (1/factor)
+			// Add forward direction: inputUnit → outputUnit
 			addEdge(conv.inputUnit, conv.outputUnit, conv.conversionFactor);
-			// Add reverse direction
+			// Add reverse direction: outputUnit → inputUnit
 			addEdge(conv.outputUnit, conv.inputUnit, 1 / conv.conversionFactor);
 		}
 	}

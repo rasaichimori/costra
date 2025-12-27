@@ -16,8 +16,8 @@
 
 	import { Chart as ChartJS } from 'chart.js/auto';
 
-	// Custom plugin to render labels (ingredient name inside segment and percentage outside)
-	const labelPlugin: Plugin<'doughnut'> = {
+	// Helper function to create label plugin with current recipe reference
+	const createLabelPlugin = (currentRecipe: RecipeDoc): Plugin<'doughnut'> => ({
 		id: 'labels',
 		afterDatasetsDraw(chart) {
 			const meta = chart.getDatasetMeta(0);
@@ -41,7 +41,7 @@
 
 			ctx.save();
 			(meta.data as any[]).forEach((arc, idx) => {
-				const ing = recipe.ingredients[idx];
+				const ing = currentRecipe.ingredients[idx];
 				if (!ing || ing.hidden) return; // skip hidden
 				const value = chart.data.datasets[0].data[idx] as number;
 				const percent = (value / total) * 100;
@@ -63,10 +63,7 @@
 			});
 			ctx.restore();
 		}
-	};
-
-	// Register plugin once (Chart.js ignores duplicates)
-	ChartJS.register(labelPlugin);
+	});
 
 	interface Props {
 		recipe: RecipeDoc;
@@ -96,6 +93,7 @@
 
 	let canvas: HTMLCanvasElement;
 	let chart = $state<Chart<'doughnut'> | undefined>(undefined);
+	let resizeHandler: (() => void) | null = null;
 
 	// Unified visibility sync helper
 	const syncVisibility = (idx: number, hidden: boolean) => {
@@ -114,7 +112,15 @@
 		}
 	};
 
-	async function createChart() {
+	const createChart = () => {
+		// Destroy existing chart if it exists
+		if (chart) {
+			if (resizeHandler) {
+				window.removeEventListener('resize', resizeHandler);
+			}
+			chart.destroy();
+		}
+
 		const labels = labelsAll;
 		const data = chartDataValues;
 
@@ -127,6 +133,9 @@
 				}
 			]
 		};
+
+		// Create plugin with current recipe reference
+		const labelPlugin = createLabelPlugin(recipe);
 
 		const options: ChartOptions<'doughnut'> = {
 			responsive: true,
@@ -185,22 +194,34 @@
 			maintainAspectRatio: false
 		};
 
-		chart = new ChartJS(canvas, { type: 'doughnut', data: chartData, options });
+		chart = new ChartJS(canvas, { type: 'doughnut', data: chartData, options, plugins: [labelPlugin] });
+		
+		// Store recipe ID on chart instance to detect recipe changes
+		(chart as any).__recipeId = recipe.id;
 
-		const resize = () => chart?.resize();
-		window.addEventListener('resize', resize);
-		onDestroy(() => {
-			window.removeEventListener('resize', resize);
-			chart?.destroy();
-		});
+		resizeHandler = () => chart?.resize();
+		window.addEventListener('resize', resizeHandler);
 	}
 
 	$effect(() => {
 		if (!chart) return;
 		const labels = labelsAll;
+		const data = chartDataValues;
+		const bgColors = colors;
+		
+		// Check if recipe reference changed - if so, recreate chart with new plugin
+		const currentRecipeId = recipe.id;
+		const chartRecipeId = (chart as any).__recipeId;
+		
+		if (chartRecipeId !== currentRecipeId) {
+			// Recipe changed, recreate chart with new plugin
+			createChart();
+			return;
+		}
+		
 		chart.data.labels = labels;
-		chart.data.datasets[0].data = chartDataValues;
-		chart.data.datasets[0].backgroundColor = colors;
+		chart.data.datasets[0].data = data;
+		chart.data.datasets[0].backgroundColor = bgColors;
 		chart.update();
 	});
 
@@ -212,7 +233,15 @@
 		});
 	});
 
-	onMount(createChart);
+	onMount(() => {
+		createChart();
+		return () => {
+			if (resizeHandler) {
+				window.removeEventListener('resize', resizeHandler);
+			}
+			chart?.destroy();
+		};
+	});
 </script>
 
 <div class="chart-wrapper">
