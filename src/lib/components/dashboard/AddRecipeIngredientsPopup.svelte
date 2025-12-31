@@ -185,7 +185,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: 12px;
-		padding: 20px;
+		padding: 16px;
 		background: var(--card);
 		border: 1px solid var(--border);
 		border-radius: 10px;
@@ -226,7 +226,7 @@
 		background: var(--muted);
 		border: 1px solid var(--border);
 		color: var(--foreground);
-		padding: 6px 12px;
+		padding: 4px 8px;
 		border-radius: 6px;
 		cursor: pointer;
 		font-size: 12px;

@@ -370,6 +370,10 @@
 		padding: 8px;
 		border-bottom: 1px solid var(--border);
 		vertical-align: middle;
+
+		&.ingredient-cell {
+			padding-left: 12px;
+		}
 	}
 
 	.costs-table tbody tr {
