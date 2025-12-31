@@ -1088,44 +1088,44 @@
   "unitConversions": [
     {
       "ingredientId": "06abe694-884a-4730-b8b3-27ca0dbf6a7b",
-      "inputUnit": "cup",
-      "outputUnit": "g",
+      "inputUnit": "g",
+      "outputUnit": "cup",
       "conversionFactor": 140
     },
     {
       "ingredientId": "b83b0488-0716-42f1-a83f-36060e1b61f1",
-      "inputUnit": "cup",
-      "outputUnit": "g",
+      "inputUnit": "g",
+      "outputUnit": "cup",
       "conversionFactor": 160
     },
     {
       "ingredientId": "5e039c48-bbd5-45fe-afc0-a3652c780630",
-      "inputUnit": "tbs",
-      "outputUnit": "g",
+      "inputUnit": "g",
+      "outputUnit": "tbs",
       "conversionFactor": 25
     },
     {
       "ingredientId": "eedf952a-f257-4bb2-a149-2b6abe0bf616",
-      "inputUnit": "tbs",
-      "outputUnit": "g",
+      "inputUnit": "g",
+      "outputUnit": "tbs",
       "conversionFactor": 17
     },
     {
       "ingredientId": "7edf22d7-32a0-40de-b12e-2981b0c54535",
-      "inputUnit": "tbs",
-      "outputUnit": "g",
+      "inputUnit": "g",
+      "outputUnit": "tbs",
       "conversionFactor": 7
     },
     {
       "ingredientId": "bb6d4d72-fe84-4c67-834b-0a841bda759d",
-      "inputUnit": "tbs",
-      "outputUnit": "g",
+      "inputUnit": "g",
+      "outputUnit": "tbs",
       "conversionFactor": 12
     },
     {
       "ingredientId": "f6007718-8207-4f41-abb8-f74cdeffb3ce",
-      "inputUnit": "tbs",
-      "outputUnit": "g",
+      "inputUnit": "g",
+      "outputUnit": "tbs",
       "conversionFactor": 21
     }
   ],

@@ -846,20 +846,20 @@ export const mockData = {
 	unitConversions: [
 		{
 			ingredientId: 'frozenMango',
-			inputUnit: 'cup',
-			outputUnit: 'g',
+			inputUnit: 'g',
+			outputUnit: 'cup',
 			conversionFactor: 165
 		},
 		{
 			ingredientId: 'frozenBlueberry',
-			inputUnit: 'cup',
-			outputUnit: 'g',
+			inputUnit: 'g',
+			outputUnit: 'cup',
 			conversionFactor: 160
 		},
 		{
 			ingredientId: 'agave',
-			inputUnit: 'tbs',
-			outputUnit: 'g',
+			inputUnit: 'g',
+			outputUnit: 'tbs',
 			conversionFactor: 21
 		},
 		{
@@ -870,20 +870,20 @@ export const mockData = {
 		},
 		{
 			ingredientId: 'nutella',
-			inputUnit: 'tbs',
-			outputUnit: 'g',
+			inputUnit: 'g',
+			outputUnit: 'tbs',
 			conversionFactor: 19
 		},
 		{
 			ingredientId: 'coconutCream',
-			inputUnit: 'tbs',
-			outputUnit: 'g',
+			inputUnit: 'g',
+			outputUnit: 'tbs',
 			conversionFactor: 15
 		},
 		{
 			ingredientId: 'vanHoutenCocoa',
-			inputUnit: 'tbs',
-			outputUnit: 'g',
+			inputUnit: 'g',
+			outputUnit: 'tbs',
 			conversionFactor: 7.5
 		}
 	]
