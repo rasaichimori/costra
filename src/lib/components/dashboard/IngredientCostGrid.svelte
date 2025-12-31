@@ -367,7 +367,7 @@
 	}
 
 	.costs-table td {
-		padding: 12px;
+		padding: 8px;
 		border-bottom: 1px solid var(--border);
 		vertical-align: middle;
 	}

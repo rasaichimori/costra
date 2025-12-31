@@ -334,7 +334,7 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		padding: 8px 12px;
+		padding: 6px 12px;
 		background: var(--muted);
 		border: 1px solid var(--border);
 		border-radius: 6px;
