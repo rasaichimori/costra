@@ -41,8 +41,8 @@
 <style>
 	.dropdown-options {
 		position: absolute;
-		background: var(--bg-secondary);
-		border: 1px solid var(--border-secondary);
+		background: var(--card);
+		border: 1px solid var(--border);
 		border-radius: 4px;
 		border-top: none;
 		border-top-left-radius: 0;
@@ -61,7 +61,7 @@
 		padding: 8px 12px;
 		border: none;
 		background: transparent;
-		color: var(--text-primary);
+		color: var(--foreground);
 		text-align: left;
 		cursor: pointer;
 		font-family: inherit;
@@ -76,16 +76,16 @@
 	}
 
 	.option:hover {
-		background: var(--bg-hover);
+		background: var(--hover);
 	}
 
 	.add-new-option {
-		background: var(--bg-tertiary);
+		background: var(--muted);
 		font-weight: 500;
-		border-bottom: 1px solid var(--border-primary);
+		border-bottom: 1px solid var(--border);
 	}
 
 	.add-new-option:hover {
-		background: var(--bg-active);
+		background: var(--active);
 	}
 </style>

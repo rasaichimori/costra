@@ -184,10 +184,10 @@
 		display: flex;
 		flex-direction: column;
 		gap: 20px;
-		background: var(--bg-secondary);
+		background: var(--card);
 		padding: 1.5rem;
 		border-radius: 8px;
-		border: 1px solid var(--border-primary);
+		border: 1px solid var(--border);
 		backdrop-filter: blur(10px);
 	}
 
@@ -205,13 +205,13 @@
 
 	.header-info h3 {
 		margin: 0;
-		color: var(--text-primary);
+		color: var(--foreground);
 		font-size: 18px;
 		font-weight: 600;
 	}
 
 	.stats {
-		color: var(--text-secondary);
+		color: var(--secondary-foreground);
 		font-size: 13px;
 	}
 

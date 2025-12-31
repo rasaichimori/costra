@@ -156,12 +156,12 @@
 		button {
 			width: 100%;
 			height: 25px;
-			border: 1px solid var(--border-tertiary);
+			border: 1px solid var(--border);
 			border-radius: 4px;
 			font-family: inherit;
 			font-weight: 400;
-			background: var(--bg-secondary);
-			color: var(--text-primary);
+			background: var(--card);
+			color: var(--foreground);
 			transition: all 0.2s ease;
 			outline: none;
 			cursor: pointer;
@@ -181,7 +181,7 @@
 		display: flex;
 		align-items: center;
 		pointer-events: none;
-		color: var(--text-primary);
+		color: var(--foreground);
 		font-weight: 400;
 	}
 
@@ -190,7 +190,7 @@
 		right: 8px;
 		top: 50%;
 		transform: translateY(-50%);
-		color: var(--text-secondary);
+		color: var(--secondary-foreground);
 		pointer-events: none;
 		font-size: 0.75rem;
 		transition: transform 0.2s ease;

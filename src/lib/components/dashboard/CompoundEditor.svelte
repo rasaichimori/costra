@@ -236,8 +236,8 @@
 
 <style>
 	.recipe-cost-calculator {
-		background: var(--bg-secondary);
-		border: 1px solid var(--border-secondary);
+		background: var(--card);
+		border: 1px solid var(--border);
 		padding: 18px;
 		border-radius: 8px;
 		backdrop-filter: blur(10px);
@@ -245,7 +245,7 @@
 	}
 
 	.recipe-cost-calculator h3 {
-		color: var(--text-primary);
+		color: var(--foreground);
 		font-weight: 500;
 	}
 
@@ -261,7 +261,7 @@
 	}
 
 	.title-label {
-		color: var(--text-primary);
+		color: var(--foreground);
 		font-size: 16px;
 		font-weight: 500;
 		width: fit-content;
@@ -274,7 +274,7 @@
 		gap: 8px;
 		font-size: 32px;
 		font-weight: 600;
-		color: var(--text-primary);
+		color: var(--foreground);
 	}
 
 	.recipe-yield {
@@ -289,7 +289,7 @@
 
 		span {
 			font-weight: 500;
-			color: var(--text-primary);
+			color: var(--foreground);
 			text-transform: capitalize;
 			min-width: 60px;
 			font-size: 12px;
@@ -321,7 +321,7 @@
 		margin-top: 18px;
 		gap: 8px;
 		padding-top: 15px;
-		border-top: 1px solid var(--border-secondary);
+		border-top: 1px solid var(--border);
 		text-align: left;
 	}
 	.ingredient-list {
@@ -335,8 +335,8 @@
 		justify-content: space-between;
 		align-items: center;
 		padding: 8px 12px;
-		background: var(--bg-tertiary);
-		border: 1px solid var(--border-primary);
+		background: var(--muted);
+		border: 1px solid var(--border);
 		border-radius: 6px;
 		font-size: 12px;
 	}
@@ -348,7 +348,7 @@
 	}
 	.ingredient-name {
 		font-weight: 500;
-		color: var(--text-primary);
+		color: var(--foreground);
 		text-transform: capitalize;
 		min-width: 80px;
 		width: 120px;
@@ -360,7 +360,7 @@
 
 	.ingredient-cost {
 		font-weight: 600;
-		color: var(--text-primary);
+		color: var(--foreground);
 		min-width: 40px;
 		font-size: 12px;
 	}
@@ -387,7 +387,7 @@
 	}
 
 	.no-ingredients-message {
-		color: var(--text-secondary);
+		color: var(--secondary-foreground);
 		font-style: italic;
 		padding: 12px;
 		text-align: center;

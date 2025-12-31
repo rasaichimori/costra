@@ -123,7 +123,7 @@
 		align-items: center;
 		gap: 16px;
 		padding: 12px 16px;
-		border-bottom: 1px solid var(--border-primary);
+		border-bottom: 1px solid var(--border);
 	}
 
 	.conversion-row:last-child {
@@ -138,8 +138,8 @@
 	}
 
 	.category-badge {
-		background: var(--bg-active);
-		color: var(--text-secondary);
+		background: var(--active);
+		color: var(--secondary-foreground);
 		font-size: 10px;
 		font-weight: 500;
 		padding: 2px 6px;
@@ -149,17 +149,17 @@
 	}
 
 	.category-badge.input {
-		background: var(--bg-active);
-		color: var(--text-secondary);
+		background: var(--active);
+		color: var(--secondary-foreground);
 	}
 
 	.category-badge.output {
-		background: var(--bg-active);
-		color: var(--text-secondary);
+		background: var(--active);
+		color: var(--secondary-foreground);
 	}
 
 	.arrow {
-		color: var(--text-secondary);
+		color: var(--secondary-foreground);
 		font-size: 14px;
 	}
 
@@ -178,17 +178,17 @@
 	}
 
 	.of-text {
-		color: var(--text-secondary);
+		color: var(--secondary-foreground);
 		font-size: 13px;
 		white-space: nowrap;
 	}
 
 	.unit-select {
 		padding: 0px 5px;
-		border: 1px solid var(--border-secondary);
+		border: 1px solid var(--border);
 		border-radius: 6px;
-		background: var(--bg-secondary);
-		color: var(--text-primary);
+		background: var(--card);
+		color: var(--foreground);
 		font-size: 13px;
 		font-family: inherit;
 		cursor: pointer;
@@ -197,13 +197,13 @@
 	}
 
 	.unit-select:hover {
-		border-color: var(--border-primary);
+		border-color: var(--border);
 	}
 
 	.unit-select:focus {
 		outline: none;
-		border-color: var(--accent-primary);
-		box-shadow: 0 0 0 2px rgba(var(--accent-primary-rgb), 0.2);
+		border-color: var(--primary);
+		box-shadow: 0 0 0 2px var(--accent);
 	}
 
 	.conversion-actions {

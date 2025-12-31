@@ -54,9 +54,9 @@
 
 <style>
 	.ingredient-group {
-		background: var(--bg-tertiary);
+		background: var(--muted);
 		border-radius: 8px;
-		border: 1px solid var(--border-secondary);
+		border: 1px solid var(--border);
 		overflow: hidden;
 	}
 
@@ -65,8 +65,8 @@
 		align-items: center;
 		gap: 10px;
 		padding: 12px 16px;
-		background: var(--bg-secondary);
-		border-bottom: 1px solid var(--border-secondary);
+		background: var(--card);
+		border-bottom: 1px solid var(--border);
 	}
 
 	.color-dot {
@@ -79,13 +79,13 @@
 	.ingredient-name {
 		flex: 1;
 		font-weight: 500;
-		color: var(--text-primary);
+		color: var(--foreground);
 		font-size: 14px;
 	}
 
 	.conversion-count {
-		background: var(--bg-active);
-		color: var(--text-secondary);
+		background: var(--active);
+		color: var(--secondary-foreground);
 		font-size: 10px;
 		font-weight: 500;
 		padding: 2px 6px;

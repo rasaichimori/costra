@@ -109,9 +109,9 @@
 		display: flex;
 		flex-direction: column;
 		gap: 16px;
-		color: var(--text-primary);
-		background: var(--bg-secondary);
-		border: 1px solid var(--border-secondary);
+		color: var(--foreground);
+		background: var(--card);
+		border: 1px solid var(--border);
 		border-radius: 8px;
 		padding: 24px;
 	}
@@ -120,17 +120,17 @@
 		margin: 0;
 		font-size: 1.25rem;
 		font-weight: 600;
-		color: var(--text-primary);
+		color: var(--foreground);
 	}
 
 	.description {
 		margin: 0;
-		color: var(--text-secondary);
+		color: var(--secondary-foreground);
 		line-height: 1.5;
 	}
 
 	.description strong {
-		color: var(--text-primary);
+		color: var(--foreground);
 		font-weight: 600;
 	}
 
@@ -143,7 +143,7 @@
 	.hint {
 		margin: 0;
 		font-size: 0.875rem;
-		color: var(--text-secondary);
+		color: var(--secondary-foreground);
 		font-style: italic;
 	}
 

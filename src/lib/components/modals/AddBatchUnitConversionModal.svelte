@@ -164,9 +164,9 @@
 		display: flex;
 		flex-direction: column;
 		gap: 16px;
-		color: var(--text-primary);
-		background: var(--bg-secondary);
-		border: 1px solid var(--border-secondary);
+		color: var(--foreground);
+		background: var(--card);
+		border: 1px solid var(--border);
 		border-radius: 8px;
 		padding: 24px;
 	}
@@ -175,17 +175,17 @@
 		margin: 0;
 		font-size: 1.25rem;
 		font-weight: 600;
-		color: var(--text-primary);
+		color: var(--foreground);
 	}
 
 	.description {
 		margin: 0;
-		color: var(--text-secondary);
+		color: var(--secondary-foreground);
 		line-height: 1.5;
 	}
 
 	.description strong {
-		color: var(--text-primary);
+		color: var(--foreground);
 		font-weight: 600;
 	}
 
@@ -202,19 +202,19 @@
 		flex-direction: column;
 		gap: 8px;
 		padding: 12px;
-		background: var(--bg-tertiary);
+		background: var(--muted);
 		border-radius: 6px;
-		border: 1px solid var(--border-primary);
+		border: 1px solid var(--border);
 	}
 
 	.conversion-question {
 		margin: 0;
 		font-size: 0.9rem;
-		color: var(--text-secondary);
+		color: var(--secondary-foreground);
 	}
 
 	.conversion-question strong {
-		color: var(--text-primary);
+		color: var(--foreground);
 		font-weight: 600;
 	}
 
@@ -226,7 +226,7 @@
 
 	.hint {
 		font-size: 0.8rem;
-		color: var(--text-secondary);
+		color: var(--secondary-foreground);
 		font-style: italic;
 		white-space: nowrap;
 	}
@@ -240,7 +240,7 @@
 
 	.recipes-label {
 		font-size: 0.75rem;
-		color: var(--text-secondary);
+		color: var(--secondary-foreground);
 		font-weight: 500;
 	}
 
@@ -252,23 +252,23 @@
 
 	.recipe-name {
 		font-size: 0.8rem;
-		color: var(--text-primary);
-		background: var(--bg-primary);
+		color: var(--foreground);
+		background: var(--background);
 		padding: 2px 8px;
 		border-radius: 4px;
-		border: 1px solid var(--border-primary);
+		border: 1px solid var(--border);
 		display: flex;
 		align-items: center;
 		gap: 4px;
 	}
 
 	.recipe-name.compound {
-		border-color: var(--border-secondary);
+		border-color: var(--border);
 	}
 
 	.compound-badge {
 		font-size: 0.7rem;
-		color: var(--text-secondary);
+		color: var(--secondary-foreground);
 		font-style: italic;
 	}
 

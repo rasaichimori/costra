@@ -166,11 +166,11 @@
 		flex-direction: column;
 		gap: 16px;
 		padding: 2rem;
-		background: var(--bg-secondary);
-		border-radius: 12px;
+		background: var(--card);
+		border-radius: 16px;
 		margin: 1rem;
-		border: 1px solid var(--border-primary);
-		backdrop-filter: blur(10px);
+		border: 1px solid var(--border);
+		box-shadow: var(--shadow-light);
 		min-height: calc(100vh - 2rem);
 	}
 
@@ -181,13 +181,14 @@
 	}
 
 	.editor-header h2 {
-		color: var(--text-primary);
-		font-weight: 500;
+		color: var(--foreground);
+		font-weight: 700;
 		font-size: 1.5rem;
 		display: flex;
 		align-items: center;
 		gap: 0.5rem;
 		margin: 0;
+		letter-spacing: -0.03em;
 	}
 
 	.header-actions {
@@ -205,9 +206,9 @@
 		display: flex;
 		gap: 4px;
 		padding: 4px;
-		background: var(--bg-tertiary);
-		border-radius: 10px;
-		border: 1px solid var(--border-secondary);
+		background: var(--muted);
+		border-radius: 12px;
+		border: 1px solid var(--border);
 		justify-content: space-between;
 	}
 
@@ -226,39 +227,47 @@
 		align-items: center;
 		gap: 8px;
 		padding: 10px 20px;
-		background: transparent;
-		border: none;
+		background: var(--tab-bg);
+		border: 1px solid transparent;
 		border-radius: 8px;
-		color: var(--text-secondary);
+		color: var(--muted-foreground);
 		font-size: 14px;
 		font-weight: 500;
 		cursor: pointer;
-		transition: all 0.2s ease;
+		transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 		font-family: inherit;
+		letter-spacing: -0.01em;
 	}
 
 	.tab:hover {
-		color: var(--text-primary);
-		background: var(--bg-secondary);
+		color: var(--foreground);
+		background: var(--tab-bg-hover);
+		border-color: var(--border);
 	}
 
 	.tab.active {
-		background: var(--bg-primary);
-		color: var(--text-primary);
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+		background: var(--card);
+		color: var(--foreground);
+		box-shadow: var(--shadow-light);
+		border-color: var(--border);
 	}
 
 	.tab i {
 		font-size: 14px;
+		opacity: 0.8;
+	}
+
+	.tab.active i {
+		opacity: 1;
 	}
 
 	.tab-badge {
-		background: var(--bg-active);
-		color: var(--text-secondary);
+		background: var(--accent);
+		color: var(--accent-foreground);
 		font-size: 10px;
-		font-weight: 500;
+		font-weight: 600;
 		padding: 2px 6px;
-		border-radius: 8px;
+		border-radius: 6px;
 		min-width: 16px;
 		text-align: center;
 	}
@@ -267,4 +276,3 @@
 		flex: 1;
 	}
 </style>
-

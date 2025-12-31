@@ -42,7 +42,7 @@
 
 		h2 {
 			margin: 0;
-			color: var(--text-primary);
+			color: var(--foreground);
 		}
 	}
 

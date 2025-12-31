@@ -95,29 +95,33 @@
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
-		background: var(--bg-tertiary);
-		border: 1px solid var(--border-primary);
+		background: var(--muted);
+		border: 1px solid var(--border);
 		padding: 1rem;
-		border-radius: 10px;
+		border-radius: 12px;
 		max-height: 80vh;
 		overflow-y: auto;
 		width: 220px;
+		box-shadow: var(--shadow-light);
 	}
 	.add-recipe-btn {
 		display: block;
 		width: 100%;
 		padding: 0.6rem 0.9rem;
 		font-size: 0.85rem;
-		background: var(--bg-hover);
-		border: 1px dashed var(--border-dashed);
-		border-radius: 6px;
-		color: var(--text-primary);
+		background: var(--secondary);
+		border: 1px solid transparent;
+		border-radius: 8px;
+		color: var(--secondary-foreground);
 		font-weight: 500;
 		cursor: pointer;
-		transition: background 0.25s ease;
+		transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+		letter-spacing: -0.01em;
 	}
 
 	.add-recipe-btn:hover {
-		background: var(--bg-active);
+		background: var(--hover);
+		border-color: var(--border);
+		color: var(--foreground);
 	}
 </style>

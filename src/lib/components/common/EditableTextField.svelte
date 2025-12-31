@@ -96,7 +96,7 @@
 
 	.ingredient-name {
 		font-weight: 500;
-		color: var(--text-primary);
+		color: var(--foreground);
 		text-transform: capitalize;
 		flex: 1;
 		overflow: hidden;

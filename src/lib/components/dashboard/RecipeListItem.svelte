@@ -33,21 +33,36 @@
 		padding: 0.6rem 0.9rem;
 		font-size: 0.85rem;
 		background: transparent;
-		color: var(--text-primary);
+		color: var(--secondary-foreground);
 		border: 1px solid transparent;
-		border-radius: 6px;
+		border-radius: 8px;
 		cursor: pointer;
-		transition: all 0.25s ease;
+		transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+		position: relative;
 	}
 
 	.recipe-list-item:hover {
-		background: var(--bg-hover);
+		background: var(--hover);
+		color: var(--foreground);
 	}
 
 	.recipe-list-item.selected {
-		background: var(--bg-active);
-		border-color: var(--border-secondary);
-		color: var(--text-primary);
+		background: var(--card);
+		border-color: var(--primary);
+		color: var(--foreground);
+		box-shadow: var(--shadow-light);
+	}
+
+	.recipe-list-item.selected::before {
+		content: '';
+		position: absolute;
+		left: 0;
+		top: 50%;
+		transform: translateY(-50%);
+		width: 3px;
+		height: 60%;
+		background: var(--primary);
+		border-radius: 0 2px 2px 0;
 	}
 
 	.label {
@@ -57,10 +72,13 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 		display: block;
+		font-weight: 450;
+		letter-spacing: -0.01em;
 	}
 
 	.cost {
 		font-weight: 600;
 		margin-left: 0.5rem;
+		font-variant-numeric: tabular-nums;
 	}
 </style>

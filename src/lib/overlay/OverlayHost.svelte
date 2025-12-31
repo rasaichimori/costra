@@ -60,7 +60,7 @@
 <div
 	class="overlay-backdrop"
 	onpointerdown={handleBackdropClick}
-	style="background: {entry.options?.transparentBackground ? 'transparent' : 'var(--bg-overlay)'}"
+	style="background: {entry.options?.transparentBackground ? 'transparent' : 'var(--overlay)'}"
 >
 	<div
 		class="overlay-content"

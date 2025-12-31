@@ -21,9 +21,9 @@
 		bottom: 24px;
 		left: 50%;
 		transform: translateX(-50%);
-		background: var(--bg-tertiary);
-		color: var(--text-primary);
-		border: 1px solid var(--border-primary);
+		background: var(--muted);
+		color: var(--foreground);
+		border: 1px solid var(--border);
 		padding: 8px 16px;
 		border-radius: 6px;
 		box-shadow: 0 2px 6px var(--shadow-medium);

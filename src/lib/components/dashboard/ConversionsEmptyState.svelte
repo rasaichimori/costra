@@ -18,7 +18,7 @@
 		justify-content: center;
 		padding: 48px 24px;
 		text-align: center;
-		color: var(--text-secondary);
+		color: var(--secondary-foreground);
 	}
 
 	.empty-icon {
@@ -30,7 +30,7 @@
 	.empty-state p {
 		margin: 0;
 		font-size: 16px;
-		color: var(--text-primary);
+		color: var(--foreground);
 	}
 
 	.empty-state .hint {

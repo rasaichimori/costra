@@ -282,10 +282,10 @@
 		flex-direction: column;
 		gap: 16px;
 		padding: 2rem;
-		background: var(--bg-secondary);
+		background: var(--card);
 		border-radius: 12px;
 		margin: 1rem;
-		border: 1px solid var(--border-primary);
+		border: 1px solid var(--border);
 		backdrop-filter: blur(10px);
 	}
 
@@ -296,7 +296,7 @@
 	}
 
 	.editor-header h2 {
-		color: var(--text-primary);
+		color: var(--foreground);
 		font-weight: 500;
 		font-size: 1.5rem;
 		display: flex;
@@ -320,9 +320,9 @@
 		display: flex;
 		gap: 4px;
 		padding: 4px;
-		background: var(--bg-tertiary);
+		background: var(--muted);
 		border-radius: 10px;
-		border: 1px solid var(--border-secondary);
+		border: 1px solid var(--border);
 		justify-content: space-between;
 
 		.tabs-left {
@@ -344,7 +344,7 @@
 		background: transparent;
 		border: none;
 		border-radius: 8px;
-		color: var(--text-secondary);
+		color: var(--secondary-foreground);
 		font-size: 14px;
 		font-weight: 500;
 		cursor: pointer;
@@ -353,13 +353,13 @@
 	}
 
 	.tab:hover {
-		color: var(--text-primary);
-		background: var(--bg-secondary);
+		color: var(--foreground);
+		background: var(--card);
 	}
 
 	.tab.active {
-		background: var(--bg-primary);
-		color: var(--text-primary);
+		background: var(--background);
+		color: var(--foreground);
 		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 	}
 
@@ -368,8 +368,8 @@
 	}
 
 	.tab-badge {
-		background: var(--bg-active);
-		color: var(--text-secondary);
+		background: var(--active);
+		color: var(--secondary-foreground);
 		font-size: 10px;
 		font-weight: 500;
 		padding: 2px 6px;
@@ -386,7 +386,7 @@
 
 		h2 {
 			margin: 0;
-			color: var(--text-primary);
+			color: var(--foreground);
 		}
 	}
 

@@ -52,7 +52,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: 12px;
-		color: var(--text-primary);
+		color: var(--foreground);
 	}
 	textarea {
 		width: 100%;
@@ -60,9 +60,9 @@
 		resize: vertical;
 		padding: 8px;
 		font-family: monospace;
-		background: var(--bg-secondary);
-		color: var(--text-primary);
-		border: 1px solid var(--border-secondary);
+		background: var(--card);
+		color: var(--foreground);
+		border: 1px solid var(--border);
 		border-radius: 4px;
 	}
 	.actions {

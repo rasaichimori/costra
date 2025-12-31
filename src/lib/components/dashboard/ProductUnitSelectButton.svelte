@@ -141,12 +141,12 @@
 	button {
 		width: 100%;
 		height: 25px;
-		border: 1px solid var(--border-tertiary);
+		border: 1px solid var(--border);
 		border-radius: 4px;
 		font-family: inherit;
 		font-weight: 400;
-		background: var(--bg-secondary);
-		color: var(--text-primary);
+		background: var(--card);
+		color: var(--foreground);
 		transition: all 0.2s ease;
 		outline: none;
 		cursor: pointer;

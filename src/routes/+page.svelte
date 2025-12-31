@@ -203,8 +203,8 @@
 			'Segoe UI',
 			system-ui,
 			sans-serif;
-		background: var(--bg-primary);
-		color: var(--text-primary);
+		background: var(--background);
+		color: var(--foreground);
 		overflow-x: hidden;
 		font-feature-settings:
 			'ss02' on,

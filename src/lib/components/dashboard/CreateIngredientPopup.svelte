@@ -174,18 +174,18 @@
 		flex-direction: column;
 		gap: 16px;
 		padding: 20px;
-		background: var(--bg-secondary);
-		border: 1px solid var(--border-secondary);
+		background: var(--card);
+		border: 1px solid var(--border);
 		border-radius: 10px;
 		box-shadow: 0 6px 18px var(--shadow-heavy);
 		min-width: 300px;
 		max-width: 400px;
-		color: var(--text-primary);
+		color: var(--foreground);
 	}
 
 	h3 {
 		margin: 0;
-		color: var(--text-primary);
+		color: var(--foreground);
 		font-size: 18px;
 		font-weight: 600;
 	}
@@ -205,7 +205,7 @@
 	label {
 		font-size: 12px;
 		font-weight: 500;
-		color: var(--text-secondary);
+		color: var(--secondary-foreground);
 	}
 
 	.cost-input-container {
@@ -217,7 +217,7 @@
 
 	.currency {
 		font-weight: 600;
-		color: var(--text-primary);
+		color: var(--foreground);
 	}
 
 	.portion-row {

@@ -112,12 +112,12 @@
 		display: flex;
 		flex-direction: column;
 		gap: 12px;
-		background: var(--bg-secondary);
-		border: 1px solid var(--border-secondary);
+		background: var(--card);
+		border: 1px solid var(--border);
 		border-radius: 10px;
 		box-shadow: 0 6px 18px var(--shadow-heavy);
 		width: 232px;
-		color: var(--text-primary);
+		color: var(--foreground);
 	}
 
 	.filter-pills {
@@ -146,8 +146,8 @@
 			text-transform: uppercase;
 			font-weight: 700;
 			padding: 4px 16px;
-			color: var(--text-secondary);
-			background: var(--bg-secondary);
+			color: var(--secondary-foreground);
+			background: var(--card);
 			z-index: 1;
 		}
 	}
@@ -163,7 +163,7 @@
 		padding: 4px 16px;
 		border: none;
 		background: transparent;
-		color: var(--text-primary);
+		color: var(--foreground);
 		text-align: left;
 		cursor: pointer;
 		font-family: inherit;
@@ -178,16 +178,16 @@
 	}
 
 	.option:hover {
-		background: var(--bg-hover);
+		background: var(--hover);
 	}
 
 	.add-new-option {
-		background: var(--bg-tertiary);
+		background: var(--muted);
 		font-weight: 500;
-		border-bottom: 1px solid var(--border-primary);
+		border-bottom: 1px solid var(--border);
 	}
 
 	.add-new-option:hover {
-		background: var(--bg-active);
+		background: var(--active);
 	}
 </style>

@@ -229,17 +229,18 @@
 
 <style>
 	.recipe-cost-calculator {
-		background: var(--bg-secondary);
-		border: 1px solid var(--border-secondary);
+		background: var(--card);
+		border: 1px solid var(--border);
 		padding: 18px;
-		border-radius: 8px;
-		backdrop-filter: blur(10px);
+		border-radius: 12px;
+		box-shadow: var(--shadow-light);
 		flex: 1;
 	}
 
 	.recipe-cost-calculator h3 {
-		color: var(--text-primary);
+		color: var(--foreground);
 		font-weight: 500;
+		letter-spacing: -0.01em;
 	}
 
 	.header {
@@ -248,11 +249,12 @@
 	}
 
 	.title-label {
-		color: var(--text-primary);
+		color: var(--secondary-foreground);
 		font-size: 16px;
 		font-weight: 500;
 		width: fit-content;
 		min-width: 150px;
+		letter-spacing: -0.01em;
 	}
 
 	.title {
@@ -260,8 +262,16 @@
 		flex-direction: column;
 		gap: 8px;
 		font-size: 32px;
-		font-weight: 600;
-		color: var(--text-primary);
+		font-weight: 700;
+		color: var(--foreground);
+		letter-spacing: -0.03em;
+	}
+
+	.cost-amount {
+		background: linear-gradient(135deg, var(--foreground) 0%, var(--secondary-foreground) 100%);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
 	}
 
 	.recipe-section {
@@ -277,7 +287,7 @@
 		margin-top: 18px;
 		gap: 8px;
 		padding-top: 15px;
-		border-top: 1px solid var(--border-secondary);
+		border-top: 1px solid var(--border);
 		text-align: left;
 	}
 	.ingredient-list {
@@ -291,22 +301,34 @@
 		justify-content: space-between;
 		align-items: center;
 		padding: 8px 12px;
-		background: var(--bg-tertiary);
-		border: 1px solid var(--border-primary);
-		border-radius: 6px;
+		background: var(--muted);
+		border: 1px solid var(--border);
+		border-radius: 10px;
 		font-size: 12px;
+		transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	.ingredient-cost-item:hover {
+		background: var(--secondary);
+		border-color: var(--border);
 	}
 
 	.drag-handle {
 		cursor: grab;
 		margin-right: 8px;
-		color: var(--text-secondary);
+		color: var(--muted-foreground);
 		display: flex;
 		align-items: center;
+		transition: color 0.15s ease;
+	}
+
+	.drag-handle:hover {
+		color: var(--secondary-foreground);
 	}
 
 	.drag-handle:active {
 		cursor: grabbing;
+		color: var(--primary);
 	}
 
 	.ingredient-details {
@@ -317,7 +339,7 @@
 
 	.ingredient-name {
 		font-weight: 500;
-		color: var(--text-primary);
+		color: var(--foreground);
 		text-transform: capitalize;
 		min-width: 80px;
 		width: 120px;
@@ -325,13 +347,15 @@
 		overflow: hidden;
 		white-space: nowrap;
 		text-overflow: ellipsis;
+		letter-spacing: -0.01em;
 	}
 
 	.ingredient-cost {
 		font-weight: 600;
-		color: var(--text-primary);
+		color: var(--foreground);
 		min-width: 40px;
 		font-size: 12px;
+		font-variant-numeric: tabular-nums;
 	}
 
 	.amount-input-group,
@@ -348,30 +372,59 @@
 	}
 
 	.color-picker {
-		border: none;
+		border: 2px solid var(--border);
 		background: transparent;
-		width: 20px;
-		height: 20px;
+		width: 22px;
+		height: 22px;
 		padding: 0;
+		border-radius: 6px;
+		cursor: pointer;
+		transition: all 0.15s ease;
+	}
+
+	.color-picker:hover {
+		border-color: var(--border);
+		transform: scale(1.1);
+	}
+
+	.color-picker::-webkit-color-swatch-wrapper {
+		padding: 2px;
+	}
+
+	.color-picker::-webkit-color-swatch {
+		border: none;
+		border-radius: 3px;
+	}
+
+	.color-picker::-moz-color-swatch {
+		border: none;
+		border-radius: 3px;
 	}
 
 	.no-ingredients-message {
-		color: var(--text-secondary);
+		color: var(--muted-foreground);
 		font-style: italic;
 		padding: 12px;
 		text-align: center;
+		background: var(--muted);
+		border-radius: 10px;
+		border: 1px dashed var(--border);
 	}
 
 	/* Hidden row greyed out */
 	.ingredient-cost-item.hidden {
-		opacity: 0.4;
+		opacity: 0.35;
+		filter: grayscale(0.3);
 	}
 
 	.ingredient-cost-item.compound {
-		border-color: var(--accent-warning, #ff9500);
+		border-color: var(--primary);
+		background: linear-gradient(135deg, var(--muted) 0%, var(--accent) 100%);
 	}
 
 	.ingredient-cost-item.dragging {
-		opacity: 0.5;
+		opacity: 0.6;
+		transform: scale(0.98);
+		box-shadow: var(--shadow-medium);
 	}
 </style>

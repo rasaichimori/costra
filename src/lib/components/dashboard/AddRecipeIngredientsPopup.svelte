@@ -104,7 +104,7 @@
 			{#each categories as category}
 				<ModernButton
 					variant={selectedFilters.includes(category) ? 'primary' : 'secondary'}
-					style={category === 'Compound' ? 'border-color: var(--accent-warning, #ff9500);' : ''}
+					style={category === 'Compound' ? 'border-color: var(--primary);' : ''}
 					size="small"
 					onclick={() => {
 						if (selectedFilters.includes(category)) {
@@ -186,13 +186,13 @@
 		flex-direction: column;
 		gap: 12px;
 		padding: 20px;
-		background: var(--bg-secondary);
-		border: 1px solid var(--border-secondary);
+		background: var(--card);
+		border: 1px solid var(--border);
 		border-radius: 10px;
 		box-shadow: 0 6px 18px var(--shadow-heavy);
 		min-width: 260px;
 		max-width: 320px;
-		color: var(--text-primary);
+		color: var(--foreground);
 
 		p {
 			margin: 0;
@@ -200,7 +200,7 @@
 	}
 
 	.no-ingredients-message {
-		color: var(--text-secondary);
+		color: var(--secondary-foreground);
 		font-style: italic;
 		text-align: center;
 		padding: 20px;
@@ -223,9 +223,9 @@
 	}
 
 	.add-ingredient-btn {
-		background: var(--bg-tertiary);
-		border: 1px solid var(--border-primary);
-		color: var(--text-primary);
+		background: var(--muted);
+		border: 1px solid var(--border);
+		color: var(--foreground);
 		padding: 6px 12px;
 		border-radius: 6px;
 		cursor: pointer;
@@ -240,8 +240,8 @@
 	}
 
 	.add-ingredient-btn:hover {
-		background: var(--bg-primary);
-		border-color: var(--border-tertiary);
+		background: var(--background);
+		border-color: var(--border);
 		transform: translateY(-1px);
 	}
 
@@ -258,6 +258,6 @@
 
 	/* Highlight for compound category */
 	.compound {
-		border-color: var(--accent-warning, #ff9500);
+		border-color: var(--primary);
 	}
 </style>

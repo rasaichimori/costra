@@ -267,7 +267,7 @@
 
 	.settings-group h3 {
 		margin: 0;
-		color: var(--text-primary);
+		color: var(--foreground);
 		font-weight: 500;
 		font-size: 1.1rem;
 	}
@@ -279,7 +279,7 @@
 	}
 
 	.setting-item .setting-label {
-		color: var(--text-secondary);
+		color: var(--secondary-foreground);
 		font-size: 0.9rem;
 		font-weight: 500;
 	}
@@ -296,10 +296,10 @@
 		justify-content: space-between;
 		gap: 8px;
 		padding: 8px 12px;
-		background: var(--bg-secondary);
-		border: 1px solid var(--border-tertiary);
+		background: var(--card);
+		border: 1px solid var(--border);
 		border-radius: 6px;
-		color: var(--text-primary);
+		color: var(--foreground);
 		font-family: inherit;
 		font-size: 0.9rem;
 		cursor: pointer;
@@ -309,8 +309,8 @@
 	}
 
 	.currency-dropdown-button:hover {
-		background: var(--bg-hover);
-		border-color: var(--border-secondary);
+		background: var(--hover);
+		border-color: var(--border);
 	}
 
 	.currency-value {
@@ -319,7 +319,7 @@
 
 	.currency-dropdown-button i {
 		font-size: 0.75rem;
-		color: var(--text-secondary);
+		color: var(--secondary-foreground);
 		transition: transform 0.2s ease;
 	}
 </style>

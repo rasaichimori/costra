@@ -308,11 +308,11 @@
 	.ingredient-cost-section {
 		display: flex;
 		flex-direction: column;
-		background: var(--bg-secondary);
+		background: var(--card);
 		padding: 1.5rem;
-		border-radius: 8px;
-		border: 1px solid var(--border-primary);
-		backdrop-filter: blur(10px);
+		border-radius: 12px;
+		border: 1px solid var(--border);
+		box-shadow: var(--shadow-light);
 		gap: 16px;
 		flex: 1;
 	}
@@ -329,9 +329,10 @@
 
 	.filter-section h3 {
 		margin: 0;
-		color: var(--text-primary);
+		color: var(--foreground);
 		font-size: 16px;
 		font-weight: 500;
+		letter-spacing: -0.01em;
 	}
 
 	.filter-pills {
@@ -341,9 +342,10 @@
 	}
 
 	.costs-table-container {
-		background: var(--bg-secondary);
-		border-radius: 8px;
-		border: 1px solid var(--border-secondary);
+		background: var(--muted);
+		border-radius: 10px;
+		border: 1px solid var(--border);
+		overflow: hidden;
 	}
 
 	.costs-table {
@@ -353,18 +355,29 @@
 	}
 
 	.costs-table th {
-		background: var(--bg-tertiary);
-		color: var(--text-primary);
+		background: var(--secondary);
+		color: var(--secondary-foreground);
 		font-weight: 600;
 		padding: 15px 12px;
 		text-align: left;
-		border-bottom: 1px solid var(--border-secondary);
+		border-bottom: 1px solid var(--border);
+		font-size: 0.8rem;
+		text-transform: uppercase;
+		letter-spacing: 0.03em;
 	}
 
 	.costs-table td {
 		padding: 12px;
-		border-bottom: 1px solid var(--border-primary);
+		border-bottom: 1px solid var(--border);
 		vertical-align: middle;
+	}
+
+	.costs-table tbody tr {
+		transition: background-color 0.15s ease;
+	}
+
+	.costs-table tbody tr:hover {
+		background: var(--hover);
 	}
 
 	.costs-table tr:last-child td {
@@ -417,7 +430,7 @@
 
 	.currency {
 		font-weight: 600;
-		color: var(--text-primary);
+		color: var(--foreground);
 	}
 
 	@media (max-width: 768px) {

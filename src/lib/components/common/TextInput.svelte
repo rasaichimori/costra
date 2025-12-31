@@ -236,11 +236,11 @@
 	.input-label {
 		font-size: 0.875rem;
 		font-weight: 500;
-		color: var(--text-primary);
+		color: var(--foreground);
 	}
 
 	.required {
-		color: var(--danger);
+		color: var(--destructive);
 		margin-left: 2px;
 	}
 
@@ -254,7 +254,7 @@
 	.input-icon {
 		position: absolute;
 		left: 12px;
-		color: var(--text-secondary);
+		color: var(--secondary-foreground);
 		font-size: 14px;
 		pointer-events: none;
 		z-index: 1;
@@ -265,47 +265,51 @@
 	}
 
 	.input {
-		border: 1px solid var(--border-secondary);
-		border-radius: 4px;
+		border: 1px solid var(--border);
+		border-radius: 8px;
 		font-family: inherit;
 		font-weight: 400;
-		background: var(--bg-secondary);
-		color: var(--text-primary);
-		transition: all 0.2s ease;
+		background: var(--card);
+		color: var(--foreground);
+		transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 		outline: none;
 		width: 100%;
 	}
 
 	.input:focus {
-		border-color: var(--border-primary);
-		background: var(--bg-primary);
-		box-shadow: var(--shadow-light);
+		border-color: var(--ring);
+		background: var(--card);
+		box-shadow: 0 0 0 3px var(--accent);
+	}
+
+	.input:hover:not(:focus):not(:disabled) {
+		border-color: var(--border);
 	}
 
 	.input:disabled {
-		opacity: 0.5;
+		opacity: 0.4;
 		cursor: not-allowed;
-		background: var(--bg-tertiary);
+		background: var(--secondary);
 	}
 
 	.input:readonly {
-		background: var(--bg-tertiary);
+		background: var(--muted);
 		cursor: default;
 	}
 
 	.input.error {
-		border-color: var(--danger);
-		background: var(--danger-bg-light);
+		border-color: var(--destructive);
+		background: rgba(239, 68, 68, 0.05);
 	}
 
 	.input.error:focus {
-		border-color: var(--danger);
-		box-shadow: var(--danger-shadow);
+		border-color: var(--destructive);
+		box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
 	}
 
 	.error-message {
 		font-size: 0.75rem;
-		color: var(--danger);
+		color: var(--destructive);
 		margin-top: 2px;
 	}
 
@@ -352,16 +356,19 @@
 		right: 8px;
 		top: 50%;
 		transform: translateY(-50%);
-		background: transparent;
+		background: var(--hover);
 		border: none;
-		color: var(--text-secondary);
+		color: var(--muted-foreground);
 		cursor: pointer;
-		font-size: 14px;
+		font-size: 12px;
 		line-height: 1;
-		padding: 0;
+		padding: 2px 6px;
+		border-radius: 4px;
+		transition: all 0.15s ease;
 	}
 
 	.clear-btn:hover {
-		color: var(--text-primary);
+		color: var(--foreground);
+		background: var(--active);
 	}
 </style>
