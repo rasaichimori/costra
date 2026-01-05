@@ -53,9 +53,9 @@
 	}
 
 	.logo-text {
-		font-family: 'Instrument Serif', serif;
+		font-family: 'Outfit', sans-serif;
 		font-size: 1.5rem;
-		font-weight: 400;
+		font-weight: 600;
 		letter-spacing: -0.02em;
 		color: var(--foreground);
 	}

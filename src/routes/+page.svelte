@@ -5,8 +5,6 @@
 		HeroContent,
 		DashboardPreview,
 		FeaturesSection,
-		SocialProof,
-		FinalCTA,
 		LandingFooter
 	} from '$lib/components/landing';
 
@@ -36,12 +34,6 @@
 		name="description"
 		content="A simple tool to understand your costs and protect your margins"
 	/>
-	<link rel="preconnect" href="https://fonts.googleapis.com" />
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
-	<link
-		href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap"
-		rel="stylesheet"
-	/>
 </svelte:head>
 
 <main class="landing" onmousemove={handleMouseMove}>
@@ -54,8 +46,6 @@
 	</section>
 
 	<FeaturesSection />
-	<SocialProof />
-	<FinalCTA />
 	<LandingFooter />
 </main>
 

@@ -20,24 +20,9 @@
 
 	<p class="tagline">A simple tool to understand your costs.</p>
 
-	<div class="value-prop">
-		<div class="value-prop-icon">
-			<svg
-				width="20"
-				height="20"
-				viewBox="0 0 24 24"
-				fill="none"
-				stroke="currentColor"
-				stroke-width="1.5"
-			>
-				<path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-			</svg>
-		</div>
-		<p class="value-prop-text">
-			Your profit is leaking. <span class="text-highlight">Protect your margins</span> before they
-			disappear.
-		</p>
-	</div>
+	<p class="value-prop-text">
+		Your profit is leaking. <span class="text-highlight">Protect your margins</span> before they disappear.
+	</p>
 
 	<div class="cta-group">
 		<a href="/dashboard" class="btn-primary">
@@ -57,9 +42,6 @@
 				</svg>
 			</span>
 		</a>
-		<button class="btn-secondary">
-			<span class="btn-content">See How It Works</span>
-		</button>
 	</div>
 </div>
 
@@ -71,12 +53,12 @@
 	}
 
 	.headline {
-		font-family: 'Instrument Serif', serif;
+		font-family: 'Outfit', sans-serif;
 		font-size: clamp(2.75rem, 5vw, 4.5rem);
-		font-weight: 400;
+		font-weight: 700;
 		line-height: 1.1;
 		margin: 0;
-		letter-spacing: -0.02em;
+		letter-spacing: -0.03em;
 		color: var(--foreground);
 	}
 
@@ -91,26 +73,24 @@
 	}
 
 	.headline-italic {
-		font-style: italic;
+		font-weight: 300;
 		color: var(--muted-foreground);
 	}
 
 	.headline-accent {
-		color: var(--primary);
+		color: black;
 		position: relative;
 	}
 
-	.headline-accent::after {
+	.headline-accent::before {
 		content: '';
 		position: absolute;
-		bottom: 0.05em;
-		left: 0;
-		right: 0;
-		height: 3px;
+		inset: 0;
 		background: var(--primary);
-		transform: scaleX(0);
-		transform-origin: left;
-		animation: underlineReveal 0.6s ease-out 0.8s forwards;
+		height: 85%;
+		transform: rotate(-2deg) translateY(10px) scaleY(0.9);
+		z-index: -1;
+		border-radius: 2px;
 	}
 
 	@keyframes wordReveal {
@@ -124,40 +104,11 @@
 		}
 	}
 
-	@keyframes underlineReveal {
-		to {
-			transform: scaleX(1);
-		}
-	}
-
 	.tagline {
 		font-size: 1.125rem;
 		color: var(--muted-foreground);
 		margin: 0;
 		animation: fadeInUp 0.8s ease-out 0.5s both;
-	}
-
-	.value-prop {
-		display: flex;
-		align-items: flex-start;
-		gap: 1rem;
-		padding: 1.25rem;
-		background: var(--muted);
-		border: 1px solid var(--border);
-		border-radius: 12px;
-		animation: fadeInUp 0.8s ease-out 0.6s both;
-	}
-
-	.value-prop-icon {
-		color: var(--primary);
-		flex-shrink: 0;
-	}
-
-	.value-prop-text {
-		font-size: 0.9375rem;
-		line-height: 1.6;
-		color: var(--muted-foreground);
-		margin: 0;
 	}
 
 	.text-highlight {
@@ -171,8 +122,7 @@
 		animation: fadeInUp 0.8s ease-out 0.7s both;
 	}
 
-	.btn-primary,
-	.btn-secondary {
+	.btn-primary {
 		position: relative;
 		padding: 0.875rem 1.75rem;
 		font-size: 0.9375rem;
@@ -218,18 +168,6 @@
 		transform: translateX(4px);
 	}
 
-	.btn-secondary {
-		background: transparent;
-		color: var(--foreground);
-		border: 1px solid var(--border);
-		transition: all 0.3s ease;
-	}
-
-	.btn-secondary:hover {
-		background: var(--muted);
-		border-color: var(--muted-foreground);
-	}
-
 	@keyframes fadeInUp {
 		from {
 			opacity: 0;
@@ -264,4 +202,3 @@
 		}
 	}
 </style>
-

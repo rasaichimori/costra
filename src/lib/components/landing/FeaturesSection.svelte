@@ -33,7 +33,7 @@
 <section class="features">
 	<div class="features-header">
 		<span class="section-number">01</span>
-		<h2 class="section-title">Why Costra?</h2>
+		<h2 class="section-title">Um, so why Costra?</h2>
 		<p class="section-description">
 			Everything you need to understand and optimize your product costs.
 		</p>
@@ -128,11 +128,11 @@
 	}
 
 	.section-title {
-		font-family: 'Instrument Serif', serif;
+		font-family: 'Outfit', sans-serif;
 		font-size: clamp(2rem, 4vw, 2.75rem);
-		font-weight: 400;
+		font-weight: 700;
 		margin: 0;
-		letter-spacing: -0.02em;
+		letter-spacing: -0.03em;
 		color: var(--foreground);
 	}
 
@@ -209,9 +209,9 @@
 	}
 
 	.feature-title {
-		font-family: 'Instrument Serif', serif;
+		font-family: 'Outfit', sans-serif;
 		font-size: 1.375rem;
-		font-weight: 400;
+		font-weight: 600;
 		margin: 0 0 0.5rem;
 		color: var(--foreground);
 	}
@@ -235,4 +235,3 @@
 		}
 	}
 </style>
-

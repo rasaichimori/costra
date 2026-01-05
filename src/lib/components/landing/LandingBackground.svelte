@@ -1,10 +1,27 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+
 	interface Props {
 		mouseX?: number;
 		mouseY?: number;
 	}
 
 	let { mouseX = 0, mouseY = 0 }: Props = $props();
+
+	let scrollY = $state(0);
+
+	onMount(() => {
+		const handleScroll = () => {
+			scrollY = window.scrollY;
+		};
+
+		window.addEventListener('scroll', handleScroll, { passive: true });
+		handleScroll(); // Initial value
+
+		return () => {
+			window.removeEventListener('scroll', handleScroll);
+		};
+	});
 </script>
 
 <!-- Animated gradient mesh background -->
@@ -28,15 +45,42 @@
 <div class="floating-elements">
 	<div
 		class="float-orb orb-1"
-		style="transform: translate({mouseX * -30}px, {mouseY * -30}px)"
+		style="transform: translate({mouseX * -30 + scrollY * 0.1}px, {mouseY * -30 +
+			scrollY * 0.15}px)"
 	></div>
 	<div
 		class="float-orb orb-2"
-		style="transform: translate({mouseX * 40}px, {mouseY * 25}px)"
+		style="transform: translate({mouseX * 40 + scrollY * -0.12}px, {mouseY * 25 + scrollY * 0.1}px)"
 	></div>
 	<div
 		class="float-orb orb-3"
-		style="transform: translate({mouseX * -20}px, {mouseY * 35}px)"
+		style="transform: translate({mouseX * -20 + scrollY * 0.08}px, {mouseY * 35 +
+			scrollY * -0.12}px)"
+	></div>
+	<div
+		class="float-orb orb-4"
+		style="transform: translate({mouseX * 35 + scrollY * -0.1}px, {mouseY * -25 +
+			scrollY * 0.13}px)"
+	></div>
+	<div
+		class="float-orb orb-5"
+		style="transform: translate({mouseX * -35 + scrollY * 0.11}px, {mouseY * 20 +
+			scrollY * -0.09}px)"
+	></div>
+	<div
+		class="float-orb orb-6"
+		style="transform: translate({mouseX * 25 + scrollY * -0.13}px, {mouseY * 30 +
+			scrollY * 0.11}px)"
+	></div>
+	<div
+		class="float-orb orb-7"
+		style="transform: translate({mouseX * -25 + scrollY * 0.09}px, {mouseY * -35 +
+			scrollY * -0.14}px)"
+	></div>
+	<div
+		class="float-orb orb-8"
+		style="transform: translate({mouseX * 30 + scrollY * -0.11}px, {mouseY * -20 +
+			scrollY * 0.12}px)"
 	></div>
 </div>
 
@@ -207,5 +251,49 @@
 		background: var(--chart-3);
 		box-shadow: 0 0 18px color-mix(in srgb, var(--chart-3) 50%, transparent);
 	}
-</style>
 
+	.orb-4 {
+		top: 40%;
+		right: 25%;
+		width: 4px;
+		height: 4px;
+		background: var(--primary);
+		box-shadow: 0 0 16px color-mix(in srgb, var(--primary) 50%, transparent);
+	}
+
+	.orb-5 {
+		top: 25%;
+		left: 50%;
+		width: 6px;
+		height: 6px;
+		background: var(--chart-2);
+		box-shadow: 0 0 22px color-mix(in srgb, var(--chart-2) 50%, transparent);
+	}
+
+	.orb-6 {
+		bottom: 50%;
+		right: 30%;
+		width: 5px;
+		height: 5px;
+		background: var(--chart-3);
+		box-shadow: 0 0 19px color-mix(in srgb, var(--chart-3) 50%, transparent);
+	}
+
+	.orb-7 {
+		top: 70%;
+		left: 35%;
+		width: 4px;
+		height: 4px;
+		background: var(--primary);
+		box-shadow: 0 0 17px color-mix(in srgb, var(--primary) 50%, transparent);
+	}
+
+	.orb-8 {
+		bottom: 15%;
+		right: 40%;
+		width: 5px;
+		height: 5px;
+		background: var(--chart-2);
+		box-shadow: 0 0 20px color-mix(in srgb, var(--chart-2) 50%, transparent);
+	}
+</style>
