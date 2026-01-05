@@ -1,31 +1,40 @@
 <script lang="ts">
+	import FeatureDemoLayers from './FeatureDemoLayers.svelte';
+	import FeatureDemoUpdates from './FeatureDemoUpdates.svelte';
+	import FeatureDemoMargin from './FeatureDemoMargin.svelte';
+	import FeatureDemoCompound from './FeatureDemoCompound.svelte';
+
 	const features = [
 		{
 			number: '01',
 			title: 'Layer by Layer',
 			description:
 				'Break down complex recipes into individual components. See exactly where your money goes.',
-			icon: 'layers'
+			icon: 'layers',
+			demo: 'layers'
 		},
 		{
 			number: '02',
 			title: 'Instant Updates',
 			description:
 				'Change an ingredient price and watch it ripple through every recipe automatically.',
-			icon: 'clock'
+			icon: 'clock',
+			demo: 'updates'
 		},
 		{
 			number: '03',
 			title: 'Margin Clarity',
 			description: 'Set your target margins and instantly see which products are hitting the mark.',
-			icon: 'chart'
+			icon: 'chart',
+			demo: 'margin'
 		},
 		{
 			number: '04',
 			title: 'Compound Recipes',
 			description:
 				'Build recipes from other recipes. Perfect for bakeries, restaurants, and manufacturers.',
-			icon: 'grid'
+			icon: 'grid',
+			demo: 'compound'
 		}
 	];
 </script>
@@ -42,63 +51,80 @@
 	<div class="features-grid">
 		{#each features as feature}
 			<div class="feature-card">
-				<div class="feature-number">{feature.number}</div>
-				<div class="feature-icon">
-					{#if feature.icon === 'layers'}
-						<svg
-							width="32"
-							height="32"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="1.5"
-						>
-							<path d="M12 2L2 7L12 12L22 7L12 2Z" />
-							<path d="M2 17L12 22L22 17" />
-							<path d="M2 12L12 17L22 12" />
-						</svg>
-					{:else if feature.icon === 'clock'}
-						<svg
-							width="32"
-							height="32"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="1.5"
-						>
-							<circle cx="12" cy="12" r="10" />
-							<path d="M12 6V12L16 14" />
-						</svg>
-					{:else if feature.icon === 'chart'}
-						<svg
-							width="32"
-							height="32"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="1.5"
-						>
-							<path d="M21 21H3V3" />
-							<path d="M21 9L15 15L10 10L3 17" />
-						</svg>
-					{:else if feature.icon === 'grid'}
-						<svg
-							width="32"
-							height="32"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="1.5"
-						>
-							<rect x="3" y="3" width="7" height="9" />
-							<rect x="14" y="3" width="7" height="5" />
-							<rect x="14" y="12" width="7" height="9" />
-							<rect x="3" y="16" width="7" height="5" />
-						</svg>
+				<div class="feature-header">
+					<div class="feature-meta">
+						<div class="feature-number">{feature.number}</div>
+						<div class="feature-icon">
+							{#if feature.icon === 'layers'}
+								<svg
+									width="32"
+									height="32"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="1.5"
+								>
+									<path d="M12 2L2 7L12 12L22 7L12 2Z" />
+									<path d="M2 17L12 22L22 17" />
+									<path d="M2 12L12 17L22 12" />
+								</svg>
+							{:else if feature.icon === 'clock'}
+								<svg
+									width="32"
+									height="32"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="1.5"
+								>
+									<circle cx="12" cy="12" r="10" />
+									<path d="M12 6V12L16 14" />
+								</svg>
+							{:else if feature.icon === 'chart'}
+								<svg
+									width="32"
+									height="32"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="1.5"
+								>
+									<path d="M21 21H3V3" />
+									<path d="M21 9L15 15L10 10L3 17" />
+								</svg>
+							{:else if feature.icon === 'grid'}
+								<svg
+									width="32"
+									height="32"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="1.5"
+								>
+									<rect x="3" y="3" width="7" height="9" />
+									<rect x="14" y="3" width="7" height="5" />
+									<rect x="14" y="12" width="7" height="9" />
+									<rect x="3" y="16" width="7" height="5" />
+								</svg>
+							{/if}
+						</div>
+					</div>
+					<div class="feature-text">
+						<h3 class="feature-title">{feature.title}</h3>
+						<p class="feature-description">{feature.description}</p>
+					</div>
+				</div>
+				<div class="feature-demo">
+					{#if feature.demo === 'layers'}
+						<FeatureDemoLayers />
+					{:else if feature.demo === 'updates'}
+						<FeatureDemoUpdates />
+					{:else if feature.demo === 'margin'}
+						<FeatureDemoMargin />
+					{:else if feature.demo === 'compound'}
+						<FeatureDemoCompound />
 					{/if}
 				</div>
-				<h3 class="feature-title">{feature.title}</h3>
-				<p class="feature-description">{feature.description}</p>
 			</div>
 		{/each}
 	</div>
@@ -150,13 +176,15 @@
 	}
 
 	.feature-card {
-		padding: 2rem;
+		padding: 1.5rem;
 		background: var(--card);
 		border: 1px solid var(--border);
 		border-radius: 12px;
 		transition: all 0.3s ease;
 		position: relative;
 		overflow: hidden;
+		display: flex;
+		flex-direction: column;
 	}
 
 	.feature-card::before {
@@ -181,12 +209,22 @@
 		opacity: 1;
 	}
 
+	.feature-header {
+		display: flex;
+		gap: 1rem;
+	}
+
+	.feature-meta {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+	}
+
 	.feature-number {
 		font-size: 0.6875rem;
 		font-weight: 500;
 		color: var(--muted-foreground);
 		letter-spacing: 0.1em;
-		margin-bottom: 1.25rem;
 	}
 
 	.feature-icon {
@@ -199,7 +237,6 @@
 		border: 1px solid color-mix(in srgb, var(--primary) 25%, transparent);
 		border-radius: 10px;
 		color: var(--primary);
-		margin-bottom: 1.25rem;
 		transition: all 0.3s ease;
 	}
 
@@ -208,19 +245,30 @@
 		transform: scale(1.05);
 	}
 
+	.feature-text {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
 	.feature-title {
 		font-family: 'Outfit', sans-serif;
 		font-size: 1.375rem;
 		font-weight: 600;
-		margin: 0 0 0.5rem;
+		margin: 0;
 		color: var(--foreground);
 	}
 
 	.feature-description {
-		font-size: 0.9375rem;
+		font-size: 0.875rem;
 		color: var(--muted-foreground);
 		line-height: 1.6;
 		margin: 0;
+	}
+
+	.feature-demo {
+		margin-top: auto;
 	}
 
 	@media (max-width: 1024px) {
@@ -232,6 +280,16 @@
 	@media (max-width: 768px) {
 		.features {
 			padding: 4rem 1.5rem;
+		}
+
+		.feature-header {
+			flex-direction: column;
+			gap: 0.75rem;
+		}
+
+		.feature-meta {
+			flex-direction: row;
+			align-items: center;
 		}
 	}
 </style>
