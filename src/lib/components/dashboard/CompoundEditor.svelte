@@ -20,6 +20,8 @@
 	import UnitChevronDropdownButton from './UnitChevronDropdownButton.svelte';
 	import RecipeUnitSelectButton from './RecipeUnitSelectButton.svelte';
 	import { getCurrencyContext } from '$lib/contexts/currency.svelte';
+	import { startDrag } from '$lib/utils/dragControls';
+	import DragHandle from '../common/DragHandle.svelte';
 
 	interface Props {
 		recipe: CompoundIngredientDoc;
@@ -59,6 +61,13 @@
 		compoundsToIngredients({ [recipe.id]: recipe }, costs, unitConversions)[recipe.id]
 	);
 	const currencyContext = getCurrencyContext();
+
+	let draggingId = $state<string | null>(null);
+
+	const swap = (from: number, to: number) => {
+		const moved = recipe.ingredients.splice(from, 1)[0];
+		recipe.ingredients.splice(to, 0, moved);
+	};
 </script>
 
 <div class="recipe-cost-calculator">
@@ -143,8 +152,43 @@
 			<h3>Ingredient Breakdown:</h3>
 			{#if recipe.ingredients.length > 0}
 				<div class="ingredient-list">
-					{#each recipe.ingredients as ingredient}
-						<div class="ingredient-cost-item" class:hidden={ingredient.hidden}>
+					{#each recipe.ingredients as ingredient, idx (ingredient.id)}
+						<div
+							class="ingredient-cost-item"
+							class:hidden={ingredient.hidden}
+							class:dragging={ingredient.id === draggingId}
+							data-id={ingredient.id}
+						>
+							<span
+								class="drag-handle"
+								role="button"
+								tabindex="-1"
+								aria-label="Drag to reorder"
+								title="Drag to reorder"
+								onpointerdown={(e) => {
+									draggingId = ingredient.id;
+									startDrag(
+										e,
+										(moveEvent) => {
+											moveEvent.preventDefault();
+											const targetEl = document.elementFromPoint(
+												moveEvent.clientX,
+												moveEvent.clientY
+											) as HTMLElement;
+											const targetId = targetEl.dataset.id;
+											if (targetId && targetId !== ingredient.id) {
+												swap(
+													idx,
+													recipe.ingredients.findIndex((i) => i.id === targetId)
+												);
+											}
+										},
+										() => (draggingId = null)
+									);
+								}}
+							>
+								<DragHandle />
+							</span>
 							<div class="ingredient-details">
 								<span class="ingredient-name">{costs[ingredient.id]?.name ?? ingredient.id}</span>
 								<div class="amount-input-group">
@@ -339,6 +383,36 @@
 		border: 1px solid var(--border);
 		border-radius: 6px;
 		font-size: 12px;
+		transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	.ingredient-cost-item:hover {
+		background: var(--secondary);
+		border-color: var(--border);
+	}
+
+	.drag-handle {
+		cursor: grab;
+		margin-right: 8px;
+		color: var(--muted-foreground);
+		display: flex;
+		align-items: center;
+		transition: color 0.15s ease;
+	}
+
+	.drag-handle:hover {
+		color: var(--secondary-foreground);
+	}
+
+	.drag-handle:active {
+		cursor: grabbing;
+		color: var(--primary);
+	}
+
+	.ingredient-cost-item.dragging {
+		opacity: 0.6;
+		transform: scale(0.98);
+		box-shadow: var(--shadow-medium);
 	}
 
 	.ingredient-details {

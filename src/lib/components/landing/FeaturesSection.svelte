@@ -37,6 +37,32 @@
 			demo: 'compound'
 		}
 	];
+
+	// Track tilt state for each card
+	let cardTilts = $state<Record<string, { tiltX: number; tiltY: number }>>({});
+
+	const handleMouseMove = (e: MouseEvent, featureId: string) => {
+		const card = e.currentTarget as HTMLElement;
+		const rect = card.getBoundingClientRect();
+		const x = e.clientX - rect.left;
+		const y = e.clientY - rect.top;
+		const centerX = rect.width / 2;
+		const centerY = rect.height / 2;
+
+		// Calculate tilt (max 8 degrees)
+		const tiltX = ((y - centerY) / centerY) * -8;
+		const tiltY = ((x - centerX) / centerX) * 8;
+
+		cardTilts[featureId] = { tiltX, tiltY };
+	};
+
+	const handleMouseLeave = (featureId: string) => {
+		cardTilts[featureId] = { tiltX: 0, tiltY: 0 };
+	};
+
+	const getTilt = (featureId: string) => {
+		return cardTilts[featureId] ?? { tiltX: 0, tiltY: 0 };
+	};
 </script>
 
 <section class="features">
@@ -50,80 +76,43 @@
 
 	<div class="features-grid">
 		{#each features as feature}
-			<div class="feature-card">
-				<div class="feature-header">
-					<div class="feature-meta">
-						<div class="feature-number">{feature.number}</div>
-						<div class="feature-icon">
-							{#if feature.icon === 'layers'}
-								<svg
-									width="32"
-									height="32"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="1.5"
-								>
-									<path d="M12 2L2 7L12 12L22 7L12 2Z" />
-									<path d="M2 17L12 22L22 17" />
-									<path d="M2 12L12 17L22 12" />
-								</svg>
-							{:else if feature.icon === 'clock'}
-								<svg
-									width="32"
-									height="32"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="1.5"
-								>
-									<circle cx="12" cy="12" r="10" />
-									<path d="M12 6V12L16 14" />
-								</svg>
-							{:else if feature.icon === 'chart'}
-								<svg
-									width="32"
-									height="32"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="1.5"
-								>
-									<path d="M21 21H3V3" />
-									<path d="M21 9L15 15L10 10L3 17" />
-								</svg>
-							{:else if feature.icon === 'grid'}
-								<svg
-									width="32"
-									height="32"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="1.5"
-								>
-									<rect x="3" y="3" width="7" height="9" />
-									<rect x="14" y="3" width="7" height="5" />
-									<rect x="14" y="12" width="7" height="9" />
-									<rect x="3" y="16" width="7" height="5" />
-								</svg>
-							{/if}
-						</div>
+			{@const tilt = getTilt(feature.demo)}
+			<div
+				class="feature-card"
+				role="group"
+				onmousemove={(e) => handleMouseMove(e, feature.demo)}
+				onmouseleave={() => handleMouseLeave(feature.demo)}
+			>
+				<div class="feature-meta">
+					<div class="feature-number">Interactive {feature.number}</div>
+				</div>
+				<div class="feature-demo">
+					<div
+						class="demo-3d-wrapper"
+						style="transform: perspective(800px) rotateX({tilt.tiltX}deg) rotateY({tilt.tiltY}deg) translateZ({Math.abs(
+							tilt.tiltX
+						) +
+							Math.abs(tilt.tiltY) >
+						0
+							? 20
+							: 0}px)"
+					>
+						{#if feature.demo === 'layers'}
+							<FeatureDemoLayers />
+						{:else if feature.demo === 'updates'}
+							<FeatureDemoUpdates />
+						{:else if feature.demo === 'margin'}
+							<FeatureDemoMargin />
+						{:else if feature.demo === 'compound'}
+							<FeatureDemoCompound />
+						{/if}
 					</div>
+				</div>
+				<div class="feature-header">
 					<div class="feature-text">
 						<h3 class="feature-title">{feature.title}</h3>
 						<p class="feature-description">{feature.description}</p>
 					</div>
-				</div>
-				<div class="feature-demo">
-					{#if feature.demo === 'layers'}
-						<FeatureDemoLayers />
-					{:else if feature.demo === 'updates'}
-						<FeatureDemoUpdates />
-					{:else if feature.demo === 'margin'}
-						<FeatureDemoMargin />
-					{:else if feature.demo === 'compound'}
-						<FeatureDemoCompound />
-					{/if}
 				</div>
 			</div>
 		{/each}
@@ -185,6 +174,7 @@
 		overflow: hidden;
 		display: flex;
 		flex-direction: column;
+		gap: 36px;
 	}
 
 	.feature-card::before {
@@ -226,25 +216,6 @@
 		color: var(--muted-foreground);
 		letter-spacing: 0.1em;
 	}
-
-	.feature-icon {
-		width: 48px;
-		height: 48px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		background: color-mix(in srgb, var(--primary) 12%, transparent);
-		border: 1px solid color-mix(in srgb, var(--primary) 25%, transparent);
-		border-radius: 10px;
-		color: var(--primary);
-		transition: all 0.3s ease;
-	}
-
-	.feature-card:hover .feature-icon {
-		background: color-mix(in srgb, var(--primary) 18%, transparent);
-		transform: scale(1.05);
-	}
-
 	.feature-text {
 		flex: 1;
 		display: flex;
@@ -268,7 +239,24 @@
 	}
 
 	.feature-demo {
-		margin-top: auto;
+		width: 80%;
+		margin: auto;
+		perspective: 800px;
+	}
+
+	.demo-3d-wrapper {
+		transform-style: preserve-3d;
+		transition:
+			transform 0.15s ease-out,
+			box-shadow 0.15s ease-out;
+		border-radius: 8px;
+	}
+
+	.feature-card:hover .demo-3d-wrapper {
+		border: 1px solid var(--border);
+		box-shadow:
+			0 25px 50px -12px rgba(0, 0, 0, 0.15),
+			0 0 0 1px rgba(255, 255, 255, 0.05);
 	}
 
 	@media (max-width: 1024px) {

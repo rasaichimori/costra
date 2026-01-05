@@ -1,4 +1,6 @@
 <script lang="ts">
+	import DragHandle from '../common/DragHandle.svelte';
+
 	let ingredients = $state([
 		{ id: 'flour', name: 'Flour', cost: 12, color: '#f59e0b' },
 		{ id: 'butter', name: 'Butter', cost: 28, color: '#3b82f6' },
@@ -47,23 +49,14 @@
 		{#each ingredients as ing, idx (ing.id)}
 			<div
 				class="mini-row"
+				role="button"
 				class:dragging={draggingIdx === idx}
 				data-idx={idx}
+				onpointerdown={(e) => handlePointerDown(e, idx)}
+				tabindex="-1"
 			>
-				<span
-					class="grip"
-					role="button"
-					tabindex="-1"
-					onpointerdown={(e) => handlePointerDown(e, idx)}
-				>
-					<svg width="8" height="14" viewBox="0 0 8 14" fill="currentColor">
-						<circle cx="2" cy="2" r="1.5" />
-						<circle cx="6" cy="2" r="1.5" />
-						<circle cx="2" cy="7" r="1.5" />
-						<circle cx="6" cy="7" r="1.5" />
-						<circle cx="2" cy="12" r="1.5" />
-						<circle cx="6" cy="12" r="1.5" />
-					</svg>
+				<span class="grip">
+					<DragHandle />
 				</span>
 				<span class="color-dot" style="background: {ing.color}"></span>
 				<span class="name">{ing.name}</span>
@@ -80,10 +73,10 @@
 <style>
 	.demo-container {
 		background: var(--background);
-		border: 1px solid var(--border);
-		border-radius: 8px;
 		padding: 10px;
 		margin-top: 1rem;
+		border-radius: 8px;
+		transform-style: preserve-3d;
 	}
 
 	.mini-ingredient-list {
@@ -103,6 +96,7 @@
 		font-size: 0.75rem;
 		transition: all 0.15s ease;
 		user-select: none;
+		cursor: grab;
 	}
 
 	.mini-row:hover {
@@ -116,7 +110,6 @@
 	}
 
 	.grip {
-		cursor: grab;
 		color: var(--muted-foreground);
 		display: flex;
 		align-items: center;
@@ -169,4 +162,3 @@
 		font-variant-numeric: tabular-nums;
 	}
 </style>
-

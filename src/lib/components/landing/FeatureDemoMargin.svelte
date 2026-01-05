@@ -37,11 +37,25 @@
 				</div>
 				<span class="status-icon">
 					{#if product.margin >= targetMargin}
-						<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+						<svg
+							width="14"
+							height="14"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2.5"
+						>
 							<polyline points="20 6 9 17 4 12"></polyline>
 						</svg>
 					{:else}
-						<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+						<svg
+							width="14"
+							height="14"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2.5"
+						>
 							<line x1="18" y1="6" x2="6" y2="18"></line>
 							<line x1="6" y1="6" x2="18" y2="18"></line>
 						</svg>
@@ -55,10 +69,10 @@
 <style>
 	.demo-container {
 		background: var(--background);
-		border: 1px solid var(--border);
-		border-radius: 8px;
 		padding: 10px;
 		margin-top: 1rem;
+		border-radius: 8px;
+		transform-style: preserve-3d;
 	}
 
 	.target-indicator {
@@ -183,4 +197,3 @@
 		color: var(--primary);
 	}
 </style>
-

@@ -72,11 +72,7 @@
 <div class="demo-container">
 	<div class="inputs-area">
 		{#each boxes as box (box.id)}
-			<div
-				class="input-box"
-				class:flash={flashing[box.id]}
-				style="left: {box.x}%; top: {box.y}%"
-			>
+			<div class="input-box" class:flash={flashing[box.id]} style="left: {box.x}%; top: {box.y}%">
 				<span class="input-label">{box.label}</span>
 				<div class="input-wrapper">
 					<span class="currency">$</span>
@@ -120,10 +116,10 @@
 <style>
 	.demo-container {
 		background: var(--background);
-		border: 1px solid var(--border);
-		border-radius: 8px;
 		padding: 10px;
 		margin-top: 1rem;
+		border-radius: 8px;
+		transform-style: preserve-3d;
 	}
 
 	.inputs-area {
@@ -227,4 +223,3 @@
 		font-style: italic;
 	}
 </style>
-

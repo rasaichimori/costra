@@ -19,6 +19,7 @@
 	import AddRecipeIngredientsButton from './AddRecipeIngredientsButton.svelte';
 	import RecipeUnitSelectButton from './RecipeUnitSelectButton.svelte';
 	import { getCurrencyContext } from '$lib/contexts/currency.svelte';
+	import DragHandle from '../common/DragHandle.svelte';
 
 	interface Props {
 		recipe: RecipeDoc;
@@ -130,7 +131,7 @@
 									);
 								}}
 							>
-								<i class="fa-solid fa-grip-vertical"></i>
+								<DragHandle />
 							</span>
 							<div class="ingredient-details">
 								<span class="ingredient-name">{allCosts[ingredient.id]?.name ?? ingredient.id}</span

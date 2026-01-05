@@ -32,12 +32,16 @@
 			{#each recipe.ingredients as ing}
 				{#if ing.type === 'compound'}
 					<div class="compound-item">
-						<button
-							class="compound-header"
-							onclick={() => (expanded = !expanded)}
-						>
+						<button class="compound-header" onclick={() => (expanded = !expanded)}>
 							<span class="expand-icon" class:expanded>
-								<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+								<svg
+									width="10"
+									height="10"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2.5"
+								>
 									<polyline points="9 18 15 12 9 6"></polyline>
 								</svg>
 							</span>
@@ -72,10 +76,10 @@
 <style>
 	.demo-container {
 		background: var(--background);
-		border: 1px solid var(--border);
-		border-radius: 8px;
 		padding: 10px;
 		margin-top: 1rem;
+		border-radius: 8px;
+		transform-style: preserve-3d;
 	}
 
 	.recipe-card {
@@ -128,7 +132,11 @@
 		align-items: center;
 		gap: 6px;
 		padding: 5px 8px;
-		background: linear-gradient(135deg, var(--muted) 0%, color-mix(in srgb, var(--primary) 8%, var(--muted)) 100%);
+		background: linear-gradient(
+			135deg,
+			var(--muted) 0%,
+			color-mix(in srgb, var(--primary) 8%, var(--muted)) 100%
+		);
 		border: 1px solid color-mix(in srgb, var(--primary) 25%, var(--border));
 		border-radius: 5px;
 		cursor: pointer;
@@ -228,4 +236,3 @@
 		opacity: 0.8;
 	}
 </style>
-
