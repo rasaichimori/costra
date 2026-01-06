@@ -1,5 +1,17 @@
 <script lang="ts">
-	const targetMargin = 30;
+	import { startDrag } from '$lib/utils/dragControls';
+	import CheckIcon from '$lib/components/common/icons/CheckIcon.svelte';
+	import XIcon from '$lib/components/common/icons/XIcon.svelte';
+
+	interface Props {
+		isHovered?: boolean;
+	}
+
+	let { isHovered = false }: Props = $props();
+
+	let targetMargin = $state(30);
+	let trackElement: HTMLDivElement | null = $state(null);
+	let isDragging = $state(false);
 
 	let products = $state([
 		{ id: 'croissant', name: 'Croissant', margin: 35, color: '#10b981' },
@@ -8,57 +20,73 @@
 	]);
 
 	const getMarginStatus = (margin: number) => {
-		if (margin >= targetMargin) return 'on-target';
-		if (margin >= targetMargin - 10) return 'close';
-		return 'below';
+		if (margin >= targetMargin) return 'above';
+		return 'on-target';
+	};
+
+	const handleMarkerDrag = (e: MouseEvent) => {
+		if (!trackElement) return;
+
+		isDragging = true;
+
+		const updatePosition = (moveEvent: MouseEvent) => {
+			if (!trackElement) return;
+			const rect = trackElement.getBoundingClientRect();
+			const x = moveEvent.clientX - rect.left;
+			const percentage = Math.round(Math.max(5, Math.min(50, (x / rect.width) * 50)));
+			targetMargin = percentage;
+		};
+
+		startDrag(e, updatePosition, () => {
+			isDragging = false;
+		});
 	};
 </script>
 
-<div class="demo-container">
+<div class="demo-container" class:is-hovered={isHovered || isDragging}>
 	<div class="target-indicator">
 		<span class="target-label">Target: {targetMargin}%</span>
 		<div class="target-line-marker"></div>
 	</div>
 	<div class="products-list">
-		{#each products as product (product.id)}
+		{#each products as product, index (product.id)}
+			{@const isFirst = index === 0}
 			<div class="product-row">
 				<span class="product-name">{product.name}</span>
 				<div class="bar-container">
-					<div class="bar-track">
-						<div
-							class="bar-fill {getMarginStatus(product.margin)}"
-							style="width: {Math.min(product.margin, 50) * 2}%; background: {product.color}"
-						></div>
-						<div class="target-line" style="left: {targetMargin * 2}%"></div>
-					</div>
-					<span class="margin-value" class:on-target={product.margin >= targetMargin}>
+					{#if isFirst}
+						<div class="bar-track" bind:this={trackElement}>
+							<div
+								class="bar-fill {getMarginStatus(product.margin)}"
+								style="width: {Math.min(product.margin, 50) * 2}%; background: {product.color}"
+							></div>
+							<div class="target-line" style="left: {targetMargin * 2}%">
+								<!-- svelte-ignore a11y_no_static_element_interactions -->
+								<div class="drag-handle" class:dragging={isDragging} onmousedown={handleMarkerDrag}>
+									<svg width="10" height="6" viewBox="0 0 10 6" fill="currentColor">
+										<path d="M5 6L0 0h10L5 6z" />
+									</svg>
+								</div>
+							</div>
+						</div>
+					{:else}
+						<div class="bar-track">
+							<div
+								class="bar-fill {getMarginStatus(product.margin)}"
+								style="width: {Math.min(product.margin, 50) * 2}%; background: {product.color}"
+							></div>
+							<div class="target-line" style="left: {targetMargin * 2}%"></div>
+						</div>
+					{/if}
+					<span class="margin-value" class:on-target={product.margin < targetMargin}>
 						{product.margin}%
 					</span>
 				</div>
 				<span class="status-icon">
-					{#if product.margin >= targetMargin}
-						<svg
-							width="14"
-							height="14"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="2.5"
-						>
-							<polyline points="20 6 9 17 4 12"></polyline>
-						</svg>
+					{#if product.margin < targetMargin}
+						<CheckIcon />
 					{:else}
-						<svg
-							width="14"
-							height="14"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="2.5"
-						>
-							<line x1="18" y1="6" x2="6" y2="18"></line>
-							<line x1="6" y1="6" x2="18" y2="18"></line>
-						</svg>
+						<XIcon />
 					{/if}
 				</span>
 			</div>
@@ -70,9 +98,7 @@
 	.demo-container {
 		background: var(--background);
 		padding: 10px;
-		margin-top: 1rem;
 		border-radius: 8px;
-		transform-style: preserve-3d;
 	}
 
 	.target-indicator {
@@ -90,6 +116,7 @@
 		color: var(--muted-foreground);
 		text-transform: uppercase;
 		letter-spacing: 0.05em;
+		width: 70px;
 	}
 
 	.target-line-marker {
@@ -108,12 +135,14 @@
 		display: flex;
 		flex-direction: column;
 		gap: 8px;
+		transform-style: preserve-3d;
 	}
 
 	.product-row {
 		display: flex;
 		align-items: center;
 		gap: 8px;
+		transform-style: preserve-3d;
 	}
 
 	.product-name {
@@ -129,6 +158,7 @@
 		display: flex;
 		align-items: center;
 		gap: 8px;
+		transform-style: preserve-3d;
 	}
 
 	.bar-track {
@@ -137,7 +167,7 @@
 		background: var(--muted);
 		border-radius: 4px;
 		position: relative;
-		overflow: hidden;
+		transform-style: preserve-3d;
 	}
 
 	.bar-fill {
@@ -149,12 +179,7 @@
 	.bar-fill.on-target {
 		opacity: 1;
 	}
-
-	.bar-fill.close {
-		opacity: 0.8;
-	}
-
-	.bar-fill.below {
+	.bar-fill.above {
 		opacity: 0.6;
 	}
 
@@ -166,6 +191,50 @@
 		background: var(--primary);
 		border-radius: 1px;
 		box-shadow: 0 0 4px var(--primary);
+		transition: left 0.1s ease-out;
+		transform-style: preserve-3d;
+	}
+
+	.drag-handle {
+		position: absolute;
+		top: -20px;
+		left: 50%;
+		transform: translateX(-50%) translateZ(50px) scale(0.5);
+		width: 24px;
+		height: 18px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		cursor: ew-resize;
+		color: var(--primary);
+		background: var(--card);
+		border: 1px solid var(--primary);
+		border-radius: 4px;
+		filter: drop-shadow(0 0 6px var(--primary));
+		opacity: 0;
+		pointer-events: none;
+		transition:
+			transform 0.2s ease,
+			filter 0.2s ease,
+			opacity 0.2s ease;
+	}
+
+	.demo-container.is-hovered .drag-handle {
+		opacity: 1;
+		pointer-events: auto;
+		transform: translateX(-50%) translateZ(50px) scale(1);
+	}
+
+	.demo-container.is-hovered .drag-handle:hover {
+		transform: translateX(-50%) translateZ(50px) scale(1.15);
+		filter: drop-shadow(0 0 10px var(--primary));
+	}
+
+	.drag-handle.dragging {
+		opacity: 1;
+		pointer-events: auto;
+		transform: translateX(-50%) translateZ(50px) scale(1.2);
+		filter: drop-shadow(0 0 12px var(--primary));
 	}
 
 	.margin-value {
@@ -189,11 +258,11 @@
 		justify-content: center;
 	}
 
-	.status-icon svg {
+	.status-icon :global(svg) {
 		color: var(--muted-foreground);
 	}
 
-	.product-row:has(.margin-value.on-target) .status-icon svg {
+	.product-row:has(.margin-value.on-target) .status-icon :global(svg) {
 		color: var(--primary);
 	}
 </style>

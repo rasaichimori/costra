@@ -4,45 +4,21 @@
 		label: string;
 		value: number;
 		multiplier: number;
-		x: number;
-		y: number;
 	}
 
 	let boxes = $state<InputBox[]>([
-		{ id: 'a', label: 'Flour', value: 100, multiplier: 1, x: 10, y: 5 },
-		{ id: 'b', label: 'Croissant', value: 250, multiplier: 2.5, x: 55, y: 35 },
-		{ id: 'c', label: 'Danish', value: 175, multiplier: 1.75, x: 20, y: 65 }
+		{ id: 'a', label: 'Flour', value: 100, multiplier: 1 },
+		{ id: 'b', label: 'Croissant', value: 250, multiplier: 2.5 },
+		{ id: 'c', label: 'Danish', value: 175, multiplier: 1.75 }
 	]);
 
 	let flashing = $state<Record<string, boolean>>({});
-	let animatingValues = $state<Record<string, number>>({});
 
-	const animateValue = (id: string, from: number, to: number) => {
+	const flashBox = (id: string) => {
 		flashing[id] = true;
-		animatingValues[id] = from;
-
-		const duration = 400;
-		const startTime = performance.now();
-		const diff = to - from;
-
-		const animate = (currentTime: number) => {
-			const elapsed = currentTime - startTime;
-			const progress = Math.min(elapsed / duration, 1);
-			// Easing function for smooth animation
-			const eased = 1 - Math.pow(1 - progress, 3);
-			animatingValues[id] = from + diff * eased;
-
-			if (progress < 1) {
-				requestAnimationFrame(animate);
-			} else {
-				animatingValues[id] = to;
-				setTimeout(() => {
-					flashing[id] = false;
-				}, 100);
-			}
-		};
-
-		requestAnimationFrame(animate);
+		setTimeout(() => {
+			flashing[id] = false;
+		}, 500);
 	};
 
 	const updateFromBox = (sourceId: string, newVal: number) => {
@@ -55,60 +31,30 @@
 		boxes.forEach((box) => {
 			if (box.id !== sourceId) {
 				const targetValue = Math.round(baseValue * box.multiplier * 10) / 10;
-				animateValue(box.id, box.value, targetValue);
+				flashBox(box.id);
 				box.value = targetValue;
 			}
 		});
 	};
-
-	const getDisplayValue = (box: InputBox) => {
-		if (flashing[box.id] && animatingValues[box.id] !== undefined) {
-			return Math.round(animatingValues[box.id] * 10) / 10;
-		}
-		return box.value;
-	};
 </script>
 
 <div class="demo-container">
-	<div class="inputs-area">
+	<div class="inputs-list">
 		{#each boxes as box (box.id)}
-			<div class="input-box" class:flash={flashing[box.id]} style="left: {box.x}%; top: {box.y}%">
+			<div class="input-row" class:flash={flashing[box.id]}>
 				<span class="input-label">{box.label}</span>
 				<div class="input-wrapper">
 					<span class="currency">$</span>
 					<input
 						type="number"
-						value={getDisplayValue(box)}
+						bind:value={box.value}
 						oninput={(e) => updateFromBox(box.id, +e.currentTarget.value)}
 						step="10"
 					/>
 				</div>
+				<span class="multiplier">×{box.multiplier}</span>
 			</div>
 		{/each}
-		<!-- Connection lines SVG -->
-		<svg class="connections" viewBox="0 0 100 100" preserveAspectRatio="none">
-			<path
-				d="M 25 15 Q 50 25, 70 45"
-				stroke="var(--border)"
-				stroke-width="0.5"
-				fill="none"
-				stroke-dasharray="2,2"
-			/>
-			<path
-				d="M 70 45 Q 45 55, 35 75"
-				stroke="var(--border)"
-				stroke-width="0.5"
-				fill="none"
-				stroke-dasharray="2,2"
-			/>
-			<path
-				d="M 25 15 Q 25 45, 35 75"
-				stroke="var(--border)"
-				stroke-width="0.5"
-				fill="none"
-				stroke-dasharray="2,2"
-			/>
-		</svg>
 	</div>
 	<p class="hint">Change any value to see others update</p>
 </div>
@@ -117,39 +63,42 @@
 	.demo-container {
 		background: var(--background);
 		padding: 10px;
-		margin-top: 1rem;
 		border-radius: 8px;
 		transform-style: preserve-3d;
 	}
 
-	.inputs-area {
-		position: relative;
-		height: 120px;
-		overflow: hidden;
-	}
-
-	.connections {
-		position: absolute;
-		inset: 0;
-		width: 100%;
-		height: 100%;
-		pointer-events: none;
-		opacity: 0.6;
-	}
-
-	.input-box {
-		position: absolute;
+	.inputs-list {
 		display: flex;
 		flex-direction: column;
-		gap: 3px;
-		transition: transform 0.15s ease;
+		gap: 6px;
 	}
 
-	.input-box.flash {
+	.input-row {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		padding: 8px 10px;
+		background: var(--muted);
+		border: 1px solid var(--border);
+		border-radius: 6px;
+		transition: all 0.2s ease;
+		width: fit-content;
+	}
+
+	.input-row:nth-child(1) {
+		margin-left: 5%;
+	}
+
+	.input-row:nth-child(2) {
+		margin-left: 45%;
+	}
+
+	.input-row:nth-child(3) {
+		margin-left: 15%;
+	}
+
+	.input-row.flash {
 		animation: pulse 0.4s ease;
-	}
-
-	.input-box.flash input {
 		border-color: var(--primary);
 		box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 25%, transparent);
 	}
@@ -160,33 +109,25 @@
 			transform: scale(1);
 		}
 		50% {
-			transform: scale(1.05);
+			transform: scale(1.02);
 		}
 	}
 
 	.input-label {
-		font-size: 0.625rem;
+		font-size: 0.75rem;
 		font-weight: 500;
-		color: var(--muted-foreground);
-		text-transform: uppercase;
-		letter-spacing: 0.05em;
+		color: var(--foreground);
+		min-width: 60px;
 	}
 
 	.input-wrapper {
 		display: flex;
 		align-items: center;
-		background: var(--muted);
+		background: var(--background);
 		border: 1px solid var(--border);
-		border-radius: 6px;
+		border-radius: 4px;
 		padding: 4px 8px;
-		transition: all 0.2s ease;
 	}
-
-	.input-box.flash .input-wrapper {
-		border-color: var(--primary);
-		box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 25%, transparent);
-	}
-
 	.currency {
 		font-size: 0.75rem;
 		font-weight: 600;
@@ -203,6 +144,11 @@
 		color: var(--foreground);
 		font-variant-numeric: tabular-nums;
 		outline: none;
+		cursor: pointer;
+	}
+
+	.input-wrapper:has(input:hover) {
+		background: var(--secondary);
 	}
 
 	input::-webkit-outer-spin-button,
@@ -213,6 +159,14 @@
 
 	input[type='number'] {
 		-moz-appearance: textfield;
+	}
+
+	.multiplier {
+		font-size: 0.65rem;
+		font-weight: 500;
+		color: var(--muted-foreground);
+		margin-left: auto;
+		font-variant-numeric: tabular-nums;
 	}
 
 	.hint {

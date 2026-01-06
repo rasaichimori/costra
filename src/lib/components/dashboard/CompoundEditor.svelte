@@ -21,7 +21,7 @@
 	import RecipeUnitSelectButton from './RecipeUnitSelectButton.svelte';
 	import { getCurrencyContext } from '$lib/contexts/currency.svelte';
 	import { startDrag } from '$lib/utils/dragControls';
-	import DragHandle from '../common/DragHandle.svelte';
+	import DragHandle from '../common/icons/DragHandle.svelte';
 
 	interface Props {
 		recipe: CompoundIngredientDoc;

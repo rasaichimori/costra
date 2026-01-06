@@ -1,5 +1,5 @@
 <script lang="ts">
-	// No props needed - this is static content
+	import ArrowRightIcon from '$lib/components/common/icons/ArrowRightIcon.svelte';
 </script>
 
 <div class="hero-content">
@@ -21,26 +21,26 @@
 	<p class="tagline">A simple tool to understand your costs.</p>
 
 	<p class="value-prop-text">
-		Your profit is leaking. <span class="text-highlight">Protect your margins</span> before they disappear.
+		It's very simple. Your profit is leaking! So I built this tool to help you <span
+			class="text-highlight">protect your margins</span
+		>
+		before they disappear. Oh and it's <span class="text-highlight">free</span>.
 	</p>
 
 	<div class="cta-group">
 		<a href="/dashboard" class="btn-primary">
 			<span class="btn-bg"></span>
 			<span class="btn-content">
-				Get Started Free
-				<svg
-					class="btn-arrow"
-					width="16"
-					height="16"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-				>
-					<path d="M5 12H19M19 12L12 5M19 12L12 19" />
-				</svg>
+				Get Started
+				<span class="btn-arrow">
+					<ArrowRightIcon />
+				</span>
 			</span>
+		</a>
+
+		<a href="#" class="btn-secondary">
+			<span class="btn-bg"></span>
+			<span class="btn-content"> Why is it Free? </span>
 		</a>
 	</div>
 </div>
@@ -106,7 +106,7 @@
 
 	.tagline {
 		font-size: 1.125rem;
-		color: var(--muted-foreground);
+		color: var(--primary);
 		margin: 0;
 		animation: fadeInUp 0.8s ease-out 0.5s both;
 	}
@@ -122,7 +122,8 @@
 		animation: fadeInUp 0.8s ease-out 0.7s both;
 	}
 
-	.btn-primary {
+	.btn-primary,
+	.btn-secondary {
 		position: relative;
 		padding: 0.875rem 1.75rem;
 		font-size: 0.9375rem;
@@ -151,6 +152,17 @@
 	.btn-primary:hover .btn-bg {
 		transform: scale(1.02);
 	}
+	.btn-secondary {
+		background: transparent;
+		color: var(--foreground);
+		border: 1px solid var(--border);
+		transition: all 0.3s ease;
+	}
+
+	.btn-secondary:hover {
+		background: var(--muted);
+		border-color: var(--muted-foreground);
+	}
 
 	.btn-content {
 		position: relative;
@@ -161,6 +173,7 @@
 	}
 
 	.btn-arrow {
+		height: 16px;
 		transition: transform 0.3s ease;
 	}
 

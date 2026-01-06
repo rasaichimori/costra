@@ -102,7 +102,7 @@
 						{:else if feature.demo === 'updates'}
 							<FeatureDemoUpdates />
 						{:else if feature.demo === 'margin'}
-							<FeatureDemoMargin />
+							<FeatureDemoMargin isHovered={Math.abs(tilt.tiltX) + Math.abs(tilt.tiltY) > 0} />
 						{:else if feature.demo === 'compound'}
 							<FeatureDemoCompound />
 						{/if}

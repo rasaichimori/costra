@@ -77,7 +77,6 @@
 	.demo-container {
 		background: var(--background);
 		padding: 10px;
-		margin-top: 1rem;
 		border-radius: 8px;
 		transform-style: preserve-3d;
 	}

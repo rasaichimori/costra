@@ -1,5 +1,5 @@
 <script lang="ts">
-	import DragHandle from '../common/DragHandle.svelte';
+	import DragHandle from '../common/icons/DragHandle.svelte';
 
 	let ingredients = $state([
 		{ id: 'flour', name: 'Flour', cost: 12, color: '#f59e0b' },
@@ -28,6 +28,7 @@
 			if (targetIdx !== null && targetIdx !== undefined && +targetIdx !== idx) {
 				swap(idx, +targetIdx);
 				idx = +targetIdx;
+				draggingIdx = idx;
 			}
 		};
 
@@ -74,7 +75,6 @@
 	.demo-container {
 		background: var(--background);
 		padding: 10px;
-		margin-top: 1rem;
 		border-radius: 8px;
 		transform-style: preserve-3d;
 	}
