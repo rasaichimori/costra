@@ -9,19 +9,25 @@ import { historyManager } from '$lib/utils/history';
 import { mockData } from '$lib/data/mockData';
 
 class DataState {
-	costs = $state<Record<string, IngredientDoc>>(mockData.costs);
-	compoundIngredients = $state<Record<string, CompoundIngredientDoc>>(
-		mockData.compoundIngredients
-	);
-	recipes = $state<Record<string, RecipeDoc>>(mockData.recipes);
-	customUnitLabels = $state<Record<string, string>>(mockData.unitLabels);
-	unitConversions = $state<UnitConversion[]>(mockData.unitConversions);
+	costs = $state<Record<string, IngredientDoc>>({});
+	compoundIngredients = $state<Record<string, CompoundIngredientDoc>>({});
+	recipes = $state<Record<string, RecipeDoc>>({});
+	customUnitLabels = $state<Record<string, string>>({});
+	unitConversions = $state<UnitConversion[]>([]);
 
 	private isRestoring = $state(false);
 	private isInitialized = false;
 	private saveTimeout: ReturnType<typeof setTimeout> | null = null;
 
-	constructor() {
+	constructor(useMockData = false) {
+		if (useMockData) {
+			this.costs = mockData.costs;
+			this.compoundIngredients = mockData.compoundIngredients;
+			this.recipes = mockData.recipes;
+			this.customUnitLabels = mockData.unitLabels;
+			this.unitConversions = mockData.unitConversions;
+		}
+		
 		// Initialize history with initial state
 		historyManager.initialize({
 			costs: this.costs,
@@ -31,6 +37,44 @@ class DataState {
 			unitConversions: this.unitConversions
 		});
 		this.isInitialized = true;
+	}
+
+	/**
+	 * Initialize with mock data (for prefilled example)
+	 */
+	initializeWithMockData() {
+		this.costs = mockData.costs;
+		this.compoundIngredients = mockData.compoundIngredients;
+		this.recipes = mockData.recipes;
+		this.customUnitLabels = mockData.unitLabels;
+		this.unitConversions = mockData.unitConversions;
+		// Reinitialize history with new state
+		historyManager.initialize({
+			costs: this.costs,
+			compoundIngredients: this.compoundIngredients,
+			recipes: this.recipes,
+			customUnitLabels: this.customUnitLabels,
+			unitConversions: this.unitConversions
+		});
+	}
+
+	/**
+	 * Clear all data (for blank slate)
+	 */
+	clearAllData() {
+		this.costs = {};
+		this.compoundIngredients = {};
+		this.recipes = {};
+		this.customUnitLabels = {};
+		this.unitConversions = [];
+		// Reinitialize history with empty state
+		historyManager.initialize({
+			costs: this.costs,
+			compoundIngredients: this.compoundIngredients,
+			recipes: this.recipes,
+			customUnitLabels: this.customUnitLabels,
+			unitConversions: this.unitConversions
+		});
 	}
 
 	/**
@@ -106,8 +150,8 @@ class DataState {
 
 const DATA_KEY = Symbol('data');
 
-export function setDataContext() {
-	const dataState = new DataState();
+export function setDataContext(useMockData = false) {
+	const dataState = new DataState(useMockData);
 	setContext(DATA_KEY, dataState);
 	return dataState;
 }

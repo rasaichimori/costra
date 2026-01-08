@@ -1,15 +1,21 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
+	import { browser } from '$app/environment';
 	import ThemeToggle from '$lib/components/common/ThemeToggle.svelte';
 	import ModernButton from '$lib/components/common/ModernButton.svelte';
 	import { setDataContext, getDataContext } from '$lib/contexts/data.svelte';
+	import { getOverlayContext } from '$lib/contexts/overlay.svelte';
+	import WelcomeModal from '$lib/components/modals/WelcomeModal.svelte';
 	import { onMount } from 'svelte';
 
 	let { children } = $props();
 
-	// Initialize data context
-	const dataState = setDataContext();
+	const WELCOME_CHOICE_KEY = 'costra_welcome_choice';
+
+	// Initialize data context (will start empty, user will choose)
+	const dataState = setDataContext(false);
+	const { openOverlay } = getOverlayContext();
 
 	// Track undo/redo state changes using $derived instead of $effect
 	let undoRedoVersion = $state(0);
@@ -42,7 +48,39 @@
 		}
 	};
 
+	const handleWelcomeChoice = (choice: 'blank' | 'prefilled') => {
+		if (!browser) return;
+
+		// Save the choice to localStorage
+		localStorage.setItem(WELCOME_CHOICE_KEY, choice);
+
+		if (choice === 'blank') {
+			dataState.clearAllData();
+		} else {
+			dataState.initializeWithMockData();
+		}
+	};
+
 	onMount(() => {
+		// Check if user has already made a choice
+		if (browser) {
+			const savedChoice = localStorage.getItem(WELCOME_CHOICE_KEY);
+			if (!savedChoice) {
+				// First time user - show welcome modal
+				openOverlay(WelcomeModal, {
+					onChooseBlank: () => handleWelcomeChoice('blank'),
+					onChoosePrefilled: () => handleWelcomeChoice('prefilled'),
+					onclose: () => {}
+				});
+			} else {
+				// User has made a choice before, initialize accordingly
+				if (savedChoice === 'prefilled') {
+					dataState.initializeWithMockData();
+				}
+				// If blank, data is already empty, no need to call clearAllData()
+			}
+		}
+
 		// Set up keyboard shortcuts
 		const handleKeyDown = (event: KeyboardEvent) => {
 			const target = event.target as HTMLElement;

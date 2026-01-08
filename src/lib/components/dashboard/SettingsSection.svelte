@@ -16,6 +16,7 @@
 	import { onMount } from 'svelte';
 	import { findAllMissingConversionsFromImport } from '$lib/utils/unitSelectUtils';
 	import { buildUnitLabels } from '$lib/utils/unitSelectUtils';
+	import { mockData } from '$lib/data/mockData';
 
 	let {
 		costs = $bindable({}),
@@ -223,6 +224,14 @@
 			onclose: () => closeOverlay()
 		});
 	};
+
+	const loadExampleData = () => {
+		costs = mockData.costs;
+		recipes = mockData.recipes;
+		compoundIngredients = mockData.compoundIngredients;
+		unitConversions = mockData.unitConversions;
+		customUnitLabels = mockData.unitLabels;
+	};
 </script>
 
 <div class="settings-section">
@@ -246,6 +255,7 @@
 		<div class="settings-actions">
 			<ModernButton variant="primary" onclick={exportData}>Export Data</ModernButton>
 			<ModernButton variant="secondary" onclick={importData}>Import Data</ModernButton>
+			<ModernButton variant="secondary" onclick={loadExampleData}>Load Example Data</ModernButton>
 			<ModernButton variant="danger" onclick={clearAllData}>Clear All Data</ModernButton>
 		</div>
 	</div>
