@@ -113,4 +113,57 @@
 		background: var(--c);
 		display: inline-block;
 	}
+
+	@media (max-width: 768px) {
+		.placeholder-card {
+			padding: 1.5rem;
+		}
+
+		.placeholder-content {
+			flex-direction: column;
+			align-items: center;
+		}
+
+		.left {
+			text-align: center;
+		}
+
+		h3 {
+			font-size: 1.1rem;
+		}
+
+		p {
+			font-size: 0.85rem;
+		}
+
+		.demo-chart {
+			width: 120px;
+			height: 120px;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.placeholder-card {
+			padding: 1rem;
+			border-radius: 6px;
+		}
+
+		h3 {
+			font-size: 1rem;
+		}
+
+		p {
+			font-size: 0.8rem;
+		}
+
+		.demo-chart {
+			width: 100px;
+			height: 100px;
+		}
+
+		.demo-legend {
+			font-size: 0.65rem;
+			gap: 6px;
+		}
+	}
 </style>

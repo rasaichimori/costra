@@ -332,4 +332,42 @@
 		color: var(--secondary-foreground);
 		transition: transform 0.2s ease;
 	}
+
+	@media (max-width: 768px) {
+		.settings-section {
+			padding: 16px;
+			gap: 24px;
+		}
+
+		.settings-group {
+			gap: 12px;
+		}
+
+		.settings-group h3 {
+			font-size: 1rem;
+		}
+
+		.settings-actions {
+			gap: 10px;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.settings-section {
+			padding: 12px;
+			gap: 20px;
+		}
+
+		.settings-group h3 {
+			font-size: 0.95rem;
+		}
+
+		.setting-item .setting-label {
+			font-size: 0.85rem;
+		}
+
+		.settings-actions {
+			gap: 8px;
+		}
+	}
 </style>

@@ -50,5 +50,21 @@
 		display: flex;
 		gap: 16px;
 	}
+
+	@media (max-width: 1024px) {
+		.ingredients {
+			flex-direction: column;
+		}
+	}
+
+	@media (max-width: 768px) {
+		.dashboard-content {
+			gap: 12px;
+		}
+
+		.dashboard-content h2 {
+			font-size: 1.1rem;
+		}
+	}
 </style>
 

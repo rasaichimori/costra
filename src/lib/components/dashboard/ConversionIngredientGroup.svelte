@@ -98,4 +98,39 @@
 		display: flex;
 		flex-direction: column;
 	}
+
+	@media (max-width: 768px) {
+		.ingredient-header {
+			padding: 10px 12px;
+			gap: 8px;
+		}
+
+		.color-dot {
+			width: 10px;
+			height: 10px;
+		}
+
+		.ingredient-name {
+			font-size: 13px;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.ingredient-group {
+			border-radius: 6px;
+		}
+
+		.ingredient-header {
+			padding: 8px 10px;
+		}
+
+		.ingredient-name {
+			font-size: 12px;
+		}
+
+		.conversion-count {
+			font-size: 9px;
+			padding: 1px 5px;
+		}
+	}
 </style>

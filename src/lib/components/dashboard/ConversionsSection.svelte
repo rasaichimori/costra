@@ -220,4 +220,38 @@
 		flex-direction: column;
 		gap: 16px;
 	}
+
+	@media (max-width: 768px) {
+		.conversions-section {
+			padding: 1rem;
+			gap: 16px;
+		}
+
+		.header-info h3 {
+			font-size: 16px;
+		}
+
+		.stats {
+			font-size: 12px;
+		}
+
+		.conversions-grid {
+			gap: 12px;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.conversions-section {
+			padding: 0.75rem;
+			border-radius: 6px;
+		}
+
+		.header-info h3 {
+			font-size: 14px;
+		}
+
+		.stats {
+			font-size: 11px;
+		}
+	}
 </style>

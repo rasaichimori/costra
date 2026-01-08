@@ -437,17 +437,78 @@
 		color: var(--foreground);
 	}
 
-	@media (max-width: 768px) {
-		.filter-pills {
-			justify-content: center;
-		}
-
+	@media (max-width: 1024px) {
 		.costs-table-container {
 			overflow-x: auto;
+			-webkit-overflow-scrolling: touch;
 		}
 
 		.costs-table {
-			min-width: 880px;
+			min-width: 700px;
+		}
+	}
+
+	@media (max-width: 768px) {
+		.ingredient-cost-section {
+			padding: 1rem;
+		}
+
+		.filter-section {
+			gap: 12px;
+		}
+
+		.filter-section h3 {
+			font-size: 14px;
+		}
+
+		.filter-pills {
+			gap: 6px;
+		}
+
+		.costs-table {
+			min-width: 600px;
+		}
+
+		.costs-table th {
+			padding: 10px 8px;
+			font-size: 0.7rem;
+		}
+
+		.costs-table td {
+			padding: 6px;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.ingredient-cost-section {
+			padding: 0.75rem;
+			border-radius: 8px;
+			gap: 12px;
+		}
+
+		.search-section {
+			max-width: none;
+		}
+
+		.filter-section h3 {
+			font-size: 13px;
+		}
+
+		.costs-table {
+			min-width: 550px;
+		}
+
+		.costs-table th {
+			padding: 8px 6px;
+			font-size: 0.65rem;
+		}
+
+		.costs-table td {
+			padding: 5px;
+
+			&.ingredient-cell {
+				padding-left: 8px;
+			}
 		}
 	}
 </style>

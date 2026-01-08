@@ -102,7 +102,9 @@
 		max-height: 80vh;
 		overflow-y: auto;
 		width: 220px;
+		min-width: 180px;
 		box-shadow: var(--shadow-light);
+		flex-shrink: 0;
 	}
 	.add-recipe-btn {
 		display: block;
@@ -123,5 +125,32 @@
 		background: var(--hover);
 		border-color: var(--border);
 		color: var(--foreground);
+	}
+
+	@media (max-width: 900px) {
+		.recipes-list {
+			width: 100%;
+			max-height: none;
+			flex-direction: row;
+			flex-wrap: wrap;
+			align-items: center;
+		}
+
+		.add-recipe-btn {
+			width: auto;
+			flex-shrink: 0;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.recipes-list {
+			padding: 0.75rem;
+			gap: 0.4rem;
+		}
+
+		.add-recipe-btn {
+			padding: 0.5rem 0.75rem;
+			font-size: 0.8rem;
+		}
 	}
 </style>

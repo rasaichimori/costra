@@ -471,4 +471,152 @@
 	.ingredient-cost-item.hidden {
 		opacity: 0.4;
 	}
+
+	/* Mobile responsive styles */
+	@media (max-width: 768px) {
+		.recipe-cost-calculator {
+			padding: 14px;
+		}
+
+		.header {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 12px;
+		}
+
+		.header-left {
+			width: 100%;
+			gap: 8px 16px;
+		}
+
+		.title {
+			font-size: 24px;
+		}
+
+		.title-label {
+			font-size: 14px;
+			min-width: 120px;
+		}
+
+		.cost-amount {
+			font-size: 20px;
+		}
+
+		.recipe-section {
+			gap: 20px;
+		}
+
+		.ingredient-list {
+			overflow-x: auto;
+			-webkit-overflow-scrolling: touch;
+			margin: 0 -14px;
+			padding: 0 14px;
+		}
+
+		.ingredient-cost-item {
+			min-width: max-content;
+			gap: 6px;
+			padding: 6px 10px;
+		}
+
+		.ingredient-details {
+			gap: 6px;
+		}
+
+		.ingredient-name {
+			min-width: 60px;
+			width: 80px;
+			font-size: 11px;
+		}
+
+		.amount-input-group {
+			width: 50px;
+		}
+
+		.unit-input-group {
+			width: auto;
+		}
+
+		.ingredient-cost {
+			min-width: 35px;
+			font-size: 11px;
+		}
+
+		.color-picker {
+			width: 18px;
+			height: 18px;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.recipe-cost-calculator {
+			padding: 10px;
+			border-radius: 6px;
+		}
+
+		.recipe-cost-calculator h3 {
+			font-size: 14px;
+		}
+
+		.title {
+			font-size: 18px;
+			gap: 4px;
+		}
+
+		.title-label {
+			font-size: 12px;
+		}
+
+		.cost-amount {
+			font-size: 16px;
+		}
+
+		.yield-row {
+			gap: 6px;
+		}
+
+		.recipe-section {
+			gap: 16px;
+		}
+
+		.recipe-breakdown {
+			margin-top: 12px;
+			padding-top: 12px;
+		}
+
+		.ingredient-list {
+			margin: 0 -10px;
+			padding: 0 10px;
+		}
+
+		.ingredient-cost-item {
+			padding: 5px 8px;
+			font-size: 10px;
+			border-radius: 6px;
+		}
+
+		.drag-handle {
+			margin-right: 4px;
+		}
+
+		.ingredient-name {
+			min-width: 50px;
+			width: 70px;
+			font-size: 10px;
+		}
+
+		.amount-input-group {
+			width: 45px;
+		}
+
+		.ingredient-cost {
+			font-size: 10px;
+			min-width: 30px;
+		}
+
+		.color-picker {
+			width: 16px;
+			height: 16px;
+		}
+	}
 </style>

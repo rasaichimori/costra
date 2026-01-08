@@ -68,4 +68,10 @@
 		gap: 16px;
 		flex: 1;
 	}
+
+	@media (max-width: 900px) {
+		.recipes {
+			flex-direction: column;
+		}
+	}
 </style>

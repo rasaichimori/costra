@@ -167,7 +167,7 @@
 				onclick={() => handleTabClick('dashboard')}
 			>
 				<i class="fa-solid fa-kitchen-set"></i>
-				Dashboard
+				<span class="tab-text">Dashboard</span>
 			</button>
 			<button
 				class="tab"
@@ -175,7 +175,7 @@
 				onclick={() => handleTabClick('conversions')}
 			>
 				<i class="fa-solid fa-scale-balanced"></i>
-				Conversions
+				<span class="tab-text">Conversions</span>
 				{#if unitConversions.length > 0}
 					<span class="tab-badge">{unitConversions.length}</span>
 				{/if}
@@ -188,7 +188,7 @@
 				onclick={() => handleTabClick('settings')}
 			>
 				<i class="fa-solid fa-gear"></i>
-				Settings
+				<span class="tab-text">Settings</span>
 			</button>
 		</div>
 	</div>
@@ -312,5 +312,85 @@
 
 	.content {
 		flex: 1;
+	}
+
+	/* Mobile responsive styles */
+	@media (max-width: 768px) {
+		.dashboard-layout {
+			padding: 1rem;
+			margin: 0.5rem;
+			border-radius: 12px;
+			min-height: calc(100vh - 1rem);
+			gap: 12px;
+		}
+
+		.editor-header h2 {
+			font-size: 1.25rem;
+		}
+
+		.tabs {
+			flex-wrap: wrap;
+			gap: 4px;
+		}
+
+		.tabs-left,
+		.tabs-right {
+			flex-wrap: wrap;
+		}
+
+		.tab {
+			padding: 8px 12px;
+			font-size: 13px;
+			gap: 6px;
+		}
+
+		.tab i {
+			font-size: 12px;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.dashboard-layout {
+			padding: 0.75rem;
+			margin: 0;
+			border-radius: 0;
+			min-height: 100vh;
+		}
+
+		.editor-header {
+			flex-wrap: wrap;
+			gap: 8px;
+		}
+
+		.editor-header h2 {
+			font-size: 1.1rem;
+		}
+
+		.tabs {
+			overflow-x: auto;
+			-webkit-overflow-scrolling: touch;
+			scrollbar-width: none;
+		}
+
+		.tabs::-webkit-scrollbar {
+			display: none;
+		}
+
+		.tab {
+			padding: 8px 10px;
+			font-size: 12px;
+			white-space: nowrap;
+			flex-shrink: 0;
+		}
+
+		/* Hide tab text on very small screens, show only icons */
+		.tab .tab-text {
+			display: none;
+		}
+
+		.tab-badge {
+			font-size: 9px;
+			padding: 1px 4px;
+		}
 	}
 </style>

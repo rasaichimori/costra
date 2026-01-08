@@ -81,4 +81,22 @@
 		margin-left: 0.5rem;
 		font-variant-numeric: tabular-nums;
 	}
+
+	@media (max-width: 900px) {
+		.recipe-list-item {
+			width: auto;
+			flex-shrink: 0;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.recipe-list-item {
+			padding: 0.5rem 0.75rem;
+			font-size: 0.8rem;
+		}
+
+		.cost {
+			margin-left: 0.4rem;
+		}
+	}
 </style>

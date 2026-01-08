@@ -262,4 +262,16 @@
 		width: 100% !important;
 		height: 100% !important;
 	}
+
+	@media (max-width: 768px) {
+		.chart-wrapper {
+			max-width: 300px;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.chart-wrapper {
+			max-width: 250px;
+		}
+	}
 </style>
