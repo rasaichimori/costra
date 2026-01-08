@@ -201,3 +201,7 @@ body {
   background: var(--primary);
   color: var(--primary-foreground);
 }
+
+a{
+  color: var(--primary);
+}

@@ -6,6 +6,7 @@
 		DashboardPreview,
 		FeaturesSection,
 		WhyFreeSection,
+		FuturePlansSection,
 		LandingFooter
 	} from '$lib/components/landing';
 
@@ -48,6 +49,7 @@
 
 	<FeaturesSection />
 	<WhyFreeSection />
+	<FuturePlansSection />
 	<LandingFooter />
 </main>
 

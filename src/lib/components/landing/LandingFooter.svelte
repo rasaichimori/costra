@@ -1,14 +1,16 @@
 <script lang="ts">
-	// No props needed
+	import logoIcon from '$lib/assets/logo.svg';
 </script>
 
 <footer class="footer">
 	<div class="footer-content">
 		<div class="footer-brand">
-			<span class="logo-mark">◈</span>
+			<img src={logoIcon} alt="Costra logo" class="logo-icon" />
 			<span class="logo-text">Costra</span>
 		</div>
-		<p class="footer-tagline">Built for people who care about margins.</p>
+		<p class="footer-tagline">
+			Built by <a href="https://www.rasaichimori.com/" target="_blank">Rasa</a>
+		</p>
 	</div>
 </footer>
 
@@ -33,9 +35,9 @@
 		gap: 0.5rem;
 	}
 
-	.logo-mark {
-		font-size: 1.5rem;
-		color: var(--primary);
+	.logo-icon {
+		width: 20px;
+		height: 20px;
 	}
 
 	.logo-text {

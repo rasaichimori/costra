@@ -1,4 +1,5 @@
 <script lang="ts">
+	import logoIcon from '$lib/assets/logo.svg';
 	import ThemeToggle from '$lib/components/common/ThemeToggle.svelte';
 
 	interface Props {
@@ -10,7 +11,7 @@
 
 <nav class="nav" class:scrolled>
 	<div class="nav-logo">
-		<span class="logo-mark">◈</span>
+		<img src={logoIcon} alt="Costra logo" class="logo-icon" />
 		<span class="logo-text">Costra</span>
 	</div>
 	<div class="nav-actions">
@@ -41,15 +42,15 @@
 		border-bottom: 1px solid var(--border);
 	}
 
+	.logo-icon {
+		width: 20px;
+		height: 20px;
+	}
+
 	.nav-logo {
 		display: flex;
 		align-items: center;
-		gap: 0.75rem;
-	}
-
-	.logo-mark {
-		font-size: 1.5rem;
-		color: var(--primary);
+		gap: 8px;
 	}
 
 	.logo-text {
@@ -93,4 +94,3 @@
 		}
 	}
 </style>
-

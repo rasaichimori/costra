@@ -1,5 +1,5 @@
 <script lang="ts">
-	import favicon from '$lib/assets/favicon.svg';
+	import logoIcon from '$lib/assets/logo.svg';
 	import OverlayProvider from '$lib/overlay/OverlayProvider.svelte';
 	import Sidebar from '$lib/components/common/Sidebar.svelte';
 	import ThemeToggle from '$lib/components/common/ThemeToggle.svelte';
@@ -17,7 +17,7 @@
 </script>
 
 <svelte:head>
-	<link rel="icon" href={favicon} />
+	<link rel="icon" href={logoIcon} />
 </svelte:head>
 
 <OverlayProvider>
