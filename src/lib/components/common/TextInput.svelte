@@ -257,7 +257,6 @@
 		color: var(--secondary-foreground);
 		font-size: 14px;
 		pointer-events: none;
-		z-index: 1;
 	}
 
 	.input-wrapper.has-icon .input {

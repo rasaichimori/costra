@@ -15,7 +15,7 @@
 
 	// Initialize data context (will start empty, user will choose)
 	const dataState = setDataContext(false);
-	const { openOverlay } = getOverlayContext();
+	const { openOverlay, closeOverlay } = getOverlayContext();
 
 	// Track undo/redo state changes using $derived instead of $effect
 	let undoRedoVersion = $state(0);
@@ -67,10 +67,10 @@
 			const savedChoice = localStorage.getItem(WELCOME_CHOICE_KEY);
 			if (!savedChoice) {
 				// First time user - show welcome modal
-				openOverlay(WelcomeModal, {
+				const overlayId = openOverlay(WelcomeModal, {
 					onChooseBlank: () => handleWelcomeChoice('blank'),
 					onChoosePrefilled: () => handleWelcomeChoice('prefilled'),
-					onclose: () => {}
+					onclose: () => closeOverlay(overlayId)
 				});
 			} else {
 				// User has made a choice before, initialize accordingly

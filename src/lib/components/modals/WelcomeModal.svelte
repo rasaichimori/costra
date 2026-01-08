@@ -7,19 +7,12 @@
 
 	const handleSelectBlank = () => {
 		selectedChoice = 'blank';
+		onChooseBlank();
 	};
 
 	const handleSelectPrefilled = () => {
 		selectedChoice = 'prefilled';
-	};
-
-	const handleConfirm = () => {
-		if (selectedChoice === 'blank') {
-			onChooseBlank();
-		} else if (selectedChoice === 'prefilled') {
-			onChoosePrefilled();
-		}
-		onclose(true);
+		onChoosePrefilled();
 	};
 </script>
 
@@ -43,7 +36,11 @@
 	</div>
 
 	<div class="confirm-section">
-		<ModernButton variant="primary" onclick={handleConfirm} disabled={selectedChoice === null}>
+		<ModernButton
+			variant="primary"
+			onclick={() => onclose(true)}
+			disabled={selectedChoice === null}
+		>
 			Confirm
 		</ModernButton>
 	</div>
@@ -92,4 +89,3 @@
 		border-top: 1px solid var(--border);
 	}
 </style>
-
