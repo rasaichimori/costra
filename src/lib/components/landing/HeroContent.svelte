@@ -38,7 +38,7 @@
 			</span>
 		</a>
 
-		<a href="#" class="btn-secondary">
+		<a href="#why-free" class="btn-secondary">
 			<span class="btn-bg"></span>
 			<span class="btn-content"> Why is it Free? </span>
 		</a>
@@ -109,6 +109,10 @@
 		color: var(--primary);
 		margin: 0;
 		animation: fadeInUp 0.8s ease-out 0.5s both;
+	}
+
+	.value-prop-text {
+		margin-top: 0;
 	}
 
 	.text-highlight {

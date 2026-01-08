@@ -5,6 +5,7 @@
 		HeroContent,
 		DashboardPreview,
 		FeaturesSection,
+		WhyFreeSection,
 		LandingFooter
 	} from '$lib/components/landing';
 
@@ -46,6 +47,7 @@
 	</section>
 
 	<FeaturesSection />
+	<WhyFreeSection />
 	<LandingFooter />
 </main>
 
