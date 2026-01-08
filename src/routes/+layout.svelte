@@ -3,6 +3,7 @@
 	import OverlayProvider from '$lib/overlay/OverlayProvider.svelte';
 	import Sidebar from '$lib/components/common/Sidebar.svelte';
 	import ThemeToggle from '$lib/components/common/ThemeToggle.svelte';
+	import MobileBanner from '$lib/components/common/MobileBanner.svelte';
 	import { setThemeContext } from '$lib/contexts/theme.svelte';
 	import { setCurrencyContext } from '$lib/contexts/currency.svelte';
 	import { page } from '$app/state';
@@ -20,6 +21,7 @@
 	<link rel="icon" href={logoIcon} />
 </svelte:head>
 
+<MobileBanner />
 <OverlayProvider>
 	{@render children?.()}
 	<!-- {#if page.url.pathname !== '/'}
