@@ -176,4 +176,16 @@
 		margin: 8px 0 0;
 		font-style: italic;
 	}
+
+	@media (max-width: 480px) {
+		.input-row {
+			width: 100%;
+		}
+
+		.input-row:nth-child(1),
+		.input-row:nth-child(2),
+		.input-row:nth-child(3) {
+			margin-left: 0;
+		}
+	}
 </style>

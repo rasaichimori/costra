@@ -90,12 +90,22 @@
 			grid-template-columns: 1fr;
 			padding: 7rem 2rem 4rem;
 			text-align: center;
+			min-height: auto;
+			gap: 3rem;
 		}
 	}
 
 	@media (max-width: 768px) {
 		.hero {
-			padding: 6rem 1.5rem 3rem;
+			padding: 5.5rem 1.25rem 2.5rem;
+			gap: 2.5rem;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.hero {
+			padding: 5rem 1rem 2rem;
+			gap: 2rem;
 		}
 	}
 </style>

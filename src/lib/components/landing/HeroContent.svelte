@@ -200,11 +200,28 @@
 		.hero-content {
 			align-items: center;
 		}
+
+		.value-prop-text {
+			text-align: center;
+			max-width: 480px;
+		}
 	}
 
 	@media (max-width: 768px) {
+		.hero-content {
+			gap: 1.5rem;
+		}
+
 		.headline {
 			font-size: clamp(2.25rem, 9vw, 3rem);
+		}
+
+		.tagline {
+			font-size: 1rem;
+		}
+
+		.value-prop-text {
+			font-size: 0.9375rem;
 		}
 
 		.cta-group {
@@ -216,6 +233,31 @@
 		.btn-secondary {
 			width: 100%;
 			justify-content: center;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.hero-content {
+			gap: 1.25rem;
+		}
+
+		.headline {
+			font-size: clamp(1.875rem, 8vw, 2.5rem);
+		}
+
+		.tagline {
+			font-size: 0.9375rem;
+		}
+
+		.value-prop-text {
+			font-size: 0.875rem;
+			line-height: 1.6;
+		}
+
+		.btn-primary,
+		.btn-secondary {
+			padding: 0.75rem 1.5rem;
+			font-size: 0.875rem;
 		}
 	}
 </style>

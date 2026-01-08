@@ -59,4 +59,18 @@
 			padding: 2rem 1.5rem;
 		}
 	}
+
+	@media (max-width: 480px) {
+		.footer {
+			padding: 1.5rem 1rem;
+		}
+
+		.logo-text {
+			font-size: 1.25rem;
+		}
+
+		.footer-tagline {
+			font-size: 0.75rem;
+		}
+	}
 </style>

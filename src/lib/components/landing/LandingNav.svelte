@@ -92,5 +92,28 @@
 			padding: 0.5rem 1rem;
 			font-size: 0.8125rem;
 		}
+
+		.nav-actions {
+			gap: 1rem;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.nav {
+			padding: 0.875rem 1rem;
+		}
+
+		.logo-text {
+			font-size: 1.25rem;
+		}
+
+		.nav-cta {
+			padding: 0.5rem 0.875rem;
+			font-size: 0.75rem;
+		}
+
+		.nav-actions {
+			gap: 0.75rem;
+		}
 	}
 </style>

@@ -246,5 +246,50 @@
 		.image-card {
 			max-height: 300px;
 		}
+
+		.reason-card {
+			padding: 1.5rem;
+		}
+
+		.reason-text {
+			font-size: 1rem;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.why-free {
+			padding: 3rem 1rem;
+		}
+
+		.content-wrapper {
+			gap: 2rem;
+		}
+
+		.image-card {
+			max-height: 240px;
+		}
+
+		.reason-card {
+			padding: 1.25rem;
+			gap: 1rem;
+		}
+
+		.reason-text {
+			font-size: 0.9375rem;
+			line-height: 1.6;
+		}
+
+		.how-free {
+			margin-top: 1rem;
+			padding-top: 1rem;
+		}
+
+		.item-text {
+			font-size: 0.875rem;
+		}
+
+		.connected-item {
+			padding-bottom: 1rem;
+		}
 	}
 </style>

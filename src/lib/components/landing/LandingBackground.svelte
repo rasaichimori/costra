@@ -296,4 +296,31 @@
 		background: var(--chart-2);
 		box-shadow: 0 0 20px color-mix(in srgb, var(--chart-2) 50%, transparent);
 	}
+
+	/* Reduce visual complexity on mobile for better performance */
+	@media (max-width: 768px) {
+		.grid-lines {
+			display: none;
+		}
+
+		.mesh-blob {
+			filter: blur(100px);
+			opacity: 0.3;
+		}
+
+		.floating-elements {
+			display: none;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.mesh-blob {
+			filter: blur(80px);
+			opacity: 0.25;
+		}
+
+		.floating-elements {
+			display: none;
+		}
+	}
 </style>

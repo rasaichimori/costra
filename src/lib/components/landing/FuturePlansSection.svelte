@@ -214,5 +214,51 @@
 		.future-plans {
 			padding: 4rem 1.5rem;
 		}
+
+		.plans-card {
+			padding: 1.5rem;
+		}
+
+		.intro-text {
+			font-size: 1rem;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.future-plans {
+			padding: 3rem 1rem;
+		}
+
+		.content-wrapper {
+			gap: 2rem;
+		}
+
+		.plans-card {
+			padding: 1.25rem;
+			gap: 1.25rem;
+		}
+
+		.intro-text {
+			font-size: 0.9375rem;
+			line-height: 1.6;
+		}
+
+		.features-section {
+			padding-top: 1.25rem;
+			gap: 0.875rem;
+		}
+
+		.item-text {
+			font-size: 0.875rem;
+		}
+
+		.feature-item {
+			padding-bottom: 0.875rem;
+		}
+
+		.cta-text {
+			font-size: 0.875rem;
+			padding-top: 1.25rem;
+		}
 	}
 </style>

@@ -279,5 +279,32 @@
 			flex-direction: row;
 			align-items: center;
 		}
+
+		.feature-demo {
+			width: 100%;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.features {
+			padding: 3rem 1rem;
+		}
+
+		.features-header {
+			margin-bottom: 2rem;
+		}
+
+		.feature-card {
+			padding: 1.25rem;
+			gap: 24px;
+		}
+
+		.feature-title {
+			font-size: 1.25rem;
+		}
+
+		.feature-description {
+			font-size: 0.8125rem;
+		}
 	}
 </style>
