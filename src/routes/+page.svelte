@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import {
 		LandingNav,
 		LandingBackground,
@@ -9,10 +10,16 @@
 		FuturePlansSection,
 		LandingFooter
 	} from '$lib/components/landing';
+	import { overlays } from '$lib/contexts/overlay.svelte';
 
 	let mouseX = $state(0);
 	let mouseY = $state(0);
 	let scrollY = $state(0);
+
+	// Close all modals when landing page mounts
+	onMount(() => {
+		overlays.splice(0);
+	});
 
 	const handleMouseMove = (e: MouseEvent) => {
 		mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
