@@ -5,6 +5,7 @@
 		CompoundIngredientDoc,
 		UnitConversion
 	} from '$lib/data/schema';
+	import { getDataContext } from '$lib/contexts/data.svelte';
 	import RecipeEditor from './RecipeEditor.svelte';
 	import RecipeEditorPlaceholder from './RecipeEditorPlaceholder.svelte';
 	import RecipesList from './RecipesList.svelte';
@@ -23,15 +24,15 @@
 		unitConversions?: UnitConversion[];
 	} = $props();
 
-	let selectedRecipeId = $state<string | undefined>(Object.values(recipes)?.[0]?.id);
+	const data = getDataContext();
 	let isEditingName = $state(false);
 
 	const deleteRecipe = (id: string) => {
 		// Remove recipe from collection
 		const { [id]: _removed, ...rest } = recipes;
 		recipes = rest;
-		if (selectedRecipeId === id) {
-			selectedRecipeId = undefined;
+		if (data.selectedRecipeId === id) {
+			data.selectedRecipeId = undefined;
 		}
 	};
 </script>
@@ -42,17 +43,17 @@
 		{costs}
 		{compounds}
 		{unitConversions}
-		bind:selectedRecipeId
+		bind:selectedRecipeId={data.selectedRecipeId}
 		setIsEditingName={(isEditing: boolean) => {
 			isEditingName = isEditing;
 		}}
 	/>
-	{#if selectedRecipeId && recipes[selectedRecipeId]}
+	{#if data.selectedRecipeId && recipes[data.selectedRecipeId]}
 		<RecipeEditor
-			bind:recipe={recipes[selectedRecipeId]}
+			bind:recipe={recipes[data.selectedRecipeId]}
 			{costs}
 			{compounds}
-			onDelete={() => deleteRecipe(selectedRecipeId!)}
+			onDelete={() => deleteRecipe(data.selectedRecipeId!)}
 			bind:unitConversions
 			bind:customUnitLabels
 			bind:isEditingName

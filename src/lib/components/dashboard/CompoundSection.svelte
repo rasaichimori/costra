@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { CompoundIngredientDoc, IngredientDoc, UnitConversion } from '$lib/data/schema';
+	import { getDataContext } from '$lib/contexts/data.svelte';
 	import CompoundEditor from './CompoundEditor.svelte';
 	import CompoundList from './CompoundList.svelte';
 	import RecipeEditorPlaceholder from './RecipeEditorPlaceholder.svelte';
@@ -16,15 +17,15 @@
 		unitConversions?: UnitConversion[];
 	} = $props();
 
-	let selectedRecipeId = $state<string | undefined>(Object.values(recipes)?.[0]?.id);
+	const data = getDataContext();
 	let isEditingName = $state(false);
 
 	const deleteRecipe = (id: string) => {
 		// Remove recipe from collection
 		const { [id]: _removed, ...rest } = recipes;
 		recipes = rest;
-		if (selectedRecipeId === id) {
-			selectedRecipeId = undefined;
+		if (data.selectedCompoundId === id) {
+			data.selectedCompoundId = undefined;
 		}
 	};
 </script>
@@ -33,19 +34,19 @@
 	<CompoundList
 		{recipes}
 		{costs}
-		bind:selectedRecipeId
+		bind:selectedRecipeId={data.selectedCompoundId}
 		setIsEditingName={(isEditing: boolean) => {
 			isEditingName = isEditing;
 		}}
 		{unitConversions}
 	/>
-	{#if selectedRecipeId && recipes[selectedRecipeId]}
+	{#if data.selectedCompoundId && recipes[data.selectedCompoundId]}
 		<CompoundEditor
-			bind:recipe={recipes[selectedRecipeId]}
+			bind:recipe={recipes[data.selectedCompoundId]}
 			{costs}
 			bind:unitConversions
 			bind:customUnitLabels
-			onDelete={() => deleteRecipe(selectedRecipeId!)}
+			onDelete={() => deleteRecipe(data.selectedCompoundId!)}
 			bind:isEditingName
 		/>
 	{:else}

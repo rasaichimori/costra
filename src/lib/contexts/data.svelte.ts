@@ -15,6 +15,10 @@ class DataState {
 	customUnitLabels = $state<Record<string, string>>({});
 	unitConversions = $state<UnitConversion[]>([]);
 
+	// Selection state for dashboard
+	selectedRecipeId = $state<string | undefined>(undefined);
+	selectedCompoundId = $state<string | undefined>(undefined);
+
 	private isRestoring = $state(false);
 	private isInitialized = false;
 	private saveTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -48,6 +52,13 @@ class DataState {
 		this.recipes = mockData.recipes;
 		this.customUnitLabels = mockData.unitLabels;
 		this.unitConversions = mockData.unitConversions;
+
+		// Select first recipe and compound
+		const recipeIds = Object.keys(this.recipes);
+		const compoundIds = Object.keys(this.compoundIngredients);
+		this.selectedRecipeId = recipeIds.length > 0 ? this.recipes[recipeIds[0]].id : undefined;
+		this.selectedCompoundId = compoundIds.length > 0 ? this.compoundIngredients[compoundIds[0]].id : undefined;
+
 		// Reinitialize history with new state
 		historyManager.initialize({
 			costs: this.costs,
