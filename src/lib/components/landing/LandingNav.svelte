@@ -10,10 +10,10 @@
 </script>
 
 <nav class="nav" class:scrolled>
-	<div class="nav-logo">
+	<a href="/" class="nav-logo">
 		<img src={logoIcon} alt="Costra logo" class="logo-icon" />
 		<span class="logo-text">Costra</span>
-	</div>
+	</a>
 	<div class="nav-actions">
 		<ThemeToggle />
 		<a href="/dashboard" class="nav-cta">Open App</a>
@@ -51,6 +51,12 @@
 		display: flex;
 		align-items: center;
 		gap: 8px;
+		text-decoration: none;
+		transition: opacity 0.15s ease;
+	}
+
+	.nav-logo:hover {
+		opacity: 0.8;
 	}
 
 	.logo-text {

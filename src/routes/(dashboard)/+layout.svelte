@@ -131,7 +131,7 @@
 
 <div class="dashboard-layout">
 	<div class="editor-header">
-		<h2>COSTRA</h2>
+		<a href="/" class="logo-link"><h2>COSTRA</h2></a>
 		<div class="header-actions">
 			<div class="undo-redo-buttons">
 				<ModernButton
@@ -218,6 +218,14 @@
 		align-items: center;
 	}
 
+	.logo-link {
+		text-decoration: none;
+	}
+
+	.logo-link:hover h2 {
+		opacity: 0.8;
+	}
+
 	.editor-header h2 {
 		color: var(--foreground);
 		font-weight: 700;
@@ -227,6 +235,7 @@
 		gap: 0.5rem;
 		margin: 0;
 		letter-spacing: -0.03em;
+		transition: opacity 0.15s ease;
 	}
 
 	.header-actions {
