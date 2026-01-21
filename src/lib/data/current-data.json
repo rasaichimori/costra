@@ -181,7 +181,7 @@
       "name": "Greek Yogurt",
       "category": "wet",
       "product": {
-        "cost": 2430,
+        "cost": 888,
         "amount": 1000,
         "unit": "g"
       },
@@ -390,9 +390,9 @@
       "name": "Oat Milk",
       "category": "liquid",
       "product": {
-        "cost": 3388,
-        "amount": 60,
-        "unit": "oz"
+        "cost": 2498,
+        "amount": 6000,
+        "unit": "ml"
       },
       "color": "#91bee2"
     },
@@ -905,7 +905,7 @@
         "amount": 1,
         "unit": "pint"
       },
-      "viewedUnit": "cup",
+      "viewedUnit": "pint",
       "ingredients": [
         {
           "id": "e42fc8f1-3d4b-454a-836d-aefa21562047",
@@ -918,7 +918,7 @@
         {
           "id": "06abe694-884a-4730-b8b3-27ca0dbf6a7b",
           "portion": {
-            "amount": 1,
+            "amount": 1.5,
             "unit": "cup"
           },
           "hidden": false
@@ -926,7 +926,7 @@
         {
           "id": "b83b0488-0716-42f1-a83f-36060e1b61f1",
           "portion": {
-            "amount": 1,
+            "amount": 1.5,
             "unit": "cup"
           },
           "hidden": false
@@ -934,7 +934,7 @@
         {
           "id": "5e039c48-bbd5-45fe-afc0-a3652c780630",
           "portion": {
-            "amount": 1,
+            "amount": 1.5,
             "unit": "tbs"
           },
           "hidden": false
@@ -942,7 +942,7 @@
         {
           "id": "ddcf0a3e-7969-4c19-8cd1-ff1ffb89b22d",
           "portion": {
-            "amount": 1,
+            "amount": 1.5,
             "unit": "cup"
           },
           "hidden": false
@@ -958,12 +958,12 @@
         "amount": 1,
         "unit": "pint"
       },
-      "viewedUnit": "cup",
+      "viewedUnit": "pint",
       "ingredients": [
         {
           "id": "06abe694-884a-4730-b8b3-27ca0dbf6a7b",
           "portion": {
-            "amount": 1,
+            "amount": 2,
             "unit": "cup"
           },
           "hidden": false
@@ -972,14 +972,14 @@
           "id": "5e039c48-bbd5-45fe-afc0-a3652c780630",
           "portion": {
             "amount": 1,
-            "unit": "tsp"
+            "unit": "tbs"
           },
           "hidden": false
         },
         {
           "id": "ddcf0a3e-7969-4c19-8cd1-ff1ffb89b22d",
           "portion": {
-            "amount": 1,
+            "amount": 2,
             "unit": "cup"
           },
           "hidden": false
@@ -995,7 +995,7 @@
         "amount": 1,
         "unit": "pint"
       },
-      "viewedUnit": "cup",
+      "viewedUnit": "pint",
       "ingredients": [
         {
           "id": "5128567b-f0be-4b90-bafc-bebc286ff9fc",
@@ -1009,7 +1009,7 @@
           "id": "22de7026-c267-45b9-abc1-1989d8c80a0e",
           "portion": {
             "amount": 1,
-            "unit": "cup"
+            "unit": "can"
           },
           "hidden": false
         },
@@ -1083,6 +1083,51 @@
       "viewedUnit": "pack",
       "category": "Compound",
       "color": "#e29fdc"
+    },
+    "172fb8ca-26eb-4a35-a047-fe28f7db9b96": {
+      "id": "172fb8ca-26eb-4a35-a047-fe28f7db9b96",
+      "name": "Pink base",
+      "ingredients": [
+        {
+          "id": "647bbc34-c948-4f92-9304-c24dac0bb84a",
+          "portion": {
+            "amount": 3,
+            "unit": "cup"
+          },
+          "hidden": false
+        },
+        {
+          "id": "749a05c7-3852-4858-bd5e-ec3569f95ace",
+          "portion": {
+            "amount": 2,
+            "unit": "cup"
+          },
+          "hidden": false
+        },
+        {
+          "id": "854596b6-11eb-41d7-97be-c572d8c3b35c",
+          "portion": {
+            "amount": 0.5,
+            "unit": "cup"
+          },
+          "hidden": false
+        },
+        {
+          "id": "5e039c48-bbd5-45fe-afc0-a3652c780630",
+          "portion": {
+            "amount": 3,
+            "unit": "tbs"
+          },
+          "hidden": false
+        }
+      ],
+      "yield": {
+        "amount": 1,
+        "unit": "pint"
+      },
+      "viewedUnit": "pint",
+      "category": "Compound",
+      "color": "#db70d6"
     }
   },
   "unitConversions": [
@@ -1127,6 +1172,18 @@
       "inputUnit": "g",
       "outputUnit": "tbs",
       "conversionFactor": 21
+    },
+    {
+      "ingredientId": "647bbc34-c948-4f92-9304-c24dac0bb84a",
+      "inputUnit": "g",
+      "outputUnit": "cup",
+      "conversionFactor": 140
+    },
+    {
+      "ingredientId": "854596b6-11eb-41d7-97be-c572d8c3b35c",
+      "inputUnit": "g",
+      "outputUnit": "cup",
+      "conversionFactor": 225
     }
   ],
   "customUnitLabels": {}
