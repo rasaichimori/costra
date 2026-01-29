@@ -434,7 +434,7 @@
       "name": "katifi",
       "category": "dry",
       "product": {
-        "cost": 2500,
+        "cost": 1418,
         "amount": 500,
         "unit": "g"
       },
@@ -665,7 +665,7 @@
         {
           "id": "346ca52c-bff3-4622-a1c8-1eeb567bfd89",
           "portion": {
-            "amount": 45,
+            "amount": 50,
             "unit": "g"
           },
           "hidden": false
@@ -673,15 +673,7 @@
         {
           "id": "3d611b0d-28a1-4ccc-8ce3-49268ed0f692",
           "portion": {
-            "amount": 45,
-            "unit": "g"
-          },
-          "hidden": false
-        },
-        {
-          "id": "13fc1284-a87a-4d7c-8cfd-c13c4cc30030",
-          "portion": {
-            "amount": 48,
+            "amount": 40,
             "unit": "g"
           },
           "hidden": false
@@ -689,8 +681,24 @@
         {
           "id": "eedf952a-f257-4bb2-a149-2b6abe0bf616",
           "portion": {
-            "amount": 3,
-            "unit": "tbs"
+            "amount": 100,
+            "unit": "g"
+          },
+          "hidden": true
+        },
+        {
+          "id": "c0040a6a-3e29-42c0-ae65-27a46298fcd0",
+          "portion": {
+            "amount": 10,
+            "unit": "g"
+          },
+          "hidden": false
+        },
+        {
+          "id": "cd61c573-b4a6-4de1-8e9f-d9cda06b2a07",
+          "portion": {
+            "amount": 20,
+            "unit": "g"
           },
           "hidden": false
         }
@@ -1128,6 +1136,51 @@
       "viewedUnit": "pint",
       "category": "Compound",
       "color": "#db70d6"
+    },
+    "74538d2f-b3ec-4a69-8ff0-b20eb131b6ea": {
+      "id": "74538d2f-b3ec-4a69-8ff0-b20eb131b6ea",
+      "name": "Dubai sauce",
+      "ingredients": [
+        {
+          "id": "cd61c573-b4a6-4de1-8e9f-d9cda06b2a07",
+          "portion": {
+            "amount": 20,
+            "unit": "g"
+          },
+          "hidden": false
+        },
+        {
+          "id": "c0040a6a-3e29-42c0-ae65-27a46298fcd0",
+          "portion": {
+            "amount": 10,
+            "unit": "g"
+          },
+          "hidden": false
+        },
+        {
+          "id": "3d611b0d-28a1-4ccc-8ce3-49268ed0f692",
+          "portion": {
+            "amount": 50,
+            "unit": "g"
+          },
+          "hidden": false
+        },
+        {
+          "id": "346ca52c-bff3-4622-a1c8-1eeb567bfd89",
+          "portion": {
+            "amount": 40,
+            "unit": "g"
+          },
+          "hidden": false
+        }
+      ],
+      "yield": {
+        "amount": 2,
+        "unit": "servings"
+      },
+      "viewedUnit": "servings",
+      "category": "Compound",
+      "color": "#b2df7d"
     }
   },
   "unitConversions": [
@@ -1184,7 +1237,15 @@
       "inputUnit": "g",
       "outputUnit": "cup",
       "conversionFactor": 225
+    },
+    {
+      "ingredientId": "74538d2f-b3ec-4a69-8ff0-b20eb131b6ea",
+      "inputUnit": "servings",
+      "outputUnit": "pint",
+      "conversionFactor": 1
     }
   ],
-  "customUnitLabels": {}
+  "customUnitLabels": {
+    "servings": "servings"
+  }
 }

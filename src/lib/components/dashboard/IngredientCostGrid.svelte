@@ -153,10 +153,11 @@
 		}
 
 		// Create new ingredient with placeholder values
+		// Use the first selected filter as the category if any filters are selected
 		const newIngredient: IngredientDoc = {
 			id: newId,
 			name: `Ingredient ${nextNumber}`,
-			category: '',
+			category: selectedFilters.length > 0 ? selectedFilters[0] : '',
 			product: {
 				cost: 10,
 				amount: 1,
