@@ -72,13 +72,9 @@
 					onChoosePrefilled: () => handleWelcomeChoice('prefilled'),
 					onclose: () => closeOverlay(overlayId)
 				});
-			} else {
-				// User has made a choice before, initialize accordingly
-				if (savedChoice === 'prefilled') {
-					dataState.initializeWithMockData();
-				}
-				// If blank, data is already empty, no need to call clearAllData()
 			}
+			// If user has made a choice before, data is already loaded from localStorage
+			// in the DataState constructor - no need to re-initialize
 		}
 
 		// Set up keyboard shortcuts
