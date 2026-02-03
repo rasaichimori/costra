@@ -1144,7 +1144,7 @@
         {
           "id": "cd61c573-b4a6-4de1-8e9f-d9cda06b2a07",
           "portion": {
-            "amount": 20,
+            "amount": 10,
             "unit": "g"
           },
           "hidden": false
@@ -1175,7 +1175,7 @@
         }
       ],
       "yield": {
-        "amount": 2,
+        "amount": 5,
         "unit": "servings"
       },
       "viewedUnit": "servings",

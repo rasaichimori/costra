@@ -7,6 +7,7 @@ import type {
 } from '$lib/data/schema';
 import { historyManager } from '$lib/utils/history';
 import { mockData } from '$lib/data/mockData';
+import { loadAppData, saveAppData, hasSavedData, clearAppData } from '$lib/utils/localStorage';
 
 class DataState {
 	costs = $state<Record<string, IngredientDoc>>({});
@@ -24,7 +25,18 @@ class DataState {
 	private saveTimeout: ReturnType<typeof setTimeout> | null = null;
 
 	constructor(useMockData = false) {
-		if (useMockData) {
+		// First, try to load from localStorage
+		const savedData = loadAppData();
+		
+		if (savedData) {
+			// Restore from localStorage
+			this.costs = savedData.costs;
+			this.compoundIngredients = savedData.compoundIngredients;
+			this.recipes = savedData.recipes;
+			this.customUnitLabels = savedData.customUnitLabels;
+			this.unitConversions = savedData.unitConversions;
+		} else if (useMockData) {
+			// No saved data, use mock data if requested
 			this.costs = mockData.costs;
 			this.compoundIngredients = mockData.compoundIngredients;
 			this.recipes = mockData.recipes;
@@ -44,6 +56,13 @@ class DataState {
 	}
 
 	/**
+	 * Check if there's saved data in localStorage
+	 */
+	hasSavedData(): boolean {
+		return hasSavedData();
+	}
+
+	/**
 	 * Initialize with mock data (for prefilled example)
 	 */
 	initializeWithMockData() {
@@ -59,14 +78,19 @@ class DataState {
 		this.selectedRecipeId = recipeIds.length > 0 ? this.recipes[recipeIds[0]].id : undefined;
 		this.selectedCompoundId = compoundIds.length > 0 ? this.compoundIngredients[compoundIds[0]].id : undefined;
 
-		// Reinitialize history with new state
-		historyManager.initialize({
+		const currentState = {
 			costs: this.costs,
 			compoundIngredients: this.compoundIngredients,
 			recipes: this.recipes,
 			customUnitLabels: this.customUnitLabels,
 			unitConversions: this.unitConversions
-		});
+		};
+
+		// Reinitialize history with new state
+		historyManager.initialize(currentState);
+		
+		// Save to localStorage
+		saveAppData(currentState);
 	}
 
 	/**
@@ -78,18 +102,24 @@ class DataState {
 		this.recipes = {};
 		this.customUnitLabels = {};
 		this.unitConversions = [];
-		// Reinitialize history with empty state
-		historyManager.initialize({
+		
+		const emptyState = {
 			costs: this.costs,
 			compoundIngredients: this.compoundIngredients,
 			recipes: this.recipes,
 			customUnitLabels: this.customUnitLabels,
 			unitConversions: this.unitConversions
-		});
+		};
+		
+		// Reinitialize history with empty state
+		historyManager.initialize(emptyState);
+		
+		// Clear localStorage
+		clearAppData();
 	}
 
 	/**
-	 * Save current state to history (debounced)
+	 * Save current state to history and localStorage (debounced)
 	 * Components can call this after making changes, or use the reactive version
 	 */
 	saveState() {
@@ -102,13 +132,19 @@ class DataState {
 		}
 
 		this.saveTimeout = setTimeout(() => {
-			historyManager.saveState({
+			const currentState = {
 				costs: this.costs,
 				compoundIngredients: this.compoundIngredients,
 				recipes: this.recipes,
 				customUnitLabels: this.customUnitLabels,
 				unitConversions: this.unitConversions
-			});
+			};
+			
+			// Save to history for undo/redo
+			historyManager.saveState(currentState);
+			
+			// Persist to localStorage
+			saveAppData(currentState);
 		}, 300);
 	}
 
@@ -152,6 +188,9 @@ class DataState {
 		this.recipes = state.recipes;
 		this.customUnitLabels = state.customUnitLabels;
 		this.unitConversions = state.unitConversions;
+		
+		// Persist to localStorage after undo/redo
+		saveAppData(state);
 		
 		// Wait for DOM to update before allowing saves again
 		await new Promise((resolve) => setTimeout(resolve, 0));
