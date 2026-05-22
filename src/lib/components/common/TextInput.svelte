@@ -1,7 +1,6 @@
 <script lang="ts" generics="T extends string | number">
 	import { onMount } from 'svelte';
 	import { parseFraction } from '$lib/utils/math';
-	import { clamp } from '$lib/utils/math';
 	import { m } from '$lib/paraglide/messages.js';
 	interface Props<T> {
 		value?: T;
@@ -196,6 +195,7 @@
 			{disabled}
 			{readonly}
 			{required}
+			step={isNumeric ? step : undefined}
 			aria-label={ariaLabel || label}
 			oninput={handleInput}
 			onchange={handleChange}
@@ -205,7 +205,12 @@
 		/>
 
 		{#if clearable && hasText}
-			<button type="button" class="clear-btn" onclick={clearValue} aria-label={m.clearInputAriaLabel()}>×</button>
+			<button
+				type="button"
+				class="clear-btn"
+				onclick={clearValue}
+				aria-label={m.clearInputAriaLabel()}>×</button
+			>
 		{/if}
 	</div>
 

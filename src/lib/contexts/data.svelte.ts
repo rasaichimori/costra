@@ -27,7 +27,7 @@ class DataState {
 	constructor(useMockData = false) {
 		// First, try to load from localStorage
 		const savedData = loadAppData();
-		
+
 		if (savedData) {
 			// Restore from localStorage
 			this.costs = savedData.costs;
@@ -43,7 +43,7 @@ class DataState {
 			this.customUnitLabels = mockData.unitLabels;
 			this.unitConversions = mockData.unitConversions;
 		}
-		
+
 		// Initialize history with initial state
 		historyManager.initialize({
 			costs: this.costs,
@@ -76,7 +76,8 @@ class DataState {
 		const recipeIds = Object.keys(this.recipes);
 		const compoundIds = Object.keys(this.compoundIngredients);
 		this.selectedRecipeId = recipeIds.length > 0 ? this.recipes[recipeIds[0]].id : undefined;
-		this.selectedCompoundId = compoundIds.length > 0 ? this.compoundIngredients[compoundIds[0]].id : undefined;
+		this.selectedCompoundId =
+			compoundIds.length > 0 ? this.compoundIngredients[compoundIds[0]].id : undefined;
 
 		const currentState = {
 			costs: this.costs,
@@ -88,7 +89,7 @@ class DataState {
 
 		// Reinitialize history with new state
 		historyManager.initialize(currentState);
-		
+
 		// Save to localStorage
 		saveAppData(currentState);
 	}
@@ -102,7 +103,7 @@ class DataState {
 		this.recipes = {};
 		this.customUnitLabels = {};
 		this.unitConversions = [];
-		
+
 		const emptyState = {
 			costs: this.costs,
 			compoundIngredients: this.compoundIngredients,
@@ -110,10 +111,10 @@ class DataState {
 			customUnitLabels: this.customUnitLabels,
 			unitConversions: this.unitConversions
 		};
-		
+
 		// Reinitialize history with empty state
 		historyManager.initialize(emptyState);
-		
+
 		// Clear localStorage
 		clearAppData();
 	}
@@ -139,10 +140,10 @@ class DataState {
 				customUnitLabels: this.customUnitLabels,
 				unitConversions: this.unitConversions
 			};
-			
+
 			// Save to history for undo/redo
 			historyManager.saveState(currentState);
-			
+
 			// Persist to localStorage
 			saveAppData(currentState);
 		}, 300);
@@ -181,17 +182,17 @@ class DataState {
 	}) {
 		// Set flag before restoring to prevent saveState from running
 		this.isRestoring = true;
-		
+
 		// Restore state
 		this.costs = state.costs;
 		this.compoundIngredients = state.compoundIngredients;
 		this.recipes = state.recipes;
 		this.customUnitLabels = state.customUnitLabels;
 		this.unitConversions = state.unitConversions;
-		
+
 		// Persist to localStorage after undo/redo
 		saveAppData(state);
-		
+
 		// Wait for DOM to update before allowing saves again
 		await new Promise((resolve) => setTimeout(resolve, 0));
 		this.isRestoring = false;
@@ -209,4 +210,3 @@ export function setDataContext(useMockData = false) {
 export function getDataContext(): DataState {
 	return getContext(DATA_KEY);
 }
-

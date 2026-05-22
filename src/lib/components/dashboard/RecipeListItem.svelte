@@ -19,7 +19,7 @@
 		<span class="cost">{currencyContext.currency}{cost.toFixed(0)}</span>
 	{/if}
 	{#if unit !== undefined}
-		{' / '}
+		<span class="unit-separator"> / </span>
 		<span class="unit">{unit}</span>
 	{/if}
 </button>

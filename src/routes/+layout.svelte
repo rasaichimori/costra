@@ -1,12 +1,9 @@
 <script lang="ts">
 	import logoIcon from '$lib/assets/logo.svg';
 	import OverlayProvider from '$lib/overlay/OverlayProvider.svelte';
-	import Sidebar from '$lib/components/common/Sidebar.svelte';
-	import ThemeToggle from '$lib/components/common/ThemeToggle.svelte';
 	import MobileBanner from '$lib/components/common/MobileBanner.svelte';
 	import { setThemeContext } from '$lib/contexts/theme.svelte';
 	import { setCurrencyContext } from '$lib/contexts/currency.svelte';
-	import { page } from '$app/state';
 	import '../app.css';
 
 	let { children } = $props();

@@ -36,7 +36,7 @@
 
 <!-- Grid lines -->
 <div class="grid-lines">
-	{#each Array(12) as _, i}
+	{#each Array.from({ length: 12 }, (_, index) => index) as i (i)}
 		<div class="grid-line" style="left: {(i + 1) * (100 / 13)}%"></div>
 	{/each}
 </div>

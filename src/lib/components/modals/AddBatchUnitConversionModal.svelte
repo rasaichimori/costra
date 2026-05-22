@@ -35,7 +35,7 @@
 
 	const validateAll = (): boolean => {
 		let isValid = true;
-		const newErrors = conversionFactors.map((factor, index) => {
+		const newErrors = conversionFactors.map((factor) => {
 			if (factor <= 0) {
 				isValid = false;
 				return m.conversionFactorMustBePositive();
@@ -108,7 +108,7 @@
 	</p>
 
 	<div class="conversions-list">
-		{#each missingConversions as missing, index}
+		{#each missingConversions as missing, index (`${missing.inputUnit}-${missing.outputUnit}`)}
 			{@const recipesUsingUnit = getRecipesForUnit(missing.inputUnit)}
 			{@const outputIsSmaller = isSmallerUnit(missing.outputUnit, missing.inputUnit)}
 			{@const smallerUnit = outputIsSmaller === true ? missing.outputUnit : missing.inputUnit}
@@ -124,7 +124,7 @@
 					<div class="recipes-list">
 						<span class="recipes-label">{m.usedInRecipesLabel()}</span>
 						<div class="recipe-names">
-							{#each recipesUsingUnit as recipe}
+							{#each recipesUsingUnit as recipe (recipe.id)}
 								<span class="recipe-name" class:compound={isCompoundIngredient(recipe)}>
 									{recipe.name}
 									{#if isCompoundIngredient(recipe)}

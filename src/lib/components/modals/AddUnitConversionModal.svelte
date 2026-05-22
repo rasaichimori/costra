@@ -32,10 +32,6 @@
 	const smallerUnit = $derived(outputIsSmaller === true ? originalOutputUnit : originalInputUnit);
 	const largerUnit = $derived(outputIsSmaller === true ? originalInputUnit : originalOutputUnit);
 
-	// If outputUnit is smaller, we need to invert the factor for display
-	// (because we're asking "how many smaller in one larger")
-	const needsInvertedFactor = $derived(outputIsSmaller === true);
-
 	let conversionFactor = $state<number>(1);
 	let error = $state<string>('');
 

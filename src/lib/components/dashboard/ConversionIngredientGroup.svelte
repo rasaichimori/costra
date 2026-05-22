@@ -3,7 +3,6 @@
 	import ConversionRow from './ConversionRow.svelte';
 
 	let {
-		ingredientId,
 		ingredientName,
 		color,
 		conversions,
@@ -15,7 +14,6 @@
 		onOutputUnitChange,
 		onDelete
 	}: {
-		ingredientId: string;
 		ingredientName: string;
 		color: string;
 		conversions: UnitConversion[];
@@ -36,7 +34,7 @@
 		<span class="conversion-count">{conversions.length}</span>
 	</div>
 	<div class="conversions-list">
-		{#each conversions as conversion, index}
+		{#each conversions as conversion, index (index)}
 			<ConversionRow
 				{conversion}
 				{ingredientName}

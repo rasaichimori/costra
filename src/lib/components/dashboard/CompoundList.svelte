@@ -4,6 +4,7 @@
 	import { calculateRecipeCosts, getTotalRecipeCost } from '$lib/utils/costCalculatorUtils';
 	import { getConversionFactor } from '$lib/utils/unit';
 	import RecipeListItem from './RecipeListItem.svelte';
+	import SidebarAddButton from './SidebarAddButton.svelte';
 	import { m } from '$lib/paraglide/messages.js';
 
 	interface Props {
@@ -77,7 +78,7 @@
 </script>
 
 <div class="recipes-list">
-	{#each Object.entries(recipes) as [id, recipe]}
+	{#each Object.entries(recipes) as [id, recipe] (id)}
 		<RecipeListItem
 			label={recipe.name}
 			selected={id === selectedRecipeId}
@@ -89,7 +90,7 @@
 			}}
 		/>
 	{/each}
-	<button class="add-recipe-btn" onclick={addRecipe}>{m.createNewCompound()}</button>
+	<SidebarAddButton onclick={addRecipe}>{m.createNewCompound()}</SidebarAddButton>
 </div>
 
 <style>
@@ -107,23 +108,6 @@
 		min-width: 180px;
 		flex-shrink: 0;
 	}
-	.add-recipe-btn {
-		display: block;
-		width: 100%;
-		padding: 0.6rem 0.9rem;
-		font-size: 0.85rem;
-		background: var(--hover);
-		border: 1px dashed var(--border);
-		border-radius: 6px;
-		color: var(--foreground);
-		font-weight: 500;
-		cursor: pointer;
-		transition: background 0.25s ease;
-	}
-
-	.add-recipe-btn:hover {
-		background: var(--active);
-	}
 
 	@media (max-width: 900px) {
 		.recipes-list {
@@ -133,22 +117,12 @@
 			flex-wrap: wrap;
 			align-items: center;
 		}
-
-		.add-recipe-btn {
-			width: auto;
-			flex-shrink: 0;
-		}
 	}
 
 	@media (max-width: 480px) {
 		.recipes-list {
 			padding: 0.75rem;
 			gap: 0.4rem;
-		}
-
-		.add-recipe-btn {
-			padding: 0.5rem 0.75rem;
-			font-size: 0.8rem;
 		}
 	}
 </style>

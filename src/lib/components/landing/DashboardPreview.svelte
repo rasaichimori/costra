@@ -41,7 +41,8 @@
 						</div>
 						<div class="ingredient-row">
 							<span class="ing-name"
-								><span class="ing-dot" style="background: #f97316;"></span>{m.previewDemoFlour()}</span
+								><span class="ing-dot" style="background: #f97316;"
+								></span>{m.previewDemoFlour()}</span
 							>
 							<span class="ing-qty">250</span>
 							<span class="ing-unit">g</span>
@@ -49,7 +50,8 @@
 						</div>
 						<div class="ingredient-row">
 							<span class="ing-name"
-								><span class="ing-dot" style="background: #8b5cf6;"></span>{m.previewDemoCocoaPowder()}</span
+								><span class="ing-dot" style="background: #8b5cf6;"
+								></span>{m.previewDemoCocoaPowder()}</span
 							>
 							<span class="ing-qty">75</span>
 							<span class="ing-unit">g</span>
@@ -57,7 +59,8 @@
 						</div>
 						<div class="ingredient-row">
 							<span class="ing-name"
-								><span class="ing-dot" style="background: #eab308;"></span>{m.previewDemoButter()}</span
+								><span class="ing-dot" style="background: #eab308;"
+								></span>{m.previewDemoButter()}</span
 							>
 							<span class="ing-qty">200</span>
 							<span class="ing-unit">g</span>
@@ -65,7 +68,8 @@
 						</div>
 						<div class="ingredient-row">
 							<span class="ing-name"
-								><span class="ing-dot" style="background: #ec4899;"></span>{m.previewDemoSugar()}</span
+								><span class="ing-dot" style="background: #ec4899;"
+								></span>{m.previewDemoSugar()}</span
 							>
 							<span class="ing-qty">300</span>
 							<span class="ing-unit">g</span>
@@ -73,7 +77,8 @@
 						</div>
 						<div class="ingredient-row">
 							<span class="ing-name"
-								><span class="ing-dot" style="background: #22c55e;"></span>{m.previewDemoEggs()}</span
+								><span class="ing-dot" style="background: #22c55e;"
+								></span>{m.previewDemoEggs()}</span
 							>
 							<span class="ing-qty">4</span>
 							<span class="ing-unit">pcs</span>

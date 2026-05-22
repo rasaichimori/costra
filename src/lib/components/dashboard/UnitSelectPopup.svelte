@@ -29,7 +29,6 @@
 					label: group.label,
 					options: group.options.filter((unitOption) => {
 						const matchesSearch = unitOption.label.toLowerCase().includes(searchTerm.toLowerCase());
-						unitOption.label;
 						let matchesFilter = false;
 						if (selectedFilters.length === 0) {
 							matchesFilter = true;
@@ -47,7 +46,7 @@
 <div class="unit-popup">
 	<!-- Filter Pills Section -->
 	<div class="filter-pills">
-		{#each categoryFilters as category}
+		{#each categoryFilters as category (category.key)}
 			<ModernButton
 				variant={selectedFilters.includes(category.key) ? 'primary' : 'secondary'}
 				size="small"
@@ -71,7 +70,7 @@
 	<div class="search-container">
 		<TextInput
 			bind:value={searchTerm}
-			size={'small'}
+			size="small"
 			variant="inline"
 			placeholder={!searchTerm ? m.searchUnitPlaceholder() : ''}
 			autofocus={true}
@@ -98,10 +97,10 @@
 		</button>
 	{/if}
 	<div class="unit-groups">
-		{#each filteredGroups as group}
+		{#each filteredGroups as group (group.label)}
 			<div class="group-header">{group.label}</div>
 			<div class="unit-options">
-				{#each group.options as option}
+				{#each group.options as option (option.id)}
 					<button class="option" onclick={() => selectUnit(option)} tabindex="-1">
 						{option.label}
 						{selectedUnitId === option.id ? '✓' : ''}

@@ -13,6 +13,6 @@
 
 {@render children?.()}
 
-{#each overlays as entry, i (entry.id)}
+{#each overlays as entry (entry.id)}
 	<OverlayHost {entry} />
 {/each}

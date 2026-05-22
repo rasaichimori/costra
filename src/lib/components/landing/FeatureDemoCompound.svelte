@@ -31,7 +31,7 @@
 			<span class="recipe-cost">${recipe.cost}</span>
 		</div>
 		<div class="ingredients-tree">
-			{#each recipe.ingredients as ing}
+			{#each recipe.ingredients as ing (ing.name)}
 				{#if ing.type === 'compound'}
 					<div class="compound-item">
 						<button class="compound-header" onclick={() => (expanded = !expanded)}>
@@ -53,7 +53,7 @@
 						</button>
 						{#if expanded && ing.children}
 							<div class="nested-items">
-								{#each ing.children as child}
+								{#each ing.children as child (child.name)}
 									<div class="nested-item">
 										<span class="tree-line"></span>
 										<span class="ing-name">{child.name}</span>

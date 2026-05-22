@@ -11,22 +11,17 @@
 		options: { label: string; value: T }[];
 		size?: 'small' | 'medium' | 'large';
 		disabled?: boolean;
-		searchable?: boolean;
 		onchange?: (value: T) => void;
 	}
 
 	let {
 		value = $bindable(),
 		options = [],
-		searchable = true,
 		onchange,
 		size = 'medium',
 		disabled = false
 	}: Props<T> = $props();
 
-	const selectedOption = $derived(options.find((o) => o.value === value));
-
-	let searchTerm = $state(searchable && value !== undefined ? (selectedOption?.label ?? '') : '');
 	let containerElement: HTMLElement;
 	let dropdownId = $state<string | undefined>(undefined);
 
@@ -36,9 +31,6 @@
 		}
 
 		value = option.value;
-		if (searchable) {
-			searchTerm = option.label;
-		}
 		closeDropdown();
 		onchange?.(option.value);
 	};

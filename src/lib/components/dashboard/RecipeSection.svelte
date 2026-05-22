@@ -28,9 +28,9 @@
 	let isEditingName = $state(false);
 
 	const deleteRecipe = (id: string) => {
-		// Remove recipe from collection
-		const { [id]: _removed, ...rest } = recipes;
-		recipes = rest;
+		recipes = Object.fromEntries(
+			Object.entries(recipes).filter(([recipeId]) => recipeId !== id)
+		) as typeof recipes;
 		if (data.selectedRecipeId === id) {
 			data.selectedRecipeId = undefined;
 		}

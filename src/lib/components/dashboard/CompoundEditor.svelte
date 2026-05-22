@@ -6,12 +6,7 @@
 		compoundsToIngredients
 	} from '../../utils/costCalculatorUtils';
 	import type { CompoundIngredientDoc, IngredientDoc, UnitConversion } from '$lib/data/schema';
-	import {
-		getConversionFactor,
-		massUnitLabels,
-		volumeUnitLabels,
-		type UnitOption
-	} from '$lib/utils/unit';
+	import { getConversionFactor, massUnitLabels, volumeUnitLabels } from '$lib/utils/unit';
 	import TextInput from '../common/TextInput.svelte';
 	import ModernButton from '../common/ModernButton.svelte';
 	import CostBreakdown from './CostBreakdown.svelte';
@@ -220,7 +215,8 @@
 											}}
 										/>
 									{:else}
-										<span class="error-text">{m.missingIngredientShort({ id: ingredient.id })}</span>
+										<span class="error-text">{m.missingIngredientShort({ id: ingredient.id })}</span
+										>
 									{/if}
 								</div>
 							</div>

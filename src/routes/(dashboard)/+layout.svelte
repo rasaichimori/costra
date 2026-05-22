@@ -5,7 +5,7 @@
 	import ThemeToggle from '$lib/components/common/ThemeToggle.svelte';
 	import LanguageSwitcher from '$lib/components/common/LanguageSwitcher.svelte';
 	import ModernButton from '$lib/components/common/ModernButton.svelte';
-	import { setDataContext, getDataContext } from '$lib/contexts/data.svelte';
+	import { setDataContext } from '$lib/contexts/data.svelte';
 	import { getOverlayContext } from '$lib/contexts/overlay.svelte';
 	import WelcomeModal from '$lib/components/modals/WelcomeModal.svelte';
 	import { localPath } from '$lib/i18n';
@@ -20,10 +20,16 @@
 	const dataState = setDataContext(false);
 	const { openOverlay, closeOverlay } = getOverlayContext();
 
-	// Track undo/redo state changes using $derived instead of $effect
+	// Track undo/redo state changes — version bump forces derived to re-run
 	let undoRedoVersion = $state(0);
-	const canUndo = $derived(dataState.canUndo());
-	const canRedo = $derived(dataState.canRedo());
+	const canUndo = $derived.by(() => {
+		void undoRedoVersion;
+		return dataState.canUndo();
+	});
+	const canRedo = $derived.by(() => {
+		void undoRedoVersion;
+		return dataState.canRedo();
+	});
 
 	const handleUndo = async () => {
 		await dataState.undo();
@@ -114,11 +120,11 @@
 	// This is the only $effect we use, and it's essential for the feature
 	$effect(() => {
 		// Access state to track changes
-		dataState.costs;
-		dataState.compoundIngredients;
-		dataState.recipes;
-		dataState.customUnitLabels;
-		dataState.unitConversions;
+		void dataState.costs;
+		void dataState.compoundIngredients;
+		void dataState.recipes;
+		void dataState.customUnitLabels;
+		void dataState.unitConversions;
 
 		// Save state to history (debounced internally)
 		dataState.saveState();

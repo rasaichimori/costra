@@ -16,9 +16,8 @@
 			</div>
 			<div class="reason-card main-reason">
 				<p class="reason-text">
-					{m.whyFreeReason1Before()}<a
-						href="https://www.instagram.com/lanibowls/"
-						target="_blank">{m.whyFreeRestaurantLink()}</a
+					{m.whyFreeReason1Before()}<a href="https://www.instagram.com/lanibowls/" target="_blank"
+						>{m.whyFreeRestaurantLink()}</a
 					>{m.whyFreeReason1After()}
 				</p>
 				<p class="reason-text">

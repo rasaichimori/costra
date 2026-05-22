@@ -1,4 +1,6 @@
 <script lang="ts">
+	import type { Snippet } from 'svelte';
+
 	interface Props {
 		variant?: 'primary' | 'secondary' | 'icon' | 'danger';
 		size?: 'small' | 'medium' | 'large';
@@ -8,7 +10,7 @@
 		ariaLabel?: string;
 		title?: string;
 		style?: string;
-		children?: any;
+		children?: Snippet;
 	}
 
 	let {

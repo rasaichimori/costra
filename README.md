@@ -75,17 +75,17 @@ npm run test:e2e
 
 ## Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Build for production |
-| `npm run preview` | Preview production build |
-| `npm run check` | Run Svelte type checking |
-| `npm run lint` | Run Prettier and ESLint |
-| `npm run format` | Format code with Prettier |
-| `npm run test` | Run all tests |
-| `npm run test:unit` | Run unit tests with Vitest |
-| `npm run test:e2e` | Run E2E tests with Playwright |
+| Command             | Description                   |
+| ------------------- | ----------------------------- |
+| `npm run dev`       | Start development server      |
+| `npm run build`     | Build for production          |
+| `npm run preview`   | Preview production build      |
+| `npm run check`     | Run Svelte type checking      |
+| `npm run lint`      | Run Prettier and ESLint       |
+| `npm run format`    | Format code with Prettier     |
+| `npm run test`      | Run all tests                 |
+| `npm run test:unit` | Run unit tests with Vitest    |
+| `npm run test:e2e`  | Run E2E tests with Playwright |
 
 ## License
 

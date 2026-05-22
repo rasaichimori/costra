@@ -12,4 +12,3 @@
 	bind:unitConversions={data.unitConversions}
 	bind:customUnitLabels={data.customUnitLabels}
 />
-

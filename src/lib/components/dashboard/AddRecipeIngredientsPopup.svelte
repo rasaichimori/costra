@@ -102,7 +102,7 @@
 	<!-- Filter Pills Section -->
 	{#if categories.length > 0}
 		<div class="filter-pills">
-			{#each categories as category}
+			{#each categories as category (category)}
 				<ModernButton
 					variant={selectedFilters.includes(category) ? 'primary' : 'secondary'}
 					style={category === 'Compound' ? 'border-color: var(--primary);' : ''}
@@ -119,7 +119,9 @@
 				</ModernButton>
 			{/each}
 			{#if selectedFilters.length > 0}
-				<ModernButton variant="danger" size="small" onclick={clearFilters}>{m.clearFilters()}</ModernButton>
+				<ModernButton variant="danger" size="small" onclick={clearFilters}
+					>{m.clearFilters()}</ModernButton
+				>
 			{/if}
 		</div>
 	{/if}
@@ -127,7 +129,7 @@
 	<!-- Search -->
 	<TextInput
 		bind:value={searchTerm}
-		size={'small'}
+		size="small"
 		variant="inline"
 		placeholder={!searchTerm ? m.searchIngredientsPlaceholder() : ''}
 		autofocus={true}
@@ -138,7 +140,7 @@
 	{#if filteredIngredients.length > 0}
 		<!-- Available Ingredients -->
 		<div class="available-ingredients">
-			{#each filteredIngredients as ingredient}
+			{#each filteredIngredients as ingredient (ingredient.id)}
 				<button
 					class="add-ingredient-btn"
 					class:compound={ingredient.category === 'Compound'}

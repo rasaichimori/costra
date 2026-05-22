@@ -163,20 +163,19 @@ describe('parseFraction', () => {
 			expect(parseFraction('  5  ')).toBe(5);
 		});
 
-	it('returns 0 for invalid input', () => {
-		expect(parseFraction('abc')).toBe(0);
-	});
+		it('returns 0 for invalid input', () => {
+			expect(parseFraction('abc')).toBe(0);
+		});
 
-	it('handles division by zero in fraction', () => {
-		// '1/0' doesn't match fraction regex (denominator 0), falls through to parseFloat('1/0') = 1
-		// This is expected behavior - the regex explicitly checks for valid fractions
-		expect(parseFraction('1/0')).toBe(1);
-		expect(parseFraction('0/0')).toBe(0);
-	});
+		it('handles division by zero in fraction', () => {
+			// '1/0' doesn't match fraction regex (denominator 0), falls through to parseFloat('1/0') = 1
+			// This is expected behavior - the regex explicitly checks for valid fractions
+			expect(parseFraction('1/0')).toBe(1);
+			expect(parseFraction('0/0')).toBe(0);
+		});
 
 		it('handles negative fractions', () => {
 			expect(parseFraction('-1/2')).toBe(-0.5);
 		});
 	});
 });
-

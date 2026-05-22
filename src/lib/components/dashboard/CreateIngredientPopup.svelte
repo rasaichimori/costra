@@ -3,7 +3,6 @@
 	import ModernButton from '../common/ModernButton.svelte';
 	import TextInput from '../common/TextInput.svelte';
 	import SelectInput from '../common/SelectInput.svelte';
-	import EditableTextField from '../common/EditableTextField.svelte';
 	import { getCurrencyContext } from '$lib/contexts/currency.svelte';
 	import { randomLightColorHex } from '$lib/utils/color';
 	import ProductUnitSelectButton from './ProductUnitSelectButton.svelte';
@@ -60,7 +59,9 @@
 		return num;
 	};
 
-	let ingredientName = $state(initialName || m.defaultIngredientName({ number: getNextIngredientNumber() }));
+	let ingredientName = $state(
+		initialName || m.defaultIngredientName({ number: getNextIngredientNumber() })
+	);
 	let category = $state(initialCategory);
 	let cost = $state(10);
 	let amount = $state(1);
@@ -126,7 +127,12 @@
 	<div class="form-fields">
 		<div class="field-group">
 			<label>{m.fieldName()}</label>
-			<TextInput bind:value={ingredientName} size="small" variant="inline" placeholder={m.ingredientNamePlaceholder()} />
+			<TextInput
+				bind:value={ingredientName}
+				size="small"
+				variant="inline"
+				placeholder={m.ingredientNamePlaceholder()}
+			/>
 		</div>
 		<div class="field-group">
 			<label>{m.fieldCategory()}</label>
@@ -244,4 +250,3 @@
 		margin-top: 8px;
 	}
 </style>
-

@@ -106,4 +106,3 @@ class HistoryManager {
 }
 
 export const historyManager = new HistoryManager();
-

@@ -73,7 +73,7 @@
 	</div>
 
 	<div class="features-grid">
-		{#each features as feature}
+		{#each features as feature (feature.demo)}
 			{@const tilt = getTilt(feature.demo)}
 			<div
 				class="feature-card"

@@ -77,14 +77,15 @@ describe('getConversionFactor', () => {
 			const conversions: UnitConversion[] = [
 				{ ingredientId, inputUnit: 'bunch', outputUnit: 'cup', conversionFactor: 2 }
 			];
-			expect(getConversionFactor('bunch', 'cup', ingredientId, conversions)).toBe(2);
+			// Schema: 2 bunch = 1 cup
+			expect(getConversionFactor('bunch', 'cup', ingredientId, conversions)).toBe(0.5);
 		});
 
 		it('uses inverse conversion when direction is swapped', () => {
 			const conversions: UnitConversion[] = [
 				{ ingredientId, inputUnit: 'bunch', outputUnit: 'cup', conversionFactor: 2 }
 			];
-			expect(getConversionFactor('cup', 'bunch', ingredientId, conversions)).toBe(0.5);
+			expect(getConversionFactor('cup', 'bunch', ingredientId, conversions)).toBe(2);
 		});
 
 		it('only uses conversions for the correct ingredient', () => {
@@ -107,27 +108,27 @@ describe('getConversionFactor', () => {
 				{ ingredientId, inputUnit: 'bunch', outputUnit: 'cup', conversionFactor: 2 }
 			];
 			const cupToOz = TbsMultipliers.cup / TbsMultipliers.oz;
-			const expected = 2 * cupToOz;
+			const expected = 0.5 * cupToOz;
 			expect(getConversionFactor('bunch', 'oz', ingredientId, conversions)).toBeCloseTo(expected);
 		});
 
 		it('finds path custom -> volume -> mass', () => {
-			// bunch -> cup -> g (needs cup -> g conversion)
+			// bunch -> cup -> g
 			const conversions: UnitConversion[] = [
 				{ ingredientId, inputUnit: 'bunch', outputUnit: 'cup', conversionFactor: 2 },
-				{ ingredientId, inputUnit: 'cup', outputUnit: 'g', conversionFactor: 240 }
+				{ ingredientId, inputUnit: 'g', outputUnit: 'cup', conversionFactor: 240 }
 			];
-			expect(getConversionFactor('bunch', 'g', ingredientId, conversions)).toBeCloseTo(480);
+			expect(getConversionFactor('bunch', 'g', ingredientId, conversions)).toBeCloseTo(120);
 		});
 
 		it('finds path custom -> volume -> volume -> mass', () => {
 			// bunch -> cup -> oz -> g
 			const conversions: UnitConversion[] = [
 				{ ingredientId, inputUnit: 'bunch', outputUnit: 'cup', conversionFactor: 2 },
-				{ ingredientId, inputUnit: 'oz', outputUnit: 'g', conversionFactor: 28.35 }
+				{ ingredientId, inputUnit: 'g', outputUnit: 'oz', conversionFactor: 28.35 }
 			];
 			const cupToOz = TbsMultipliers.cup / TbsMultipliers.oz;
-			const expected = 2 * cupToOz * 28.35;
+			const expected = 0.5 * cupToOz * 28.35;
 			expect(getConversionFactor('bunch', 'g', ingredientId, conversions)).toBeCloseTo(expected);
 		});
 
@@ -136,13 +137,13 @@ describe('getConversionFactor', () => {
 			const conversions: UnitConversion[] = [
 				{ ingredientId, inputUnit: 'pack', outputUnit: 'kg', conversionFactor: 0.5 }
 			];
-			expect(getConversionFactor('pack', 'g', ingredientId, conversions)).toBeCloseTo(500);
+			expect(getConversionFactor('pack', 'g', ingredientId, conversions)).toBeCloseTo(2000);
 		});
 
 		it('finds path mass -> volume via custom unit', () => {
 			// g -> oz -> cup
 			const conversions: UnitConversion[] = [
-				{ ingredientId, inputUnit: 'oz', outputUnit: 'g', conversionFactor: 28.35 }
+				{ ingredientId, inputUnit: 'g', outputUnit: 'oz', conversionFactor: 28.35 }
 			];
 			const ozToCup = TbsMultipliers.oz / TbsMultipliers.cup;
 			const expected = (1 / 28.35) * ozToCup;
@@ -150,12 +151,12 @@ describe('getConversionFactor', () => {
 		});
 
 		it('finds reverse multi-step path', () => {
-			// g -> cup -> bunch (reverse of bunch -> cup -> g)
+			// g -> cup -> bunch
 			const conversions: UnitConversion[] = [
 				{ ingredientId, inputUnit: 'bunch', outputUnit: 'cup', conversionFactor: 2 },
-				{ ingredientId, inputUnit: 'cup', outputUnit: 'g', conversionFactor: 240 }
+				{ ingredientId, inputUnit: 'g', outputUnit: 'cup', conversionFactor: 240 }
 			];
-			expect(getConversionFactor('g', 'bunch', ingredientId, conversions)).toBeCloseTo(1 / 480);
+			expect(getConversionFactor('g', 'bunch', ingredientId, conversions)).toBeCloseTo(2 / 240);
 		});
 	});
 

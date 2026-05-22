@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { SvelteMap } from 'svelte/reactivity';
 	import type { CompoundIngredientDoc, IngredientDoc, UnitConversion } from '$lib/data/schema';
 	import ConversionIngredientGroup from './ConversionIngredientGroup.svelte';
 	import ConversionsEmptyState from './ConversionsEmptyState.svelte';
@@ -42,7 +43,7 @@
 
 	// Group conversions by ingredient
 	const groupedConversions = $derived.by(() => {
-		const groups = new Map<string, UnitConversion[]>();
+		const groups = new SvelteMap<string, UnitConversion[]>();
 
 		for (const conversion of unitConversions) {
 			const existing = groups.get(conversion.ingredientId);
@@ -156,9 +157,8 @@
 		<ConversionsEmptyState />
 	{:else}
 		<div class="conversions-grid">
-			{#each groupedConversions as group}
+			{#each groupedConversions as group (group.ingredientId)}
 				<ConversionIngredientGroup
-					ingredientId={group.ingredientId}
 					ingredientName={group.ingredientName}
 					color={group.color}
 					conversions={group.conversions}

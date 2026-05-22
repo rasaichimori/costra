@@ -31,7 +31,7 @@
 		</button>
 	{/if}
 
-	{#each filteredOptions as option}
+	{#each filteredOptions as option (option.value)}
 		<button class="option" onclick={() => selectOption(option)} tabindex="-1">
 			{option.label}
 		</button>

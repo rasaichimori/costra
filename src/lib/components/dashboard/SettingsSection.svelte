@@ -265,7 +265,9 @@
 		<div class="settings-actions">
 			<ModernButton variant="primary" onclick={exportData}>{m.exportData()}</ModernButton>
 			<ModernButton variant="secondary" onclick={importData}>{m.importData()}</ModernButton>
-			<ModernButton variant="secondary" onclick={loadExampleData}>{m.loadExampleData()}</ModernButton>
+			<ModernButton variant="secondary" onclick={loadExampleData}
+				>{m.loadExampleData()}</ModernButton
+			>
 			<ModernButton variant="danger" onclick={clearAllData}>{m.clearAllData()}</ModernButton>
 		</div>
 	</div>

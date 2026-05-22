@@ -10,8 +10,10 @@ class ThemeState {
 		if (browser) {
 			// Check for saved theme preference or default to light
 			const savedTheme = localStorage.getItem('theme') as Theme;
-			const systemPreference = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-			
+			const systemPreference = window.matchMedia('(prefers-color-scheme: dark)').matches
+				? 'dark'
+				: 'light';
+
 			this.theme = savedTheme || systemPreference;
 			this.updateDocumentTheme();
 

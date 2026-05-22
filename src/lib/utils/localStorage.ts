@@ -16,14 +16,6 @@ export interface AppData {
 	unitConversions: UnitConversion[];
 }
 
-const DEFAULT_DATA: AppData = {
-	costs: {},
-	compoundIngredients: {},
-	recipes: {},
-	customUnitLabels: {},
-	unitConversions: []
-};
-
 /**
  * Save all app data to localStorage
  */
@@ -135,7 +127,8 @@ function clearFromLocalStorage(key: string): void {
 export const storage = {
 	costs: {
 		save: <T>(data: T) => saveToLocalStorage(LEGACY_STORAGE_KEYS.INGREDIENT_COSTS, data),
-		load: <T>(fallback: T): T => loadFromLocalStorage(LEGACY_STORAGE_KEYS.INGREDIENT_COSTS, fallback),
+		load: <T>(fallback: T): T =>
+			loadFromLocalStorage(LEGACY_STORAGE_KEYS.INGREDIENT_COSTS, fallback),
 		clear: () => clearFromLocalStorage(LEGACY_STORAGE_KEYS.INGREDIENT_COSTS)
 	},
 	recipes: {

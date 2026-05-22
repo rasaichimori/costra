@@ -190,7 +190,7 @@
 		</div>
 		<h3>{m.filterByTypeTitle()}</h3>
 		<div class="filter-pills">
-			{#each categories as category}
+			{#each categories as category (category)}
 				<ModernButton
 					variant={selectedFilters.includes(category) ? 'primary' : 'secondary'}
 					size="small"
@@ -228,7 +228,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each filteredIngredients as ingredientId}
+				{#each filteredIngredients as ingredientId (ingredientId)}
 					{#if costs[ingredientId]}
 						<tr class="cost-row">
 							<td class="ingredient-cell">

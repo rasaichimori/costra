@@ -30,7 +30,7 @@
 	{#if recipesUsing.length > 0}
 		<p>{m.deleteIngredientUsedInRecipes()}</p>
 		<ul>
-			{#each recipesUsing as recipe}
+			{#each recipesUsing as recipe (recipe.id)}
 				<li><strong>{recipe.name}</strong></li>
 			{/each}
 		</ul>

@@ -1,17 +1,13 @@
 <script lang="ts">
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount } from 'svelte';
 	import type {
 		CompoundIngredientDoc,
 		IngredientDoc,
 		RecipeDoc,
 		UnitConversion
 	} from '$lib/data/schema';
-	import type { Chart, ChartData, ChartOptions, Plugin } from 'chart.js';
-	import {
-		calculateRecipeCosts,
-		compoundsToIngredients,
-		getAllCosts
-	} from '$lib/utils/costCalculatorUtils';
+	import type { ArcElement, Chart, ChartData, ChartOptions, Plugin } from 'chart.js';
+	import { calculateRecipeCosts, getAllCosts } from '$lib/utils/costCalculatorUtils';
 	import { getCurrencyContext } from '$lib/contexts/currency.svelte';
 
 	import { Chart as ChartJS } from 'chart.js/auto';
@@ -40,12 +36,12 @@
 			};
 
 			ctx.save();
-			(meta.data as any[]).forEach((arc, idx) => {
+			(meta.data as ArcElement[]).forEach((arc, idx) => {
 				const ing = currentRecipe.ingredients[idx];
 				if (!ing || ing.hidden) return; // skip hidden
 				const value = chart.data.datasets[0].data[idx] as number;
 				const percent = (value / total) * 100;
-				const center = arc.getCenterPoint();
+				const center = arc.getCenterPoint(true);
 				ctx.textAlign = 'center';
 				ctx.textBaseline = 'middle';
 				const bgColor = (chart.data.datasets[0].backgroundColor as string[])[idx];
@@ -91,8 +87,10 @@
 
 	const colors = $derived(recipe.ingredients.map((ing) => allCosts[ing.id]?.color ?? '#000000'));
 
+	type DoughnutChart = Chart<'doughnut'> & { __recipeId?: string };
+
 	let canvas: HTMLCanvasElement;
-	let chart = $state<Chart<'doughnut'> | undefined>(undefined);
+	let chart = $state<DoughnutChart | undefined>(undefined);
 	let resizeHandler: (() => void) | null = null;
 
 	// Unified visibility sync helper
@@ -194,31 +192,36 @@
 			maintainAspectRatio: false
 		};
 
-		chart = new ChartJS(canvas, { type: 'doughnut', data: chartData, options, plugins: [labelPlugin] });
-		
+		chart = new ChartJS(canvas, {
+			type: 'doughnut',
+			data: chartData,
+			options,
+			plugins: [labelPlugin]
+		});
+
 		// Store recipe ID on chart instance to detect recipe changes
-		(chart as any).__recipeId = recipe.id;
+		chart.__recipeId = recipe.id;
 
 		resizeHandler = () => chart?.resize();
 		window.addEventListener('resize', resizeHandler);
-	}
+	};
 
 	$effect(() => {
 		if (!chart) return;
 		const labels = labelsAll;
 		const data = chartDataValues;
 		const bgColors = colors;
-		
+
 		// Check if recipe reference changed - if so, recreate chart with new plugin
 		const currentRecipeId = recipe.id;
-		const chartRecipeId = (chart as any).__recipeId;
-		
+		const chartRecipeId = chart.__recipeId;
+
 		if (chartRecipeId !== currentRecipeId) {
 			// Recipe changed, recreate chart with new plugin
 			createChart();
 			return;
 		}
-		
+
 		chart.data.labels = labels;
 		chart.data.datasets[0].data = data;
 		chart.data.datasets[0].backgroundColor = bgColors;

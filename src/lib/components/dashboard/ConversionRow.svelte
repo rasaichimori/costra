@@ -79,7 +79,7 @@
 					onInputUnitChange(e.currentTarget.value);
 				}}
 			>
-				{#each firstUnits as unit}
+				{#each firstUnits as unit (unit.id)}
 					<option value={unit.id}>{unit.label}</option>
 				{/each}
 			</select>
@@ -106,7 +106,7 @@
 					onOutputUnitChange(e.currentTarget.value);
 				}}
 			>
-				{#each secondUnits as unit}
+				{#each secondUnits as unit (unit.id)}
 					<option value={unit.id}>{unit.label}</option>
 				{/each}
 			</select>

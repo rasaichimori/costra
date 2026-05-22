@@ -22,7 +22,8 @@
 
 	const deleteRecipe = (id: string) => {
 		// Remove recipe from collection
-		const { [id]: _removed, ...rest } = recipes;
+		const rest = { ...recipes };
+		delete rest[id];
 		recipes = rest;
 		if (data.selectedCompoundId === id) {
 			data.selectedCompoundId = undefined;

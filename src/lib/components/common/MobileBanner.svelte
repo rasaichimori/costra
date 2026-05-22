@@ -27,7 +27,11 @@
 	<div class="mobile-banner">
 		<div class="banner-content">
 			<p>{m.mobileBannerMessage()}</p>
-			<button class="dismiss-button" onclick={dismissBanner} aria-label={m.dismissBannerAriaLabel()}>
+			<button
+				class="dismiss-button"
+				onclick={dismissBanner}
+				aria-label={m.dismissBannerAriaLabel()}
+			>
 				×
 			</button>
 		</div>

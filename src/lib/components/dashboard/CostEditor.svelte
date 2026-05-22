@@ -6,15 +6,12 @@
 		UnitConversion
 	} from '$lib/data/schema';
 	import IngredientCostGrid from './IngredientCostGrid.svelte';
-	import { getOverlayContext } from '$lib/contexts/overlay.svelte';
 	import ThemeToggle from '../common/ThemeToggle.svelte';
 	import { mockData } from '$lib/data/mockData';
 	import RecipeSection from './RecipeSection.svelte';
 	import CompoundSection from './CompoundSection.svelte';
 	import ConversionsSection from './ConversionsSection.svelte';
 	import SettingsSection from './SettingsSection.svelte';
-	import { findAllMissingConversionsFromImport } from '$lib/utils/unitSelectUtils';
-	import { buildUnitLabels } from '$lib/utils/unitSelectUtils';
 	import { historyManager } from '$lib/utils/history';
 	import { onMount, untrack, tick } from 'svelte';
 	import ModernButton from '../common/ModernButton.svelte';
@@ -30,8 +27,6 @@
 	let recipes = $state<Record<string, RecipeDoc>>(mockData.recipes);
 	let customUnitLabels = $state<Record<string, string>>(mockData.unitLabels);
 	let unitConversions = $state<UnitConversion[]>(mockData.unitConversions);
-
-	const { openOverlay, closeOverlay } = getOverlayContext();
 
 	// Undo/redo state
 	let isRestoring = $state(false);
@@ -97,11 +92,11 @@
 		}
 
 		// Access all state variables to track changes
-		costs;
-		compoundIngredients;
-		recipes;
-		customUnitLabels;
-		unitConversions;
+		void costs;
+		void compoundIngredients;
+		void recipes;
+		void customUnitLabels;
+		void unitConversions;
 
 		// Debounce saves to avoid too many history entries
 		if (saveTimeout) {

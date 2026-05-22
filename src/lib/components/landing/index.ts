@@ -6,4 +6,3 @@ export { default as FeaturesSection } from './FeaturesSection.svelte';
 export { default as WhyFreeSection } from './WhyFreeSection.svelte';
 export { default as FuturePlansSection } from './FuturePlansSection.svelte';
 export { default as LandingFooter } from './LandingFooter.svelte';
-

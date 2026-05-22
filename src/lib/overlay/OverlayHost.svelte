@@ -5,9 +5,9 @@
 		type OverlayEntry
 	} from '../contexts/overlay.svelte';
 
-	let { entry }: { entry: OverlayEntry<any, any> } = $props();
+	let { entry }: { entry: OverlayEntry<Record<string, unknown>, unknown> } = $props();
 
-	const Comp = $derived(entry?.component as OverlayComponent<any, any>);
+	const Comp = $derived(entry?.component as OverlayComponent<Record<string, unknown>, unknown>);
 
 	const { closeOverlay } = getOverlayContext();
 

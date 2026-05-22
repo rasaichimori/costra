@@ -162,7 +162,8 @@
 											}}
 										/>
 									{:else}
-										<span class="error-text">{m.missingIngredientError({ id: ingredient.id })}</span>
+										<span class="error-text">{m.missingIngredientError({ id: ingredient.id })}</span
+										>
 									{/if}
 								</div>
 							</div>

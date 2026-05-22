@@ -31,4 +31,3 @@ export function setCurrencyContext() {
 export function getCurrencyContext(): CurrencyState {
 	return getContext(CURRENCY_KEY);
 }
-

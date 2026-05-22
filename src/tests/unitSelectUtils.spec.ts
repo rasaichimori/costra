@@ -291,12 +291,7 @@ describe('findAllMissingConversionsFromImport', () => {
 		const compounds: Record<string, CompoundIngredientDoc> = {};
 		const conversions: UnitConversion[] = [];
 
-		const missingMap = findAllMissingConversionsFromImport(
-			costs,
-			recipes,
-			compounds,
-			conversions
-		);
+		const missingMap = findAllMissingConversionsFromImport(costs, recipes, compounds, conversions);
 
 		expect(missingMap.has('flour')).toBe(true);
 		const flourMissing = missingMap.get('flour');
@@ -315,12 +310,7 @@ describe('findAllMissingConversionsFromImport', () => {
 
 		const conversions: UnitConversion[] = [];
 
-		const missingMap = findAllMissingConversionsFromImport(
-			costs,
-			recipes,
-			compounds,
-			conversions
-		);
+		const missingMap = findAllMissingConversionsFromImport(costs, recipes, compounds, conversions);
 
 		expect(missingMap.has('dough')).toBe(true);
 	});
@@ -338,12 +328,7 @@ describe('findAllMissingConversionsFromImport', () => {
 
 		const conversions: UnitConversion[] = [];
 
-		const missingMap = findAllMissingConversionsFromImport(
-			costs,
-			recipes,
-			compounds,
-			conversions
-		);
+		const missingMap = findAllMissingConversionsFromImport(costs, recipes, compounds, conversions);
 
 		expect(missingMap.has('flour')).toBe(true);
 	});
@@ -360,12 +345,7 @@ describe('findAllMissingConversionsFromImport', () => {
 		const compounds: Record<string, CompoundIngredientDoc> = {};
 		const conversions: UnitConversion[] = [];
 
-		const missingMap = findAllMissingConversionsFromImport(
-			costs,
-			recipes,
-			compounds,
-			conversions
-		);
+		const missingMap = findAllMissingConversionsFromImport(costs, recipes, compounds, conversions);
 
 		expect(missingMap.has('flour')).toBe(false);
 	});
@@ -382,12 +362,7 @@ describe('findAllMissingConversionsFromImport', () => {
 		const compounds: Record<string, CompoundIngredientDoc> = {};
 		const conversions: UnitConversion[] = [];
 
-		const missingMap = findAllMissingConversionsFromImport(
-			costs,
-			recipes,
-			compounds,
-			conversions
-		);
+		const missingMap = findAllMissingConversionsFromImport(costs, recipes, compounds, conversions);
 
 		expect(missingMap.has('flour')).toBe(false);
 	});
@@ -407,12 +382,7 @@ describe('findAllMissingConversionsFromImport', () => {
 
 		const conversions: UnitConversion[] = [];
 
-		const missingMap = findAllMissingConversionsFromImport(
-			costs,
-			recipes,
-			compounds,
-			conversions
-		);
+		const missingMap = findAllMissingConversionsFromImport(costs, recipes, compounds, conversions);
 
 		// dough is used with 'cup' but yields 'g'
 		expect(missingMap.has('dough')).toBe(true);
@@ -432,12 +402,7 @@ describe('findAllMissingConversionsFromImport', () => {
 		const compounds: Record<string, CompoundIngredientDoc> = {};
 		const conversions: UnitConversion[] = [];
 
-		const missingMap = findAllMissingConversionsFromImport(
-			costs,
-			recipes,
-			compounds,
-			conversions
-		);
+		const missingMap = findAllMissingConversionsFromImport(costs, recipes, compounds, conversions);
 
 		// Should only have one missing conversion for flour (volume -> mass)
 		const flourMissing = missingMap.get('flour');
@@ -458,14 +423,8 @@ describe('findAllMissingConversionsFromImport', () => {
 			{ ingredientId: 'flour', inputUnit: 'g', outputUnit: 'cup', conversionFactor: 125 }
 		];
 
-		const missingMap = findAllMissingConversionsFromImport(
-			costs,
-			recipes,
-			compounds,
-			conversions
-		);
+		const missingMap = findAllMissingConversionsFromImport(costs, recipes, compounds, conversions);
 
 		expect(missingMap.size).toBe(0);
 	});
 });
-

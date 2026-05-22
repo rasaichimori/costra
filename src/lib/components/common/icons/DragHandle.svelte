@@ -6,4 +6,3 @@
 	<circle cx="2" cy="12" r="1.5" />
 	<circle cx="6" cy="12" r="1.5" />
 </svg>
-
