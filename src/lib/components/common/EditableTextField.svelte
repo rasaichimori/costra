@@ -1,6 +1,7 @@
 <script lang="ts">
 	import TextInput from './TextInput.svelte';
 	import ModernButton from './ModernButton.svelte';
+	import { m } from '$lib/paraglide/messages.js';
 
 	let {
 		value = $bindable(),
@@ -50,15 +51,15 @@
 			bind:value={editingValue}
 			size="small"
 			variant="inline"
-			placeholder="Ingredient name"
-			ariaLabel="Edit ingredient name"
+			placeholder={m.ingredientNamePlaceholder()}
+			ariaLabel={m.editIngredientNameAriaLabel()}
 			onkeydown={handleKeydown}
 		/>
 		<ModernButton
 			variant="icon"
 			size="small"
-			ariaLabel="Save name"
-			title="Save changes"
+			ariaLabel={m.saveNameAriaLabel()}
+			title={m.saveChangesTitle()}
 			onclick={saveChanges}
 		>
 			<i class="fa-solid fa-check"></i>
@@ -66,8 +67,8 @@
 		<ModernButton
 			variant="icon"
 			size="small"
-			ariaLabel="Cancel editing"
-			title="Cancel editing"
+			ariaLabel={m.cancelEditingAriaLabel()}
+			title={m.cancelEditingTitle()}
 			onclick={cancelEditing}
 		>
 			<i class="fa-solid fa-times"></i>
@@ -77,8 +78,8 @@
 		<ModernButton
 			variant="icon"
 			size="small"
-			ariaLabel="Edit ingredient name"
-			title="Edit ingredient name"
+			ariaLabel={m.editIngredientNameAriaLabel()}
+			title={m.editIngredientNameTitle()}
 			onclick={startEditing}
 		>
 			<i class="fa-solid fa-pencil"></i>

@@ -1,12 +1,15 @@
 <script lang="ts">
-	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/state';
 	import { browser } from '$app/environment';
 	import ThemeToggle from '$lib/components/common/ThemeToggle.svelte';
+	import LanguageSwitcher from '$lib/components/common/LanguageSwitcher.svelte';
 	import ModernButton from '$lib/components/common/ModernButton.svelte';
 	import { setDataContext, getDataContext } from '$lib/contexts/data.svelte';
 	import { getOverlayContext } from '$lib/contexts/overlay.svelte';
 	import WelcomeModal from '$lib/components/modals/WelcomeModal.svelte';
+	import { localPath } from '$lib/i18n';
+	import { m } from '$lib/paraglide/messages.js';
 	import { onMount } from 'svelte';
 
 	let { children } = $props();
@@ -42,9 +45,9 @@
 
 	const handleTabClick = (tab: 'dashboard' | 'conversions' | 'settings') => {
 		if (tab === 'dashboard') {
-			goto('/dashboard');
+			goto(localPath('/dashboard'));
 		} else {
-			goto(`/${tab}`);
+			goto(localPath(`/${tab}`));
 		}
 	};
 
@@ -127,7 +130,7 @@
 
 <div class="dashboard-layout">
 	<div class="editor-header">
-		<a href="/" class="logo-link"><h2>COSTRA</h2></a>
+		<a href={localPath('/')} class="logo-link"><h2>{m.appName()}</h2></a>
 		<div class="header-actions">
 			<div class="undo-redo-buttons">
 				<ModernButton
@@ -135,8 +138,8 @@
 					size="small"
 					disabled={!canUndo}
 					onclick={handleUndo}
-					ariaLabel="Undo"
-					title="Undo (Ctrl+Z)"
+					ariaLabel={m.undoAriaLabel()}
+					title={m.undoTitle()}
 				>
 					<i class="fa-solid fa-rotate-left"></i>
 				</ModernButton>
@@ -145,12 +148,13 @@
 					size="small"
 					disabled={!canRedo}
 					onclick={handleRedo}
-					ariaLabel="Redo"
-					title="Redo (Ctrl+Y)"
+					ariaLabel={m.redoAriaLabel()}
+					title={m.redoTitle()}
 				>
 					<i class="fa-solid fa-rotate-right"></i>
 				</ModernButton>
 			</div>
+			<LanguageSwitcher variant="compact" />
 			<ThemeToggle />
 		</div>
 	</div>
@@ -163,7 +167,7 @@
 				onclick={() => handleTabClick('dashboard')}
 			>
 				<i class="fa-solid fa-kitchen-set"></i>
-				<span class="tab-text">Dashboard</span>
+				<span class="tab-text">{m.tabDashboard()}</span>
 			</button>
 			<button
 				class="tab"
@@ -171,7 +175,7 @@
 				onclick={() => handleTabClick('conversions')}
 			>
 				<i class="fa-solid fa-scale-balanced"></i>
-				<span class="tab-text">Conversions</span>
+				<span class="tab-text">{m.tabConversions()}</span>
 				{#if unitConversions.length > 0}
 					<span class="tab-badge">{unitConversions.length}</span>
 				{/if}
@@ -184,7 +188,7 @@
 				onclick={() => handleTabClick('settings')}
 			>
 				<i class="fa-solid fa-gear"></i>
-				<span class="tab-text">Settings</span>
+				<span class="tab-text">{m.tabSettings()}</span>
 			</button>
 		</div>
 	</div>

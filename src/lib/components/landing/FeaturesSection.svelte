@@ -3,40 +3,38 @@
 	import FeatureDemoUpdates from './FeatureDemoUpdates.svelte';
 	import FeatureDemoMargin from './FeatureDemoMargin.svelte';
 	import FeatureDemoCompound from './FeatureDemoCompound.svelte';
+	import { m } from '$lib/paraglide/messages.js';
 
-	const features = [
+	const features = $derived([
 		{
 			number: '01',
-			title: 'Layer by Layer',
-			description:
-				'Break down complex recipes into individual components. See exactly where your money goes.',
+			title: m.featureLayerTitle(),
+			description: m.featureLayerDescription(),
 			icon: 'layers',
 			demo: 'layers'
 		},
 		{
 			number: '02',
-			title: 'Instant Updates',
-			description:
-				'Change an ingredient price and watch it ripple through every recipe automatically.',
+			title: m.featureUpdatesTitle(),
+			description: m.featureUpdatesDescription(),
 			icon: 'clock',
 			demo: 'updates'
 		},
 		{
 			number: '03',
-			title: 'Margin Clarity',
-			description: 'Set your target margins and instantly see which products are hitting the mark.',
+			title: m.featureMarginTitle(),
+			description: m.featureMarginDescription(),
 			icon: 'chart',
 			demo: 'margin'
 		},
 		{
 			number: '04',
-			title: 'Compound Recipes',
-			description:
-				'Build recipes from other recipes. Perfect for bakeries, restaurants, and manufacturers.',
+			title: m.featureCompoundTitle(),
+			description: m.featureCompoundDescription(),
 			icon: 'grid',
 			demo: 'compound'
 		}
-	];
+	]);
 
 	// Track tilt state for each card
 	let cardTilts = $state<Record<string, { tiltX: number; tiltY: number }>>({});
@@ -68,9 +66,9 @@
 <section class="features">
 	<div class="features-header">
 		<span class="section-number">01</span>
-		<h2 class="section-title">Um, so why Costra?</h2>
+		<h2 class="section-title">{m.featuresSectionTitle()}</h2>
 		<p class="section-description">
-			Everything you need to understand and optimize your product costs.
+			{m.featuresSectionDescription()}
 		</p>
 	</div>
 
@@ -84,7 +82,7 @@
 				onmouseleave={() => handleMouseLeave(feature.demo)}
 			>
 				<div class="feature-meta">
-					<div class="feature-number">Interactive {feature.number}</div>
+					<div class="feature-number">{m.featureInteractiveLabel({ number: feature.number })}</div>
 				</div>
 				<div class="feature-demo">
 					<div

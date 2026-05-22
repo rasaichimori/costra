@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { RecipeDoc } from '$lib/data/schema';
 	import ModernButton from '$lib/components/common/ModernButton.svelte';
+	import { m } from '$lib/paraglide/messages.js';
 
 	let {
 		ingredientName,
@@ -24,10 +25,10 @@
 
 <div class="modal">
 	<p>
-		Are you sure you want to delete <strong>{ingredientName}</strong>?
+		{m.deleteIngredientConfirm({ name: ingredientName })}
 	</p>
 	{#if recipesUsing.length > 0}
-		<p>This ingredient is currently used in the following recipes:</p>
+		<p>{m.deleteIngredientUsedInRecipes()}</p>
 		<ul>
 			{#each recipesUsing as recipe}
 				<li><strong>{recipe.name}</strong></li>
@@ -38,11 +39,11 @@
 	<div class="actions">
 		<ModernButton variant="danger" size="small" onclick={() => handleClose(true)}>
 			<i class="fa-solid fa-trash"></i>
-			Remove and Delete
+			{m.removeAndDelete()}
 		</ModernButton>
 
 		<ModernButton variant="secondary" size="small" onclick={() => handleClose(false)}>
-			Cancel
+			{m.cancel()}
 		</ModernButton>
 	</div>
 
@@ -50,8 +51,8 @@
 	<ModernButton
 		variant="icon"
 		size="small"
-		ariaLabel="Close modal"
-		title="Close"
+		ariaLabel={m.closeModalAriaLabel()}
+		title={m.closeTitle()}
 		style="position:absolute; top:8px; right:8px;"
 		onclick={() => handleClose(false)}
 	>

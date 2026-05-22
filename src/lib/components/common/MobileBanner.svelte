@@ -1,20 +1,18 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { m } from '$lib/paraglide/messages.js';
 
 	let showBanner = $state(false);
 
 	onMount(() => {
 		const checkMobile = () => {
-			// Check if screen width is mobile-sized
 			const isMobile = window.innerWidth <= 768;
 			showBanner = isMobile;
 		};
 
 		checkMobile();
-		
-		// Listen for resize events
 		window.addEventListener('resize', checkMobile);
-		
+
 		return () => {
 			window.removeEventListener('resize', checkMobile);
 		};
@@ -28,8 +26,8 @@
 {#if showBanner}
 	<div class="mobile-banner">
 		<div class="banner-content">
-			<p>This app is not optimized for mobile yet. Please use a computer for the best experience.</p>
-			<button class="dismiss-button" onclick={dismissBanner} aria-label="Dismiss banner">
+			<p>{m.mobileBannerMessage()}</p>
+			<button class="dismiss-button" onclick={dismissBanner} aria-label={m.dismissBannerAriaLabel()}>
 				×
 			</button>
 		</div>

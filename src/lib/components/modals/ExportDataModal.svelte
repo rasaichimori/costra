@@ -7,6 +7,7 @@
 	} from '$lib/data/schema';
 	import ModernButton from '../common/ModernButton.svelte';
 	import Toast from '../common/Toast.svelte';
+	import { m } from '$lib/paraglide/messages.js';
 	let {
 		data = {} as {
 			costs: Record<string, IngredientDoc>;
@@ -33,16 +34,16 @@
 </script>
 
 <div class="export-modal">
-	<h3>Export Data</h3>
-	<p>Copy the JSON below to save your data.</p>
+	<h3>{m.exportDataTitle()}</h3>
+	<p>{m.exportDataDescription()}</p>
 	<textarea readonly value={jsonString} onfocus={(e) => e.currentTarget.select()}></textarea>
 	<div class="actions">
-		<ModernButton variant="secondary" onclick={copyToClipboard}>Copy</ModernButton>
-		<ModernButton variant="primary" onclick={() => onclose()}>Close</ModernButton>
+		<ModernButton variant="secondary" onclick={copyToClipboard}>{m.copy()}</ModernButton>
+		<ModernButton variant="primary" onclick={() => onclose()}>{m.close()}</ModernButton>
 	</div>
 
 	{#if showToast}
-		<Toast message="Copied!" />
+		<Toast message={m.copiedToast()} />
 	{/if}
 </div>
 

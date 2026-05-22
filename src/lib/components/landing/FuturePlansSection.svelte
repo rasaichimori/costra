@@ -1,48 +1,42 @@
 <script lang="ts">
+	import { m } from '$lib/paraglide/messages.js';
 </script>
 
 <section class="future-plans" id="future-plans">
 	<div class="content-wrapper">
 		<div class="section-header">
 			<span class="section-number">03</span>
-			<h2 class="section-title">What's Next?</h2>
+			<h2 class="section-title">{m.futurePlansSectionTitle()}</h2>
 		</div>
 
 		<div class="plans-card">
 			<p class="intro-text">
-				Costra will always have a <strong>free core</strong>. But if enough people want features
-				that require ongoing costs, I'd consider an optional paid tier on top.
+				{m.futurePlansIntroBefore()}<strong>{m.futurePlansFreeCore()}</strong
+				>{m.futurePlansIntroAfter()}
 			</p>
 
 			<div class="features-section">
-				<span class="features-label">Possible features</span>
+				<span class="features-label">{m.futurePlansFeaturesLabel()}</span>
 				<ul class="features-list">
 					<li class="feature-item">
 						<span class="item-dot"></span>
-						<span class="item-text"
-							>AI auto-fill — Let AI fill in the ingredients or recipes as you are typing</span
-						>
+						<span class="item-text">{m.futurePlansFeatureAi()}</span>
 					</li>
 					<li class="feature-item">
 						<span class="item-dot"></span>
-						<span class="item-text"
-							>Price tracking — Track prices from vendors and get notified when ingredient costs
-							change</span
-						>
+						<span class="item-text">{m.futurePlansFeatureTracking()}</span>
 					</li>
 					<li class="feature-item">
 						<span class="item-dot"></span>
-						<span class="item-text"
-							>Cloud accounts — access your data from anywhere, on any device</span
-						>
+						<span class="item-text">{m.futurePlansFeatureCloud()}</span>
 					</li>
 				</ul>
 			</div>
 
 			<p class="cta-text">
-				Want any of these? <a href="https://www.instagram.com/lanibowls/" target="_blank"
-					>Let me know</a
-				> — if there's enough interest, I'll make it happen.
+				{m.futurePlansCtaBefore()}<a href="https://www.instagram.com/lanibowls/" target="_blank"
+					>{m.futurePlansLetMeKnow()}</a
+				>{m.futurePlansCtaAfter()}
 			</p>
 		</div>
 	</div>

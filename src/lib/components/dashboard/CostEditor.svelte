@@ -18,6 +18,7 @@
 	import { historyManager } from '$lib/utils/history';
 	import { onMount, untrack, tick } from 'svelte';
 	import ModernButton from '../common/ModernButton.svelte';
+	import { m } from '$lib/paraglide/messages.js';
 
 	type TabId = 'dashboard' | 'conversions' | 'settings';
 	let activeTab = $state<TabId>('dashboard');
@@ -238,7 +239,7 @@
 
 	{#if activeTab === 'dashboard'}
 		<div class="content">
-			<h2>Recipes</h2>
+			<h2>{m.sectionRecipes()}</h2>
 			<RecipeSection
 				bind:recipes
 				{costs}
@@ -246,7 +247,7 @@
 				bind:unitConversions
 				bind:customUnitLabels
 			/>
-			<h2>Ingredients</h2>
+			<h2>{m.sectionIngredients()}</h2>
 			<div class="ingredients">
 				<CompoundSection
 					bind:recipes={compoundIngredients}

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import ModernButton from '../common/ModernButton.svelte';
+	import { m } from '$lib/paraglide/messages.js';
 
 	let { onChooseBlank, onChoosePrefilled, onclose } = $props();
 
@@ -17,21 +18,21 @@
 </script>
 
 <div class="welcome-modal">
-	<h3>Welcome to COSTRA!</h3>
-	<p>Would you like to start with a blank slate or explore with a prefilled example?</p>
+	<h3>{m.welcomeTitle()}</h3>
+	<p>{m.welcomeDescription()}</p>
 
 	<div class="options">
 		<ModernButton
 			variant={selectedChoice === 'blank' ? 'primary' : 'secondary'}
 			onclick={handleSelectBlank}
 		>
-			Blank Slate
+			{m.welcomeBlankSlate()}
 		</ModernButton>
 		<ModernButton
 			variant={selectedChoice === 'prefilled' ? 'primary' : 'secondary'}
 			onclick={handleSelectPrefilled}
 		>
-			Prefilled Example
+			{m.welcomePrefilledExample()}
 		</ModernButton>
 	</div>
 
@@ -41,7 +42,7 @@
 			onclick={() => onclose(true)}
 			disabled={selectedChoice === null}
 		>
-			Confirm
+			{m.confirm()}
 		</ModernButton>
 	</div>
 </div>

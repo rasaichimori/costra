@@ -11,6 +11,7 @@
 		LandingFooter
 	} from '$lib/components/landing';
 	import { overlays } from '$lib/contexts/overlay.svelte';
+	import { m } from '$lib/paraglide/messages.js';
 
 	let mouseX = $state(0);
 	let mouseY = $state(0);
@@ -38,11 +39,8 @@
 <svelte:window onmousemove={handleMouseMove} onscroll={handleScroll} />
 
 <svelte:head>
-	<title>Costra - Protect Your Margins</title>
-	<meta
-		name="description"
-		content="A simple tool to understand your costs and protect your margins"
-	/>
+	<title>{m.pageTitle()}</title>
+	<meta name="description" content={m.pageDescription()} />
 </svelte:head>
 
 <main class="landing" onmousemove={handleMouseMove}>

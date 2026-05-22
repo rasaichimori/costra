@@ -4,6 +4,7 @@
 	import TextInput from '../common/TextInput.svelte';
 	import { getRecipesUsingIngredientWithUnit } from '$lib/utils/unitSelectUtils';
 	import { isSmallerUnit } from '$lib/utils/unit';
+	import { m } from '$lib/paraglide/messages.js';
 
 	interface Props {
 		ingredientId: string;
@@ -37,11 +38,11 @@
 		const newErrors = conversionFactors.map((factor, index) => {
 			if (factor <= 0) {
 				isValid = false;
-				return 'Must be greater than 0';
+				return m.conversionFactorMustBePositive();
 			}
 			if (!isFinite(factor)) {
 				isValid = false;
-				return 'Must be a valid number';
+				return m.conversionFactorMustBeValidNumber();
 			}
 			return '';
 		});
@@ -101,9 +102,9 @@
 	aria-labelledby="conversion-modal-title"
 	tabindex="-1"
 >
-	<h3 id="conversion-modal-title">Add Unit Conversions</h3>
+	<h3 id="conversion-modal-title">{m.addUnitConversionsTitle()}</h3>
 	<p class="description">
-		The following conversions are needed for <strong>{ingredientName}</strong> to use the new unit:
+		{m.addUnitConversionsDescription({ name: ingredientName })}
 	</p>
 
 	<div class="conversions-list">
@@ -114,18 +115,20 @@
 			{@const largerUnit = outputIsSmaller === true ? missing.inputUnit : missing.outputUnit}
 			<div class="conversion-row">
 				<p class="conversion-question">
-					How many <strong>{getUnitLabel(smallerUnit)}</strong> is in one{' '}
-					<strong>{getUnitLabel(largerUnit)}</strong>?
+					{m.addUnitConversionQuestionShort({
+						smaller: getUnitLabel(smallerUnit),
+						larger: getUnitLabel(largerUnit)
+					})}
 				</p>
 				{#if recipesUsingUnit.length > 0}
 					<div class="recipes-list">
-						<span class="recipes-label">Used in:</span>
+						<span class="recipes-label">{m.usedInRecipesLabel()}</span>
 						<div class="recipe-names">
 							{#each recipesUsingUnit as recipe}
 								<span class="recipe-name" class:compound={isCompoundIngredient(recipe)}>
 									{recipe.name}
 									{#if isCompoundIngredient(recipe)}
-										<span class="compound-badge">Compound</span>
+										<span class="compound-badge">{m.compoundBadge()}</span>
 									{/if}
 								</span>
 							{/each}
@@ -143,8 +146,11 @@
 						error={errors[index]}
 					/>
 					<span class="hint">
-						1 {getUnitLabel(largerUnit)} = {conversionFactors[index]}{' '}
-						{getUnitLabel(smallerUnit)}
+						{m.conversionFactorHint({
+							larger: getUnitLabel(largerUnit),
+							factor: conversionFactors[index],
+							smaller: getUnitLabel(smallerUnit)
+						})}
 					</span>
 				</div>
 			</div>
@@ -152,8 +158,8 @@
 	</div>
 
 	<div class="actions">
-		<ModernButton variant="secondary" onclick={() => onclose?.()}>Cancel</ModernButton>
-		<ModernButton variant="primary" onclick={handleSave}>Save All</ModernButton>
+		<ModernButton variant="secondary" onclick={() => onclose?.()}>{m.cancel()}</ModernButton>
+		<ModernButton variant="primary" onclick={handleSave}>{m.saveAll()}</ModernButton>
 	</div>
 </div>
 

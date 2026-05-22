@@ -4,6 +4,7 @@
 	import { calculateRecipeCosts, getTotalRecipeCost } from '$lib/utils/costCalculatorUtils';
 	import { getConversionFactor } from '$lib/utils/unit';
 	import RecipeListItem from './RecipeListItem.svelte';
+	import { m } from '$lib/paraglide/messages.js';
 
 	interface Props {
 		recipes: Record<string, CompoundIngredientDoc>;
@@ -47,14 +48,14 @@
 		// Create new ingredient with placeholder values
 		const newRecipe: CompoundIngredientDoc = {
 			id: newId,
-			name: `Recipe ${nextNumber}`,
+			name: m.defaultCompoundName({ number: nextNumber }),
 			ingredients: [],
 			yield: {
 				amount: 1,
 				unit: 'pint'
 			},
 			viewedUnit: 'pint',
-			category: 'Compound',
+			category: m.categoryCompound(),
 			color: randomLightColorHex()
 		};
 
@@ -88,7 +89,7 @@
 			}}
 		/>
 	{/each}
-	<button class="add-recipe-btn" onclick={addRecipe}> ＋ Create New Ingredient </button>
+	<button class="add-recipe-btn" onclick={addRecipe}>{m.createNewCompound()}</button>
 </div>
 
 <style>

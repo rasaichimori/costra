@@ -1,6 +1,9 @@
 <script lang="ts">
 	import logoIcon from '$lib/assets/logo.svg';
 	import ThemeToggle from '$lib/components/common/ThemeToggle.svelte';
+	import LanguageSwitcher from '$lib/components/common/LanguageSwitcher.svelte';
+	import { localPath } from '$lib/i18n';
+	import { m } from '$lib/paraglide/messages.js';
 
 	interface Props {
 		scrolled?: boolean;
@@ -10,13 +13,14 @@
 </script>
 
 <nav class="nav" class:scrolled>
-	<a href="/" class="nav-logo">
-		<img src={logoIcon} alt="Costra logo" class="logo-icon" />
-		<span class="logo-text">Costra</span>
+	<a href={localPath('/')} class="nav-logo">
+		<img src={logoIcon} alt={m.costraLogoAlt()} class="logo-icon" />
+		<span class="logo-text">{m.brandName()}</span>
 	</a>
 	<div class="nav-actions">
+		<LanguageSwitcher variant="compact" />
 		<ThemeToggle />
-		<a href="/dashboard" class="nav-cta">Open App</a>
+		<a href={localPath('/dashboard')} class="nav-cta">{m.openApp()}</a>
 	</div>
 </nav>
 

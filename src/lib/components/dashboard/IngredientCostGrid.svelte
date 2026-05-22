@@ -18,6 +18,7 @@
 	import { getCurrencyContext } from '$lib/contexts/currency.svelte';
 	import { randomLightColorHex } from '$lib/utils/color';
 	import ProductUnitSelectButton from './ProductUnitSelectButton.svelte';
+	import { m } from '$lib/paraglide/messages.js';
 
 	let {
 		costs = $bindable(),
@@ -156,7 +157,7 @@
 		// Use the first selected filter as the category if any filters are selected
 		const newIngredient: IngredientDoc = {
 			id: newId,
-			name: `Ingredient ${nextNumber}`,
+			name: m.defaultIngredientName({ number: nextNumber }),
 			category: selectedFilters.length > 0 ? selectedFilters[0] : '',
 			product: {
 				cost: 10,
@@ -182,12 +183,12 @@
 				bind:value={searchTerm}
 				size="medium"
 				variant="inline"
-				placeholder={!searchTerm ? 'Search ingredients...' : ''}
+				placeholder={!searchTerm ? m.searchIngredientsPlaceholder() : ''}
 				clearable={true}
 				icon="fa-solid fa-magnifying-glass"
 			/>
 		</div>
-		<h3>Filter by Type:</h3>
+		<h3>{m.filterByTypeTitle()}</h3>
 		<div class="filter-pills">
 			{#each categories as category}
 				<ModernButton
@@ -209,7 +210,7 @@
 				style="width: fit-content;"
 			>
 				<i class="fa-solid fa-times"></i>
-				Clear all filters
+				{m.clearAllFilters()}
 			</ModernButton>
 		{/if}
 	</div>
@@ -218,12 +219,12 @@
 		<table class="costs-table">
 			<thead>
 				<tr>
-					<th class="ingredient-header">Ingredient</th>
-					<th class="category-header">Category</th>
-					<th class="cost-header">Total Cost ({currencyContext.currency})</th>
-					<th class="amount-header">Amount</th>
-					<th class="unit-header">Unit</th>
-					<th class="actions-header">Actions</th>
+					<th class="ingredient-header">{m.colIngredient()}</th>
+					<th class="category-header">{m.colCategory()}</th>
+					<th class="cost-header">{m.colTotalCost({ currency: currencyContext.currency })}</th>
+					<th class="amount-header">{m.colAmount()}</th>
+					<th class="unit-header">{m.colUnit()}</th>
+					<th class="actions-header">{m.colActions()}</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -248,7 +249,7 @@
 								<SelectInput
 									bind:value={costs[ingredientId].category}
 									options={categories}
-									placeholder="Select category..."
+									placeholder={m.selectCategoryPlaceholder()}
 									size="small"
 									onchange={(newCategory) => updateCategory(ingredientId, newCategory)}
 									searchable={true}
@@ -286,8 +287,8 @@
 								<ModernButton
 									variant="icon"
 									size="small"
-									ariaLabel="Delete ingredient"
-									title="Delete ingredient"
+									ariaLabel={m.deleteIngredientAriaLabel()}
+									title={m.deleteIngredientTitle()}
 									onclick={() => initiateDeleteIngredient(ingredientId)}
 								>
 									<i class="fa-solid fa-trash"></i>
@@ -301,7 +302,7 @@
 	</div>
 	<ModernButton variant="primary" onclick={addNewIngredient} style="width: fit-content;">
 		<i class="fa-solid fa-plus"></i>
-		Add Ingredient
+		{m.addIngredient()}
 	</ModernButton>
 </div>
 

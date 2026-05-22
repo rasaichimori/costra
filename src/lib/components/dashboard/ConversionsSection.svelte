@@ -2,6 +2,7 @@
 	import type { CompoundIngredientDoc, IngredientDoc, UnitConversion } from '$lib/data/schema';
 	import ConversionIngredientGroup from './ConversionIngredientGroup.svelte';
 	import ConversionsEmptyState from './ConversionsEmptyState.svelte';
+	import { m } from '$lib/paraglide/messages.js';
 
 	let {
 		costs,
@@ -144,12 +145,9 @@
 <div class="conversions-section">
 	<div class="section-header">
 		<div class="header-info">
-			<h3>Unit Conversions</h3>
+			<h3>{m.unitConversionsTitle()}</h3>
 			<span class="stats">
-				{totalConversions} conversion{totalConversions !== 1 ? 's' : ''} across {totalIngredients} ingredient{totalIngredients !==
-				1
-					? 's'
-					: ''}
+				{m.conversionsStats({ count: totalConversions, ingredientCount: totalIngredients })}
 			</span>
 		</div>
 	</div>

@@ -1,24 +1,26 @@
 <script lang="ts">
+	import { m } from '$lib/paraglide/messages.js';
+
 	let expanded = $state(true);
 
-	const recipe = {
-		name: 'Croissant',
+	const recipe = $derived({
+		name: m.demoCompoundCroissant(),
 		cost: 48,
 		ingredients: [
 			{
-				type: 'compound',
-				name: 'Laminated Dough',
+				type: 'compound' as const,
+				name: m.demoCompoundLaminatedDough(),
 				cost: 32,
 				children: [
-					{ name: 'Flour', cost: 12 },
-					{ name: 'Butter', cost: 18 },
-					{ name: 'Yeast', cost: 2 }
+					{ name: m.demoCompoundFlour(), cost: 12 },
+					{ name: m.demoCompoundButter(), cost: 18 },
+					{ name: m.demoCompoundYeast(), cost: 2 }
 				]
 			},
-			{ type: 'simple', name: 'Egg Wash', cost: 4 },
-			{ type: 'simple', name: 'Almond Fill', cost: 12 }
+			{ type: 'simple' as const, name: m.demoCompoundEggWash(), cost: 4 },
+			{ type: 'simple' as const, name: m.demoCompoundAlmondFill(), cost: 12 }
 		]
-	};
+	});
 </script>
 
 <div class="demo-container">
@@ -45,7 +47,7 @@
 									<polyline points="9 18 15 12 9 6"></polyline>
 								</svg>
 							</span>
-							<span class="compound-badge">Recipe</span>
+							<span class="compound-badge">{m.demoCompoundRecipeBadge()}</span>
 							<span class="ing-name">{ing.name}</span>
 							<span class="ing-cost">${ing.cost}</span>
 						</button>

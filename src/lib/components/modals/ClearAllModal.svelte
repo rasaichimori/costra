@@ -1,5 +1,6 @@
 <script lang="ts">
 	import ModernButton from '../common/ModernButton.svelte';
+	import { m } from '$lib/paraglide/messages.js';
 
 	let { onConfirm = () => {}, onclose = () => {} } = $props();
 
@@ -10,13 +11,13 @@
 </script>
 
 <div class="clear-all-modal">
-	<h3>Clear All Data</h3>
-	<p>This will permanently delete all ingredients and recipes. This action cannot be undone.</p>
-	<p class="warning">Are you sure you want to proceed?</p>
+	<h3>{m.clearAllDataTitle()}</h3>
+	<p>{m.clearAllDataWarning()}</p>
+	<p class="warning">{m.clearAllDataConfirm()}</p>
 
 	<div class="actions">
-		<ModernButton variant="danger" onclick={handleConfirm}>Clear All</ModernButton>
-		<ModernButton variant="secondary" onclick={() => onclose(false)}>Cancel</ModernButton>
+		<ModernButton variant="danger" onclick={handleConfirm}>{m.clearAllDataAction()}</ModernButton>
+		<ModernButton variant="secondary" onclick={() => onclose(false)}>{m.cancel()}</ModernButton>
 	</div>
 </div>
 

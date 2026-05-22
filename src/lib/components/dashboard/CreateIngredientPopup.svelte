@@ -7,6 +7,7 @@
 	import { getCurrencyContext } from '$lib/contexts/currency.svelte';
 	import { randomLightColorHex } from '$lib/utils/color';
 	import ProductUnitSelectButton from './ProductUnitSelectButton.svelte';
+	import { m } from '$lib/paraglide/messages.js';
 
 	interface Props {
 		costs: Record<string, IngredientDoc>;
@@ -59,7 +60,7 @@
 		return num;
 	};
 
-	let ingredientName = $state(initialName || `Ingredient ${getNextIngredientNumber()}`);
+	let ingredientName = $state(initialName || m.defaultIngredientName({ number: getNextIngredientNumber() }));
 	let category = $state(initialCategory);
 	let cost = $state(10);
 	let amount = $state(1);
@@ -121,32 +122,32 @@
 </script>
 
 <div class="create-ingredient-popup">
-	<h3>Create Ingredient</h3>
+	<h3>{m.createIngredientTitle()}</h3>
 	<div class="form-fields">
 		<div class="field-group">
-			<label>Name</label>
-			<TextInput bind:value={ingredientName} size="small" variant="inline" placeholder="Ingredient name" />
+			<label>{m.fieldName()}</label>
+			<TextInput bind:value={ingredientName} size="small" variant="inline" placeholder={m.ingredientNamePlaceholder()} />
 		</div>
 		<div class="field-group">
-			<label>Category</label>
+			<label>{m.fieldCategory()}</label>
 			<SelectInput
 				bind:value={category}
 				options={categories}
-				placeholder="Select category..."
+				placeholder={m.selectCategoryPlaceholder()}
 				size="small"
 				onchange={updateCategory}
 				searchable={true}
 			/>
 		</div>
 		<div class="field-group">
-			<label>Total Cost ({currencyContext.currency})</label>
+			<label>{m.fieldTotalCost({ currency: currencyContext.currency })}</label>
 			<div class="cost-input-container">
 				<span class="currency">{currencyContext.currency}</span>
 				<TextInput bind:value={cost} size="small" variant="inline" min={0} />
 			</div>
 		</div>
 		<div class="field-group">
-			<label>Portion</label>
+			<label>{m.fieldPortion()}</label>
 			<div class="portion-row">
 				<TextInput bind:value={amount} size="small" variant="inline" min={0.01} step={0.01} />
 				<ProductUnitSelectButton
@@ -163,8 +164,8 @@
 		</div>
 	</div>
 	<div class="actions">
-		<ModernButton variant="secondary" onclick={cancel}>Cancel</ModernButton>
-		<ModernButton variant="primary" onclick={createIngredient}>Create</ModernButton>
+		<ModernButton variant="secondary" onclick={cancel}>{m.cancel()}</ModernButton>
+		<ModernButton variant="primary" onclick={createIngredient}>{m.create()}</ModernButton>
 	</div>
 </div>
 

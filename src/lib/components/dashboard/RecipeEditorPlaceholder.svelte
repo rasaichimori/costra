@@ -1,12 +1,12 @@
 <script lang="ts">
-	// Placeholder component for Recipe Editor when no recipe is selected or created.
+	import { m } from '$lib/paraglide/messages.js';
 </script>
 
 <div class="placeholder-card">
 	<div class="placeholder-content">
 		<div class="left">
-			<h3>No recipe selected</h3>
-			<p>Select a recipe from the list on the left or create a new one to begin editing.</p>
+			<h3>{m.noRecipeSelectedTitle()}</h3>
+			<p>{m.noRecipeSelectedDescription()}</p>
 		</div>
 
 		<div class="demo-chart-section">

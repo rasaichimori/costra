@@ -1,16 +1,23 @@
 <script lang="ts">
+	import { m } from '$lib/paraglide/messages.js';
+
 	interface InputBox {
 		id: string;
-		label: string;
 		value: number;
 		multiplier: number;
 	}
 
 	let boxes = $state<InputBox[]>([
-		{ id: 'a', label: 'Flour', value: 100, multiplier: 1 },
-		{ id: 'b', label: 'Croissant', value: 250, multiplier: 2.5 },
-		{ id: 'c', label: 'Danish', value: 175, multiplier: 1.75 }
+		{ id: 'a', value: 100, multiplier: 1 },
+		{ id: 'b', value: 250, multiplier: 2.5 },
+		{ id: 'c', value: 175, multiplier: 1.75 }
 	]);
+
+	const demoLabels: Record<string, () => string> = {
+		a: () => m.demoUpdatesFlour(),
+		b: () => m.demoUpdatesCroissant(),
+		c: () => m.demoUpdatesDanish()
+	};
 
 	let flashing = $state<Record<string, boolean>>({});
 
@@ -42,7 +49,7 @@
 	<div class="inputs-list">
 		{#each boxes as box (box.id)}
 			<div class="input-row" class:flash={flashing[box.id]}>
-				<span class="input-label">{box.label}</span>
+				<span class="input-label">{demoLabels[box.id]()}</span>
 				<div class="input-wrapper">
 					<span class="currency">$</span>
 					<input
@@ -56,7 +63,7 @@
 			</div>
 		{/each}
 	</div>
-	<p class="hint">Change any value to see others update</p>
+	<p class="hint">{m.demoUpdatesHint()}</p>
 </div>
 
 <style>

@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { m } from '$lib/paraglide/messages.js';
+
 	interface Props {
 		tiltX?: number;
 		tiltY?: number;
@@ -19,27 +21,27 @@
 					<span class="dot yellow"></span>
 					<span class="dot green"></span>
 				</div>
-				<span class="preview-title">Recipe Cost Calculator</span>
+				<span class="preview-title">{m.previewAppTitle()}</span>
 			</div>
 			<div class="preview-content">
 				<!-- Recipe name -->
 				<div class="preview-recipe-header">
-					<span class="recipe-name">Chocolate Cake</span>
-					<span class="recipe-badge">Recipe</span>
+					<span class="recipe-name">{m.previewDemoRecipeName()}</span>
+					<span class="recipe-badge">{m.previewRecipeBadge()}</span>
 				</div>
 
 				<!-- Ingredients list with donut chart -->
 				<div class="ingredients-section">
 					<div class="preview-ingredients">
 						<div class="ingredient-row header">
-							<span class="ing-name">Ingredient</span>
-							<span class="ing-qty">Qty</span>
-							<span class="ing-unit">Unit</span>
-							<span class="ing-cost">Cost</span>
+							<span class="ing-name">{m.colIngredient()}</span>
+							<span class="ing-qty">{m.previewColQty()}</span>
+							<span class="ing-unit">{m.colUnit()}</span>
+							<span class="ing-cost">{m.previewColCost()}</span>
 						</div>
 						<div class="ingredient-row">
 							<span class="ing-name"
-								><span class="ing-dot" style="background: #f97316;"></span>All-Purpose Flour</span
+								><span class="ing-dot" style="background: #f97316;"></span>{m.previewDemoFlour()}</span
 							>
 							<span class="ing-qty">250</span>
 							<span class="ing-unit">g</span>
@@ -47,7 +49,7 @@
 						</div>
 						<div class="ingredient-row">
 							<span class="ing-name"
-								><span class="ing-dot" style="background: #8b5cf6;"></span>Cocoa Powder</span
+								><span class="ing-dot" style="background: #8b5cf6;"></span>{m.previewDemoCocoaPowder()}</span
 							>
 							<span class="ing-qty">75</span>
 							<span class="ing-unit">g</span>
@@ -55,7 +57,7 @@
 						</div>
 						<div class="ingredient-row">
 							<span class="ing-name"
-								><span class="ing-dot" style="background: #eab308;"></span>Butter</span
+								><span class="ing-dot" style="background: #eab308;"></span>{m.previewDemoButter()}</span
 							>
 							<span class="ing-qty">200</span>
 							<span class="ing-unit">g</span>
@@ -63,7 +65,7 @@
 						</div>
 						<div class="ingredient-row">
 							<span class="ing-name"
-								><span class="ing-dot" style="background: #ec4899;"></span>Sugar</span
+								><span class="ing-dot" style="background: #ec4899;"></span>{m.previewDemoSugar()}</span
 							>
 							<span class="ing-qty">300</span>
 							<span class="ing-unit">g</span>
@@ -71,7 +73,7 @@
 						</div>
 						<div class="ingredient-row">
 							<span class="ing-name"
-								><span class="ing-dot" style="background: #22c55e;"></span>Eggs</span
+								><span class="ing-dot" style="background: #22c55e;"></span>{m.previewDemoEggs()}</span
 							>
 							<span class="ing-qty">4</span>
 							<span class="ing-unit">pcs</span>
@@ -154,7 +156,7 @@
 							</svg>
 							<div class="donut-center">
 								<span class="donut-total">$6.23</span>
-								<span class="donut-label">Total</span>
+								<span class="donut-label">{m.previewTotal()}</span>
 							</div>
 						</div>
 					</div>
@@ -163,15 +165,15 @@
 				<!-- Cost summary -->
 				<div class="preview-summary">
 					<div class="summary-row">
-						<span class="summary-label">Total Cost</span>
+						<span class="summary-label">{m.previewTotalCost()}</span>
 						<span class="summary-value">$6.23</span>
 					</div>
 					<div class="summary-row highlight">
-						<span class="summary-label">Sell Price</span>
+						<span class="summary-label">{m.previewSellPrice()}</span>
 						<span class="summary-value">$18.00</span>
 					</div>
 					<div class="summary-row margin">
-						<span class="summary-label">Margin</span>
+						<span class="summary-label">{m.previewMargin()}</span>
 						<span class="summary-value positive">65.4%</span>
 					</div>
 				</div>
@@ -181,11 +183,11 @@
 		<!-- Floating cards -->
 		<div class="floating-card card-1">
 			<span class="card-icon">✓</span>
-			<span class="card-text">Cost updated</span>
+			<span class="card-text">{m.previewToastCostUpdated()}</span>
 		</div>
 		<div class="floating-card card-2">
 			<span class="card-value">+12%</span>
-			<span class="card-text">Margin improved</span>
+			<span class="card-text">{m.previewToastMarginImproved()}</span>
 		</div>
 	</div>
 	<!-- Shadow/reflection -->

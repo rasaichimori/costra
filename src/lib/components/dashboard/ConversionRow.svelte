@@ -3,6 +3,8 @@
 	import { getUnitCategory, getUnitsByCategory } from '$lib/utils/unitCategoryUtils';
 	import ModernButton from '../common/ModernButton.svelte';
 	import TextInput from '../common/TextInput.svelte';
+	import { m } from '$lib/paraglide/messages.js';
+	import type { UnitCategory } from '$lib/utils/unitCategoryUtils';
 
 	let {
 		conversion,
@@ -40,13 +42,19 @@
 	const secondCategory = $derived(getUnitCategory(conversion.outputUnit as string));
 	const firstUnits = $derived(getUnitsByCategory(firstCategory, customUnitLabels));
 	const secondUnits = $derived(getUnitsByCategory(secondCategory, customUnitLabels));
+
+	const categoryLabel = (category: UnitCategory) => {
+		if (category === 'Volume') return m.unitCategoryVolume();
+		if (category === 'Mass') return m.unitCategoryMass();
+		return m.unitCategoryCustom();
+	};
 </script>
 
 <div class="conversion-row">
 	<div class="conversion-category">
-		<span class="category-badge input">{firstCategory}</span>
+		<span class="category-badge input">{categoryLabel(firstCategory)}</span>
 		<span class="arrow">→</span>
-		<span class="category-badge output">{secondCategory}</span>
+		<span class="category-badge output">{categoryLabel(secondCategory)}</span>
 	</div>
 	<div class="conversion-editor">
 		<div class="conversion-part">
@@ -75,7 +83,7 @@
 					<option value={unit.id}>{unit.label}</option>
 				{/each}
 			</select>
-			<span class="of-text">of {ingredientName} =</span>
+			<span class="of-text">{m.conversionOfEquals({ name: ingredientName })}</span>
 		</div>
 		<div class="conversion-part">
 			<TextInput
@@ -108,8 +116,8 @@
 		<ModernButton
 			variant="icon"
 			size="small"
-			ariaLabel="Delete conversion"
-			title="Delete conversion"
+			ariaLabel={m.deleteConversionAriaLabel()}
+			title={m.deleteConversionTitle()}
 			onclick={onDelete}
 		>
 			<i class="fa-solid fa-trash"></i>

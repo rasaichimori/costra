@@ -2,10 +2,10 @@
 	import type { UnitOption, UnitOptionGroup } from '$lib/utils/unit';
 	import ModernButton from '../common/ModernButton.svelte';
 	import TextInput from '../common/TextInput.svelte';
+	import { m } from '$lib/paraglide/messages.js';
 
 	interface Props {
 		unitGroups: UnitOptionGroup[];
-		// The label acts as the search term. If value is not provided, the new option will not be added to the dropdown.
 		selectedUnitId: string;
 		selectUnit: (option: UnitOption) => void;
 		addNewUnit: (option: UnitOption) => void;
@@ -13,8 +13,13 @@
 
 	let { unitGroups, selectedUnitId, selectUnit, addNewUnit }: Props = $props();
 
+	const categoryFilters = [
+		{ key: 'Volume', label: () => m.unitGroupVolume() },
+		{ key: 'Mass', label: () => m.unitGroupMass() },
+		{ key: 'Custom', label: () => m.unitGroupCustom() }
+	];
+
 	let searchTerm = $state('');
-	// allow multiple category filters
 	let selectedFilters: string[] = $state([]);
 
 	const filteredGroups = $derived(
@@ -42,24 +47,24 @@
 <div class="unit-popup">
 	<!-- Filter Pills Section -->
 	<div class="filter-pills">
-		{#each ['Volume', 'Mass', 'Custom'] as category}
+		{#each categoryFilters as category}
 			<ModernButton
-				variant={selectedFilters.includes(category) ? 'primary' : 'secondary'}
+				variant={selectedFilters.includes(category.key) ? 'primary' : 'secondary'}
 				size="small"
 				onclick={() => {
-					if (selectedFilters.includes(category)) {
-						selectedFilters = selectedFilters.filter((c) => c !== category);
+					if (selectedFilters.includes(category.key)) {
+						selectedFilters = selectedFilters.filter((c) => c !== category.key);
 					} else {
-						selectedFilters = [...selectedFilters, category];
+						selectedFilters = [...selectedFilters, category.key];
 					}
 				}}
 			>
-				{category}
+				{category.label()}
 			</ModernButton>
 		{/each}
 		{#if selectedFilters.length > 0}
 			<ModernButton variant="danger" size="small" onclick={() => (selectedFilters = [])}
-				>Clear</ModernButton
+				>{m.clearFilters()}</ModernButton
 			>
 		{/if}
 	</div>
@@ -68,7 +73,7 @@
 			bind:value={searchTerm}
 			size={'small'}
 			variant="inline"
-			placeholder={!searchTerm ? 'Search unit...' : ''}
+			placeholder={!searchTerm ? m.searchUnitPlaceholder() : ''}
 			autofocus={true}
 			clearable={true}
 			icon="fa-solid fa-magnifying-glass"
@@ -89,7 +94,7 @@
 			tabindex="-1"
 		>
 			<i class="fa-solid fa-plus"></i>
-			"{searchTerm}"
+			{m.addNewUnitNamed({ term: searchTerm })}
 		</button>
 	{/if}
 	<div class="unit-groups">

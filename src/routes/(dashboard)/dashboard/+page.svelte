@@ -3,12 +3,13 @@
 	import RecipeSection from '$lib/components/dashboard/RecipeSection.svelte';
 	import CompoundSection from '$lib/components/dashboard/CompoundSection.svelte';
 	import { getDataContext } from '$lib/contexts/data.svelte';
+	import { m } from '$lib/paraglide/messages.js';
 
 	const data = getDataContext();
 </script>
 
 <div class="dashboard-content">
-	<h2>Recipes</h2>
+	<h2>{m.sectionRecipes()}</h2>
 	<RecipeSection
 		bind:recipes={data.recipes}
 		costs={data.costs}
@@ -16,7 +17,7 @@
 		bind:unitConversions={data.unitConversions}
 		bind:customUnitLabels={data.customUnitLabels}
 	/>
-	<h2>Ingredients</h2>
+	<h2>{m.sectionIngredients()}</h2>
 	<div class="ingredients">
 		<CompoundSection
 			bind:recipes={data.compoundIngredients}

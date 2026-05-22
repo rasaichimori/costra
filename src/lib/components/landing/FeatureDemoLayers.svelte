@@ -1,11 +1,18 @@
 <script lang="ts">
 	import DragHandle from '../common/icons/DragHandle.svelte';
+	import { m } from '$lib/paraglide/messages.js';
 
 	let ingredients = $state([
-		{ id: 'flour', name: 'Flour', cost: 12, color: '#f59e0b' },
-		{ id: 'butter', name: 'Butter', cost: 28, color: '#3b82f6' },
-		{ id: 'sugar', name: 'Sugar', cost: 8, color: '#10b981' }
+		{ id: 'flour', cost: 12, color: '#f59e0b' },
+		{ id: 'butter', cost: 28, color: '#3b82f6' },
+		{ id: 'sugar', cost: 8, color: '#10b981' }
 	]);
+
+	const demoNames: Record<string, () => string> = {
+		flour: () => m.demoLayerFlour(),
+		butter: () => m.demoLayerButter(),
+		sugar: () => m.demoLayerSugar()
+	};
 
 	let draggingIdx = $state<number | null>(null);
 
@@ -60,13 +67,13 @@
 					<DragHandle />
 				</span>
 				<span class="color-dot" style="background: {ing.color}"></span>
-				<span class="name">{ing.name}</span>
+				<span class="name">{demoNames[ing.id]()}</span>
 				<span class="cost">${ing.cost}</span>
 			</div>
 		{/each}
 	</div>
 	<div class="total-row">
-		<span>Total</span>
+		<span>{m.demoTotal()}</span>
 		<span class="total-cost">${total}</span>
 	</div>
 </div>

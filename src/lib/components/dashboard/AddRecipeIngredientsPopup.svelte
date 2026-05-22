@@ -9,6 +9,7 @@
 	import TextInput from '../common/TextInput.svelte';
 	import { getOverlayContext } from '$lib/contexts/overlay.svelte';
 	import CreateIngredientPopup from './CreateIngredientPopup.svelte';
+	import { m } from '$lib/paraglide/messages.js';
 
 	interface Props {
 		availableIngredients: IngredientDoc[];
@@ -114,11 +115,11 @@
 						}
 					}}
 				>
-					{category === '' ? '(Uncategorized)' : category}
+					{category === '' ? m.uncategorizedCategory() : category}
 				</ModernButton>
 			{/each}
 			{#if selectedFilters.length > 0}
-				<ModernButton variant="danger" size="small" onclick={clearFilters}>Clear</ModernButton>
+				<ModernButton variant="danger" size="small" onclick={clearFilters}>{m.clearFilters()}</ModernButton>
 			{/if}
 		</div>
 	{/if}
@@ -128,7 +129,7 @@
 		bind:value={searchTerm}
 		size={'small'}
 		variant="inline"
-		placeholder={!searchTerm ? 'Search ingredients...' : ''}
+		placeholder={!searchTerm ? m.searchIngredientsPlaceholder() : ''}
 		autofocus={true}
 		clearable={true}
 		icon="fa-solid fa-magnifying-glass"
@@ -167,16 +168,16 @@
 		</div>
 	{:else if searchTerm.trim()}
 		<div class="no-results">
-			<p class="no-ingredients-message">No ingredients found matching "{searchTerm}"</p>
+			<p class="no-ingredients-message">{m.noIngredientsMatching({ term: searchTerm })}</p>
 			{#if costs}
 				<ModernButton variant="primary" onclick={openCreateIngredientPopup}>
 					<i class="fa-solid fa-plus"></i>
-					Create "{searchTerm}"
+					{m.createIngredientNamed({ term: searchTerm })}
 				</ModernButton>
 			{/if}
 		</div>
 	{:else}
-		<p class="no-ingredients-message">No ingredients left to add</p>
+		<p class="no-ingredients-message">{m.noIngredientsLeftToAdd()}</p>
 	{/if}
 </div>
 

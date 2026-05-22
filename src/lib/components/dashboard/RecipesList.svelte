@@ -11,6 +11,7 @@
 		getTotalRecipeCost
 	} from '$lib/utils/costCalculatorUtils';
 	import RecipeListItem from './RecipeListItem.svelte';
+	import { m } from '$lib/paraglide/messages.js';
 
 	interface Props {
 		recipes: Record<string, RecipeDoc>;
@@ -56,7 +57,7 @@
 		// Create new ingredient with placeholder values
 		const newRecipe: RecipeDoc = {
 			id: newId,
-			name: `Recipe ${nextNumber}`,
+			name: m.defaultRecipeName({ number: nextNumber }),
 			ingredients: []
 		};
 		recipes[newId] = newRecipe;
@@ -87,7 +88,7 @@
 			}}
 		/>
 	{/each}
-	<button class="add-recipe-btn" onclick={addRecipe}> ＋ Create New Recipe </button>
+	<button class="add-recipe-btn" onclick={addRecipe}>{m.createNewRecipe()}</button>
 </div>
 
 <style>

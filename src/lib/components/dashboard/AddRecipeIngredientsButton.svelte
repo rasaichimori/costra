@@ -3,6 +3,7 @@
 	import { onMount, tick } from 'svelte';
 	import ModernButton from '../common/ModernButton.svelte';
 	import AddRecipeIngredientsPopup from './AddRecipeIngredientsPopup.svelte';
+	import { m } from '$lib/paraglide/messages.js';
 	import type {
 		CompoundIngredientDoc,
 		IngredientDoc,
@@ -88,5 +89,5 @@
 	style="width: fit-content;"
 >
 	<i class="fa-solid fa-plus"></i>
-	Add Ingredients
+	{m.addIngredients()}
 </ModernButton>

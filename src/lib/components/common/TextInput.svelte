@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { parseFraction } from '$lib/utils/math';
 	import { clamp } from '$lib/utils/math';
+	import { m } from '$lib/paraglide/messages.js';
 	interface Props<T> {
 		value?: T;
 		placeholder?: string;
@@ -204,7 +205,7 @@
 		/>
 
 		{#if clearable && hasText}
-			<button type="button" class="clear-btn" onclick={clearValue} aria-label="Clear">×</button>
+			<button type="button" class="clear-btn" onclick={clearValue} aria-label={m.clearInputAriaLabel()}>×</button>
 		{/if}
 	</div>
 

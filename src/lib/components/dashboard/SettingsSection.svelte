@@ -12,7 +12,9 @@
 	import ClearAllModal from '../modals/ClearAllModal.svelte';
 	import AddBatchUnitConversionModal from '../modals/AddBatchUnitConversionModal.svelte';
 	import ModernButton from '../common/ModernButton.svelte';
+	import LanguageSwitcher from '../common/LanguageSwitcher.svelte';
 	import Dropdown from '../common/Dropdown.svelte';
+	import { m } from '$lib/paraglide/messages.js';
 	import { onMount } from 'svelte';
 	import { findAllMissingConversionsFromImport } from '$lib/utils/unitSelectUtils';
 	import { buildUnitLabels } from '$lib/utils/unitSelectUtils';
@@ -236,9 +238,17 @@
 
 <div class="settings-section">
 	<div class="settings-group">
-		<h3>Currency</h3>
+		<h3>{m.settingsLanguageTitle()}</h3>
 		<div class="setting-item">
-			<span class="setting-label">Currency Symbol</span>
+			<span class="setting-label">{m.settingsLanguageLabel()}</span>
+			<LanguageSwitcher />
+		</div>
+	</div>
+
+	<div class="settings-group">
+		<h3>{m.settingsCurrencyTitle()}</h3>
+		<div class="setting-item">
+			<span class="setting-label">{m.settingsCurrencySymbolLabel()}</span>
 			<button
 				class="currency-dropdown-button"
 				bind:this={currencyButtonElement}
@@ -251,12 +261,12 @@
 	</div>
 
 	<div class="settings-group">
-		<h3>Data Management</h3>
+		<h3>{m.settingsDataManagementTitle()}</h3>
 		<div class="settings-actions">
-			<ModernButton variant="primary" onclick={exportData}>Export Data</ModernButton>
-			<ModernButton variant="secondary" onclick={importData}>Import Data</ModernButton>
-			<ModernButton variant="secondary" onclick={loadExampleData}>Load Example Data</ModernButton>
-			<ModernButton variant="danger" onclick={clearAllData}>Clear All Data</ModernButton>
+			<ModernButton variant="primary" onclick={exportData}>{m.exportData()}</ModernButton>
+			<ModernButton variant="secondary" onclick={importData}>{m.importData()}</ModernButton>
+			<ModernButton variant="secondary" onclick={loadExampleData}>{m.loadExampleData()}</ModernButton>
+			<ModernButton variant="danger" onclick={clearAllData}>{m.clearAllData()}</ModernButton>
 		</div>
 	</div>
 </div>

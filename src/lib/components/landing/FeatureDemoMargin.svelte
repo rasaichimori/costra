@@ -2,6 +2,7 @@
 	import { startDrag } from '$lib/utils/dragControls';
 	import CheckIcon from '$lib/components/common/icons/CheckIcon.svelte';
 	import XIcon from '$lib/components/common/icons/XIcon.svelte';
+	import { m } from '$lib/paraglide/messages.js';
 
 	interface Props {
 		isHovered?: boolean;
@@ -14,10 +15,16 @@
 	let isDragging = $state(false);
 
 	let products = $state([
-		{ id: 'croissant', name: 'Croissant', margin: 35, color: '#10b981' },
-		{ id: 'baguette', name: 'Baguette', margin: 22, color: '#f59e0b' },
-		{ id: 'danish', name: 'Danish', margin: 41, color: '#3b82f6' }
+		{ id: 'croissant', margin: 35, color: '#10b981' },
+		{ id: 'baguette', margin: 22, color: '#f59e0b' },
+		{ id: 'danish', margin: 41, color: '#3b82f6' }
 	]);
+
+	const demoNames: Record<string, () => string> = {
+		croissant: () => m.demoProductCroissant(),
+		baguette: () => m.demoProductBaguette(),
+		danish: () => m.demoProductDanish()
+	};
 
 	const getMarginStatus = (margin: number) => {
 		if (margin >= targetMargin) return 'above';
@@ -45,14 +52,14 @@
 
 <div class="demo-container" class:is-hovered={isHovered || isDragging}>
 	<div class="target-indicator">
-		<span class="target-label">Target: {targetMargin}%</span>
+		<span class="target-label">{m.demoTargetLabel({ margin: targetMargin })}</span>
 		<div class="target-line-marker"></div>
 	</div>
 	<div class="products-list">
 		{#each products as product, index (product.id)}
 			{@const isFirst = index === 0}
 			<div class="product-row">
-				<span class="product-name">{product.name}</span>
+				<span class="product-name">{demoNames[product.id]()}</span>
 				<div class="bar-container">
 					{#if isFirst}
 						<div class="bar-track" bind:this={trackElement}>

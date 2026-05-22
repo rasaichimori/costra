@@ -20,6 +20,7 @@
 	import RecipeUnitSelectButton from './RecipeUnitSelectButton.svelte';
 	import { getCurrencyContext } from '$lib/contexts/currency.svelte';
 	import DragHandle from '../common/icons/DragHandle.svelte';
+	import { m } from '$lib/paraglide/messages.js';
 
 	interface Props {
 		recipe: RecipeDoc;
@@ -80,17 +81,17 @@
 		<ModernButton
 			variant="icon"
 			size="small"
-			ariaLabel="Delete recipe"
-			title="Delete recipe"
+			ariaLabel={m.deleteRecipeAriaLabel()}
+			title={m.deleteRecipeTitle()}
 			onclick={() => onDelete?.()}
 		>
 			<i class="fa-solid fa-trash"></i>
-			Delete Recipe
+			{m.deleteRecipe()}
 		</ModernButton>
 	</div>
 	<div class="recipe-section">
 		<div class="recipe-breakdown">
-			<h3>Ingredient Breakdown:</h3>
+			<h3>{m.ingredientBreakdownTitle()}</h3>
 			{#if recipe.ingredients.length > 0}
 				<div class="ingredient-list">
 					{#each recipe.ingredients as ingredient, idx (ingredient.id)}
@@ -107,8 +108,8 @@
 								class="drag-handle"
 								role="button"
 								tabindex="-1"
-								aria-label="Drag to reorder"
-								title="Drag to reorder"
+								aria-label={m.dragToReorderAriaLabel()}
+								title={m.dragToReorderTitle()}
 								onpointerdown={(e) => {
 									draggingId = ingredient.id;
 									startDrag(
@@ -161,7 +162,7 @@
 											}}
 										/>
 									{:else}
-										<span class="error-text">Missing ingredient: {ingredient.id}</span>
+										<span class="error-text">{m.missingIngredientError({ id: ingredient.id })}</span>
 									{/if}
 								</div>
 							</div>
@@ -188,8 +189,8 @@
 							<ModernButton
 								variant="icon"
 								size="small"
-								ariaLabel={ingredient.hidden ? 'Show ingredient' : 'Hide ingredient'}
-								title={ingredient.hidden ? 'Show ingredient' : 'Hide ingredient'}
+								ariaLabel={ingredient.hidden ? m.showIngredient() : m.hideIngredient()}
+								title={ingredient.hidden ? m.showIngredient() : m.hideIngredient()}
 								onclick={() => {
 									ingredient.hidden = !ingredient.hidden;
 								}}
@@ -200,8 +201,8 @@
 							<ModernButton
 								variant="icon"
 								size="small"
-								ariaLabel="Delete ingredient"
-								title="Delete ingredient"
+								ariaLabel={m.deleteIngredientAriaLabel()}
+								title={m.deleteIngredientTitle()}
 								onclick={() => {
 									recipe.ingredients = recipe.ingredients.filter((i) => i.id !== ingredient.id);
 								}}
@@ -212,7 +213,7 @@
 					{/each}
 				</div>
 			{:else}
-				<div class="no-ingredients-message">No ingredients added yet</div>
+				<div class="no-ingredients-message">{m.noIngredientsAdded()}</div>
 			{/if}
 			<AddRecipeIngredientsButton
 				{availableIngredients}

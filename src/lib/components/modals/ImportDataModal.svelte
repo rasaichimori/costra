@@ -8,6 +8,8 @@
 	import ModernButton from '../common/ModernButton.svelte';
 	import Toast from '../common/Toast.svelte';
 	import { normalizeUnitConversion } from '$lib/utils/unit';
+	import { m } from '$lib/paraglide/messages.js';
+	import { SvelteSet } from 'svelte/reactivity';
 
 	// Props expected: onLoad callback to pass parsed data back, onclose to inform parent
 	let { onLoad, onclose } = $props();
@@ -16,198 +18,194 @@
 	let error = $state<string>('');
 	let showToast = $state(false);
 
-	const placeholder =
-		'{"costs": { ... }, "recipes": { ... }, "compoundIngredients": { ... }, "unitConversions": [ ... ], "customUnitLabels": { ... }}';
+	const placeholder = m.importDataPlaceholder();
 
-	const validateData = (data: any): string | null => {
-		// Check top-level structure
+	const validateData = (data: unknown): string | null => {
 		if (!data || typeof data !== 'object' || Array.isArray(data)) {
-			return 'Data must be an object.';
+			return m.importValidationDataMustBeObject();
 		}
 
-		// Check required keys
-		if (!data.costs || !data.recipes) {
-			return 'JSON must contain "costs" and "recipes" keys.';
+		const record = data as Record<string, unknown>;
+
+		if (!record.costs || !record.recipes) {
+			return m.importValidationMissingCostsRecipes();
 		}
 
-		// Validate costs structure
-		if (typeof data.costs !== 'object' || Array.isArray(data.costs)) {
-			return '"costs" must be an object.';
+		if (typeof record.costs !== 'object' || Array.isArray(record.costs)) {
+			return m.importValidationCostsMustBeObject();
 		}
 
-		for (const [key, ingredient] of Object.entries(data.costs)) {
+		for (const [key, ingredient] of Object.entries(record.costs)) {
 			if (!ingredient || typeof ingredient !== 'object' || Array.isArray(ingredient)) {
-				return `Ingredient "${key}" in costs must be an object.`;
+				return m.importValidationIngredientInCostsMustBeObject({ key });
 			}
 
 			const ing = ingredient as IngredientDoc;
 			if (typeof ing.id !== 'string') {
-				return `Ingredient "${key}" must have a string "id" field.`;
+				return m.importValidationIngredientMustHaveId({ key });
 			}
 			if (typeof ing.name !== 'string') {
-				return `Ingredient "${key}" must have a string "name" field.`;
+				return m.importValidationIngredientMustHaveName({ key });
 			}
 			if (typeof ing.category !== 'string') {
-				return `Ingredient "${key}" must have a string "category" field.`;
+				return m.importValidationIngredientMustHaveCategory({ key });
 			}
 			if (typeof ing.color !== 'string') {
-				return `Ingredient "${key}" must have a string "color" field.`;
+				return m.importValidationIngredientMustHaveColor({ key });
 			}
 			if (!ing.product || typeof ing.product !== 'object' || Array.isArray(ing.product)) {
-				return `Ingredient "${key}" must have a "product" object.`;
+				return m.importValidationIngredientMustHaveProduct({ key });
 			}
 			if (typeof ing.product.cost !== 'number' || !isFinite(ing.product.cost)) {
-				return `Ingredient "${key}" product must have a valid number "cost" field.`;
+				return m.importValidationIngredientProductMustHaveCost({ key });
 			}
 			if (typeof ing.product.amount !== 'number' || !isFinite(ing.product.amount)) {
-				return `Ingredient "${key}" product must have a valid number "amount" field.`;
+				return m.importValidationIngredientProductMustHaveAmount({ key });
 			}
 			if (typeof ing.product.unit !== 'string') {
-				return `Ingredient "${key}" product must have a string "unit" field.`;
+				return m.importValidationIngredientProductMustHaveUnit({ key });
 			}
 		}
 
-		// Validate recipes structure
-		if (typeof data.recipes !== 'object' || Array.isArray(data.recipes)) {
-			return '"recipes" must be an object.';
+		if (typeof record.recipes !== 'object' || Array.isArray(record.recipes)) {
+			return m.importValidationRecipesMustBeObject();
 		}
 
-		for (const [key, recipe] of Object.entries(data.recipes)) {
+		for (const [key, recipe] of Object.entries(record.recipes)) {
 			if (!recipe || typeof recipe !== 'object' || Array.isArray(recipe)) {
-				return `Recipe "${key}" must be an object.`;
+				return m.importValidationRecipeMustBeObject({ key });
 			}
 
 			const rec = recipe as RecipeDoc;
 			if (typeof rec.id !== 'string') {
-				return `Recipe "${key}" must have a string "id" field.`;
+				return m.importValidationRecipeMustHaveId({ key });
 			}
 			if (typeof rec.name !== 'string') {
-				return `Recipe "${key}" must have a string "name" field.`;
+				return m.importValidationRecipeMustHaveName({ key });
 			}
 			if (!Array.isArray(rec.ingredients)) {
-				return `Recipe "${key}" must have an array "ingredients" field.`;
+				return m.importValidationRecipeMustHaveIngredientsArray({ key });
 			}
 
 			for (const ingredient of rec.ingredients) {
 				if (!ingredient || typeof ingredient !== 'object' || Array.isArray(ingredient)) {
-					return `Recipe "${key}" has an invalid ingredient.`;
+					return m.importValidationRecipeHasInvalidIngredient({ key });
 				}
 				if (typeof ingredient.id !== 'string') {
-					return `Recipe "${key}" ingredient must have a string "id" field.`;
+					return m.importValidationRecipeIngredientMustHaveId({ key });
 				}
 				if (typeof ingredient.hidden !== 'boolean') {
-					return `Recipe "${key}" ingredient must have a boolean "hidden" field.`;
+					return m.importValidationRecipeIngredientMustHaveHidden({ key });
 				}
 				if (
 					!ingredient.portion ||
 					typeof ingredient.portion !== 'object' ||
 					Array.isArray(ingredient.portion)
 				) {
-					return `Recipe "${key}" ingredient must have a "portion" object.`;
+					return m.importValidationRecipeIngredientMustHavePortion({ key });
 				}
 				if (typeof ingredient.portion.amount !== 'number' || !isFinite(ingredient.portion.amount)) {
-					return `Recipe "${key}" ingredient portion must have a valid number "amount" field.`;
+					return m.importValidationRecipeIngredientPortionMustHaveAmount({ key });
 				}
 				if (typeof ingredient.portion.unit !== 'string') {
-					return `Recipe "${key}" ingredient portion must have a string "unit" field.`;
+					return m.importValidationRecipeIngredientPortionMustHaveUnit({ key });
 				}
 			}
 		}
 
-		// Validate compoundIngredients if present
-		if (data.compoundIngredients !== undefined) {
-			if (typeof data.compoundIngredients !== 'object' || Array.isArray(data.compoundIngredients)) {
-				return '"compoundIngredients" must be an object.';
+		if (record.compoundIngredients !== undefined) {
+			if (
+				typeof record.compoundIngredients !== 'object' ||
+				Array.isArray(record.compoundIngredients)
+			) {
+				return m.importValidationCompoundIngredientsMustBeObject();
 			}
 
-			for (const [key, compound] of Object.entries(data.compoundIngredients)) {
+			for (const [key, compound] of Object.entries(
+				record.compoundIngredients as Record<string, unknown>
+			)) {
 				if (!compound || typeof compound !== 'object' || Array.isArray(compound)) {
-					return `Compound ingredient "${key}" must be an object.`;
+					return m.importValidationCompoundMustBeObject({ key });
 				}
 
 				const comp = compound as CompoundIngredientDoc;
-				// Validate all RecipeDoc fields first
 				if (typeof comp.id !== 'string') {
-					return `Compound ingredient "${key}" must have a string "id" field.`;
+					return m.importValidationCompoundMustHaveId({ key });
 				}
 				if (typeof comp.name !== 'string') {
-					return `Compound ingredient "${key}" must have a string "name" field.`;
+					return m.importValidationCompoundMustHaveName({ key });
 				}
 				if (!Array.isArray(comp.ingredients)) {
-					return `Compound ingredient "${key}" must have an array "ingredients" field.`;
+					return m.importValidationCompoundMustHaveIngredientsArray({ key });
 				}
-
-				// Validate compound-specific fields
 				if (typeof comp.category !== 'string') {
-					return `Compound ingredient "${key}" must have a string "category" field.`;
+					return m.importValidationCompoundMustHaveCategory({ key });
 				}
 				if (typeof comp.color !== 'string') {
-					return `Compound ingredient "${key}" must have a string "color" field.`;
+					return m.importValidationCompoundMustHaveColor({ key });
 				}
 				if (!comp.yield || typeof comp.yield !== 'object' || Array.isArray(comp.yield)) {
-					return `Compound ingredient "${key}" must have a "yield" object.`;
+					return m.importValidationCompoundMustHaveYield({ key });
 				}
 				if (typeof comp.yield.amount !== 'number' || !isFinite(comp.yield.amount)) {
-					return `Compound ingredient "${key}" yield must have a valid number "amount" field.`;
+					return m.importValidationCompoundYieldMustHaveAmount({ key });
 				}
 				if (typeof comp.yield.unit !== 'string') {
-					return `Compound ingredient "${key}" yield must have a string "unit" field.`;
+					return m.importValidationCompoundYieldMustHaveUnit({ key });
 				}
 				if (typeof comp.viewedUnit !== 'string') {
-					return `Compound ingredient "${key}" must have a string "viewedUnit" field.`;
+					return m.importValidationCompoundMustHaveViewedUnit({ key });
 				}
 			}
 		}
 
-		// Validate unitConversions if present
-		if (data.unitConversions !== undefined) {
-			if (!Array.isArray(data.unitConversions)) {
-				return '"unitConversions" must be an array.';
+		if (record.unitConversions !== undefined) {
+			if (!Array.isArray(record.unitConversions)) {
+				return m.importValidationUnitConversionsMustBeArray();
 			}
 
-			for (let i = 0; i < data.unitConversions.length; i++) {
-				const conv = data.unitConversions[i];
+			for (let i = 0; i < record.unitConversions.length; i++) {
+				const conv = record.unitConversions[i];
 				if (!conv || typeof conv !== 'object' || Array.isArray(conv)) {
-					return `Unit conversion at index ${i} must be an object.`;
+					return m.importValidationUnitConversionMustBeObject({ index: i });
 				}
 				if (typeof conv.ingredientId !== 'string') {
-					return `Unit conversion at index ${i} must have a string "ingredientId" field.`;
+					return m.importValidationUnitConversionMustHaveIngredientId({ index: i });
 				}
 				if (typeof conv.inputUnit !== 'string') {
-					return `Unit conversion at index ${i} must have a string "inputUnit" field.`;
+					return m.importValidationUnitConversionMustHaveInputUnit({ index: i });
 				}
 				if (typeof conv.outputUnit !== 'string') {
-					return `Unit conversion at index ${i} must have a string "outputUnit" field.`;
+					return m.importValidationUnitConversionMustHaveOutputUnit({ index: i });
 				}
 				if (typeof conv.conversionFactor !== 'number' || !isFinite(conv.conversionFactor)) {
-					return `Unit conversion at index ${i} must have a valid number "conversionFactor" field.`;
+					return m.importValidationUnitConversionMustHaveConversionFactor({ index: i });
 				}
 			}
 		}
 
-		// Validate customUnitLabels if present
-		if (data.customUnitLabels !== undefined) {
-			if (typeof data.customUnitLabels !== 'object' || Array.isArray(data.customUnitLabels)) {
-				return '"customUnitLabels" must be an object.';
+		if (record.customUnitLabels !== undefined) {
+			if (typeof record.customUnitLabels !== 'object' || Array.isArray(record.customUnitLabels)) {
+				return m.importValidationCustomUnitLabelsMustBeObject();
 			}
 
-			for (const [key, value] of Object.entries(data.customUnitLabels)) {
+			for (const [key, value] of Object.entries(
+				record.customUnitLabels as Record<string, unknown>
+			)) {
 				if (typeof value !== 'string') {
-					return `Custom unit label "${key}" must have a string value.`;
+					return m.importValidationCustomUnitLabelMustBeString({ key });
 				}
 			}
 		}
 
-		// Validate that all recipe ingredients exist in costs or compoundIngredients
-		const costs = data.costs as Record<string, IngredientDoc>;
-		const recipes = data.recipes as Record<string, RecipeDoc>;
-		const compoundIngredients = (data.compoundIngredients || {}) as Record<
+		const costs = record.costs as Record<string, IngredientDoc>;
+		const recipes = record.recipes as Record<string, RecipeDoc>;
+		const compoundIngredients = (record.compoundIngredients || {}) as Record<
 			string,
 			CompoundIngredientDoc
 		>;
 
-		// Build a set of all available ingredient IDs (from costs and compoundIngredients)
-		const availableIngredientIds = new Set<string>();
+		const availableIngredientIds = new SvelteSet<string>();
 		for (const ingredientId of Object.keys(costs)) {
 			availableIngredientIds.add(ingredientId);
 		}
@@ -215,20 +213,26 @@
 			availableIngredientIds.add(compoundId);
 		}
 
-		// Validate recipe ingredients
 		for (const [recipeKey, recipe] of Object.entries(recipes)) {
 			for (const ingredient of recipe.ingredients) {
 				if (!availableIngredientIds.has(ingredient.id)) {
-					return `Recipe "${recipe.name}" (${recipeKey}) references ingredient "${ingredient.id}" which does not exist in costs or compoundIngredients.`;
+					return m.importValidationRecipeReferencesMissingIngredient({
+						recipeName: recipe.name,
+						recipeKey,
+						ingredientId: ingredient.id
+					});
 				}
 			}
 		}
 
-		// Validate compound ingredient components
 		for (const [compoundKey, compound] of Object.entries(compoundIngredients)) {
 			for (const ingredient of compound.ingredients) {
 				if (!availableIngredientIds.has(ingredient.id)) {
-					return `Compound ingredient "${compound.name}" (${compoundKey}) references ingredient "${ingredient.id}" which does not exist in costs or compoundIngredients.`;
+					return m.importValidationCompoundReferencesMissingIngredient({
+						compoundName: compound.name,
+						compoundKey,
+						ingredientId: ingredient.id
+					});
 				}
 			}
 		}
@@ -257,7 +261,10 @@
 
 			onLoad(data);
 		} catch (e) {
-			error = e instanceof Error ? `Invalid JSON format: ${e.message}` : 'Invalid JSON format.';
+			error =
+				e instanceof Error
+					? m.importInvalidJsonWithMessage({ message: e.message })
+					: m.importInvalidJson();
 			showToast = true;
 			setTimeout(() => (showToast = false), 3000);
 		}
@@ -265,15 +272,15 @@
 </script>
 
 <div class="import-modal">
-	<h3>Import Data</h3>
-	<p>Paste the JSON export here to restore your data.</p>
+	<h3>{m.importDataTitle()}</h3>
+	<p>{m.importDataDescription()}</p>
 	<textarea bind:value={jsonText} {placeholder}></textarea>
 	{#if error}
 		<p class="error">{error}</p>
 	{/if}
 	<div class="actions">
-		<ModernButton variant="primary" onclick={handleLoad}>Load</ModernButton>
-		<ModernButton variant="secondary" onclick={() => onclose(false)}>Cancel</ModernButton>
+		<ModernButton variant="primary" onclick={handleLoad}>{m.load()}</ModernButton>
+		<ModernButton variant="secondary" onclick={() => onclose(false)}>{m.cancel()}</ModernButton>
 	</div>
 
 	{#if showToast}

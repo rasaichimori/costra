@@ -1,37 +1,42 @@
 <script lang="ts">
 	import ArrowRightIcon from '$lib/components/common/icons/ArrowRightIcon.svelte';
+	import { localPath } from '$lib/i18n';
+	import { m } from '$lib/paraglide/messages.js';
 </script>
 
 <div class="hero-content">
 	<h1 class="headline">
 		<span class="headline-row">
-			<span class="headline-word" style="animation-delay: 0.1s">For</span>
-			<span class="headline-word" style="animation-delay: 0.15s">people</span>
-			<span class="headline-word" style="animation-delay: 0.2s">who</span>
+			<span class="headline-word" style="animation-delay: 0.1s">{m.heroHeadlineFor()}</span>
+			<span class="headline-word" style="animation-delay: 0.15s">{m.heroHeadlinePeople()}</span>
+			<span class="headline-word" style="animation-delay: 0.2s">{m.heroHeadlineWho()}</span>
 		</span>
 		<span class="headline-row">
-			<span class="headline-word headline-italic" style="animation-delay: 0.25s">care</span>
-			<span class="headline-word" style="animation-delay: 0.3s">about</span>
+			<span class="headline-word headline-italic" style="animation-delay: 0.25s"
+				>{m.heroHeadlineCare()}</span
+			>
+			<span class="headline-word" style="animation-delay: 0.3s">{m.heroHeadlineAbout()}</span>
 		</span>
 		<span class="headline-row">
-			<span class="headline-word headline-accent" style="animation-delay: 0.35s">margins</span>
+			<span class="headline-word headline-accent" style="animation-delay: 0.35s"
+				>{m.heroHeadlineMargins()}</span
+			>
 		</span>
 	</h1>
 
-	<p class="tagline">A simple tool to understand your costs.</p>
+	<p class="tagline">{m.heroTagline()}</p>
 
 	<p class="value-prop-text">
-		It's very simple. Your profit is leaking! So I built this tool to help you <span
-			class="text-highlight">protect your margins</span
-		>
-		before they disappear. Oh and it's <span class="text-highlight">free</span>.
+		{m.heroValuePropPart1()}<span class="text-highlight">{m.heroValuePropHighlightMargins()}</span
+		>{m.heroValuePropPart2()}<span class="text-highlight">{m.heroValuePropHighlightFree()}</span
+		>{m.heroValuePropPart3()}
 	</p>
 
 	<div class="cta-group">
-		<a href="/dashboard" class="btn-primary">
+		<a href={localPath('/dashboard')} class="btn-primary">
 			<span class="btn-bg"></span>
 			<span class="btn-content">
-				Get Started
+				{m.getStarted()}
 				<span class="btn-arrow">
 					<ArrowRightIcon />
 				</span>
@@ -40,7 +45,7 @@
 
 		<a href="#why-free" class="btn-secondary">
 			<span class="btn-bg"></span>
-			<span class="btn-content"> Why is it Free? </span>
+			<span class="btn-content">{m.whyIsItFree()}</span>
 		</a>
 	</div>
 </div>

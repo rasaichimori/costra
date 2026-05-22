@@ -1,13 +1,13 @@
 <script lang="ts">
-	// Empty state component for when there are no conversions
+	import { m } from '$lib/paraglide/messages.js';
 </script>
 
 <div class="empty-state">
 	<div class="empty-icon">
 		<i class="fa-solid fa-scale-balanced"></i>
 	</div>
-	<p>No unit conversions defined yet.</p>
-	<span class="hint">Conversions are automatically created when you use different units in recipes.</span>
+	<p>{m.conversionsEmptyTitle()}</p>
+	<span class="hint">{m.conversionsEmptyHint()}</span>
 </div>
 
 <style>

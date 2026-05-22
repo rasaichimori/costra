@@ -1,15 +1,17 @@
 <script lang="ts">
 	import logoIcon from '$lib/assets/logo.svg';
+	import { m } from '$lib/paraglide/messages.js';
 </script>
 
 <footer class="footer">
 	<div class="footer-content">
 		<div class="footer-brand">
-			<img src={logoIcon} alt="Costra logo" class="logo-icon" />
-			<span class="logo-text">Costra</span>
+			<img src={logoIcon} alt={m.costraLogoAlt()} class="logo-icon" />
+			<span class="logo-text">{m.brandName()}</span>
 		</div>
 		<p class="footer-tagline">
-			Built by <a href="https://www.rasaichimori.com/" target="_blank">Rasa</a>
+			{m.footerBuiltByPrefix()}<a href="https://www.rasaichimori.com/" target="_blank">Rasa</a
+			>{m.footerBuiltBySuffix()}
 		</p>
 	</div>
 </footer>
@@ -52,6 +54,15 @@
 		font-size: 0.8125rem;
 		color: var(--muted-foreground);
 		margin: 0;
+	}
+
+	.footer-tagline a {
+		color: var(--primary);
+		text-decoration: none;
+	}
+
+	.footer-tagline a:hover {
+		text-decoration: underline;
 	}
 
 	@media (max-width: 768px) {

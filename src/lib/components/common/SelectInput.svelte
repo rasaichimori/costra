@@ -3,6 +3,7 @@
 	import TextInput from './TextInput.svelte';
 	import { onMount } from 'svelte';
 	import Dropdown from './Dropdown.svelte';
+	import { m } from '$lib/paraglide/messages.js';
 
 	const { openOverlay, closeOverlay, updateOverlay } = getOverlayContext();
 
@@ -19,7 +20,7 @@
 	let {
 		value = $bindable(),
 		options = [],
-		placeholder = 'Select or type...',
+		placeholder = m.selectOrTypePlaceholder(),
 		size = 'medium',
 		disabled = false,
 		searchable = true,

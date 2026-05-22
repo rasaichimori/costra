@@ -3,6 +3,7 @@
 	import ModernButton from '../common/ModernButton.svelte';
 	import TextInput from '../common/TextInput.svelte';
 	import { isSmallerUnit } from '$lib/utils/unit';
+	import { m } from '$lib/paraglide/messages.js';
 
 	interface Props {
 		ingredientId: string;
@@ -40,11 +41,11 @@
 
 	const handleSave = () => {
 		if (conversionFactor <= 0) {
-			error = 'Conversion factor must be greater than 0';
+			error = m.conversionFactorMustBePositive();
 			return;
 		}
 		if (!isFinite(conversionFactor)) {
-			error = 'Conversion factor must be a valid number';
+			error = m.conversionFactorMustBeValidNumber();
 			return;
 		}
 
@@ -76,30 +77,36 @@
 </script>
 
 <div class="conversion-modal">
-	<h3>Add Unit Conversion</h3>
+	<h3>{m.addUnitConversionTitle()}</h3>
 	<p class="description">
-		How many <strong>{unitLabels[smallerUnit] || smallerUnit}</strong> is in one{' '}
-		<strong>{unitLabels[largerUnit] || largerUnit}</strong> for <strong>{ingredientName}</strong>?
+		{m.addUnitConversionQuestion({
+			smaller: unitLabels[smallerUnit] || smallerUnit,
+			larger: unitLabels[largerUnit] || largerUnit,
+			ingredient: ingredientName
+		})}
 	</p>
 	<div class="input-group">
 		<TextInput
 			bind:value={conversionFactor}
 			min={0.0001}
 			step={0.0001}
-			label="Conversion Factor"
+			label={m.conversionFactorLabel()}
 			size="medium"
 			autofocus={true}
 			onkeydown={handleKeydown}
 			{error}
 		/>
 		<p class="hint">
-			1 {unitLabels[largerUnit] || largerUnit} = {conversionFactor}{' '}
-			{unitLabels[smallerUnit] || smallerUnit}
+			{m.conversionFactorHint({
+				larger: unitLabels[largerUnit] || largerUnit,
+				factor: conversionFactor,
+				smaller: unitLabels[smallerUnit] || smallerUnit
+			})}
 		</p>
 	</div>
 	<div class="actions">
-		<ModernButton variant="secondary" onclick={() => onclose?.()}>Cancel</ModernButton>
-		<ModernButton variant="primary" onclick={handleSave}>Save</ModernButton>
+		<ModernButton variant="secondary" onclick={() => onclose?.()}>{m.cancel()}</ModernButton>
+		<ModernButton variant="primary" onclick={handleSave}>{m.save()}</ModernButton>
 	</div>
 </div>
 
