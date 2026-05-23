@@ -120,6 +120,7 @@
 	"fieldCategory": "Category",
 	"fieldTotalCost": "Total Cost ({currency})",
 	"fieldPortion": "Portion",
+	"unitUnsetLabel": "Set unit",
 	"ingredientNamePlaceholder": "Ingredient name",
 	"cancel": "Cancel",
 	"create": "Create",

@@ -10,19 +10,15 @@
 		findMissingConversions,
 		getPortionUnitsForIngredient
 	} from '$lib/utils/unitSelectUtils';
-	import {
-		isPlaceholderProductUnit,
-		portionUnitsExcludingPlaceholder
-	} from '$lib/utils/ingredientUtils';
+	import { isIngredientUsedWithCommittedUnits, isUnsetUnit } from '$lib/utils/ingredientUtils';
 	import AddBatchUnitConversionModal from '$lib/components/modals/AddBatchUnitConversionModal.svelte';
+	import { m } from '$lib/paraglide/messages.js';
 
 	interface Props {
 		ingredientDoc: IngredientDoc;
 		recipes: Record<string, RecipeDoc>;
 		unitConversions: UnitConversion[];
 		customUnitLabels: Record<string, string>;
-		/** Skip conversion from the auto-assigned placeholder product unit. */
-		allowFirstUnitPick?: boolean;
 		onUnitChange?: (newUnit: string) => void;
 	}
 
@@ -31,7 +27,6 @@
 		recipes,
 		unitConversions = $bindable(),
 		customUnitLabels = $bindable(),
-		allowFirstUnitPick = false,
 		onUnitChange
 	}: Props = $props();
 
@@ -40,38 +35,48 @@
 	let unitBtnElement: HTMLButtonElement | undefined;
 	let unitPopupId = $state<string | undefined>(undefined);
 
-	const unitLabels = $derived(buildUnitLabels(customUnitLabels));
+	const unitLabels = $derived(buildUnitLabels(customUnitLabels, m.unitUnsetLabel()));
 	const allUnitGroups = $derived(buildUnitGroups(customUnitLabels));
+	const productUnit = $derived(ingredientDoc.product.unit as string);
 
-	const addNewUnit = (unitOption: UnitOption) => {
-		customUnitLabels[unitOption.id] = unitOption.label;
+	const applyUnitChange = (newUnitId: string) => {
+		ingredientDoc.product.unit = newUnitId;
+		onUnitChange?.(newUnitId);
+		if (unitPopupId) {
+			closeOverlay(unitPopupId);
+		}
 	};
 
 	const handleUnitSelection = (unitOption: UnitOption) => {
 		const newUnitId = unitOption.id;
 		const ingredientId = ingredientDoc.id;
-		const oldUnitId = ingredientDoc.product.unit as string;
+		const oldUnitId = productUnit;
 
-		// Get all portion units used for this ingredient across recipes
-		const portionUnits = getPortionUnitsForIngredient(ingredientId, recipes);
+		if (newUnitId === oldUnitId) {
+			if (unitPopupId) {
+				closeOverlay(unitPopupId);
+			}
+			return;
+		}
 
-		// Always include the old product unit in the check, as it might be used as a portion unit
-		// in compounds or other recipes, and we need conversions from old unit to new unit.
-		// Skip the auto placeholder — the user has not committed to that unit yet.
-		const skipPlaceholderOldUnit = allowFirstUnitPick && isPlaceholderProductUnit(oldUnitId);
-		const allPortionUnits = portionUnitsExcludingPlaceholder(
-			[...portionUnits],
-			skipPlaceholderOldUnit
+		if (isUnsetUnit(oldUnitId)) {
+			applyUnitChange(newUnitId);
+			return;
+		}
+
+		if (!isIngredientUsedWithCommittedUnits(ingredientId, recipes)) {
+			applyUnitChange(newUnitId);
+			return;
+		}
+
+		const portionUnits = getPortionUnitsForIngredient(ingredientId, recipes).filter(
+			(unit) => !isUnsetUnit(unit)
 		);
-		if (
-			oldUnitId !== newUnitId &&
-			!allPortionUnits.includes(oldUnitId) &&
-			!skipPlaceholderOldUnit
-		) {
+		const allPortionUnits = [...portionUnits];
+		if (!allPortionUnits.includes(oldUnitId)) {
 			allPortionUnits.push(oldUnitId);
 		}
 
-		// Find missing conversions from portion units to the new product unit
 		const missingConversions = findMissingConversions(
 			allPortionUnits,
 			newUnitId,
@@ -80,7 +85,6 @@
 		);
 
 		if (missingConversions.length > 0) {
-			// Open batch conversion modal
 			const conversionModalId = openOverlay(AddBatchUnitConversionModal, {
 				ingredientId,
 				ingredientName: ingredientDoc.name,
@@ -89,24 +93,15 @@
 				recipes,
 				onSave: (conversions: UnitConversion[]) => {
 					unitConversions = [...unitConversions, ...conversions];
-					ingredientDoc.product.unit = newUnitId;
-					onUnitChange?.(newUnitId);
+					applyUnitChange(newUnitId);
 					closeOverlay(conversionModalId);
-					if (unitPopupId) {
-						closeOverlay(unitPopupId);
-					}
 				},
 				onclose: () => {
 					closeOverlay(conversionModalId);
 				}
 			});
 		} else {
-			// No conversion needed, update immediately
-			ingredientDoc.product.unit = newUnitId;
-			onUnitChange?.(newUnitId);
-			if (unitPopupId) {
-				closeOverlay(unitPopupId);
-			}
+			applyUnitChange(newUnitId);
 		}
 	};
 
@@ -116,8 +111,10 @@
 			UnitSelectPopup,
 			{
 				unitGroups: allUnitGroups,
-				selectedUnitId: ingredientDoc.product.unit as string,
-				addNewUnit,
+				selectedUnitId: productUnit,
+				addNewUnit: (unitOption: UnitOption) => {
+					customUnitLabels[unitOption.id] = unitOption.label;
+				},
 				selectUnit: handleUnitSelection
 			},
 			{ transparentBackground: true, position: unitBtnElement.getBoundingClientRect() }
@@ -131,8 +128,10 @@
 			unitPopupId,
 			{
 				unitGroups: allUnitGroups,
-				selectedUnitId: ingredientDoc.product.unit as string,
-				addNewUnit,
+				selectedUnitId: productUnit,
+				addNewUnit: (unitOption: UnitOption) => {
+					customUnitLabels[unitOption.id] = unitOption.label;
+				},
 				selectUnit: handleUnitSelection
 			},
 			{ position: unitBtnElement.getBoundingClientRect() }
@@ -149,8 +148,11 @@
 	});
 </script>
 
-<button onclick={(e) => openUnitPopup(e.currentTarget as HTMLButtonElement)}>
-	{unitLabels[ingredientDoc.product.unit as string] || ingredientDoc.product.unit}
+<button
+	class:unset-unit={isUnsetUnit(productUnit)}
+	onclick={(e) => openUnitPopup(e.currentTarget as HTMLButtonElement)}
+>
+	{unitLabels[productUnit] || productUnit}
 </button>
 
 <style>
@@ -169,5 +171,10 @@
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
+	}
+
+	button.unset-unit {
+		color: var(--secondary-foreground);
+		font-style: italic;
 	}
 </style>

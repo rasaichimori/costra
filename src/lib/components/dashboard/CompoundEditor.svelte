@@ -1,12 +1,18 @@
 <script lang="ts">
 	import {
 		calculateRecipeCosts,
-		getTotalRecipeCost,
 		getAvailableIngredients,
+		getCompoundPerUnitCost,
+		getTotalRecipeCost,
 		compoundsToIngredients
 	} from '../../utils/costCalculatorUtils';
-	import type { CompoundIngredientDoc, IngredientDoc, UnitConversion } from '$lib/data/schema';
-	import { getConversionFactor, massUnitLabels, volumeUnitLabels } from '$lib/utils/unit';
+	import type {
+		CompoundIngredientDoc,
+		IngredientDoc,
+		RecipeDoc,
+		UnitConversion
+	} from '$lib/data/schema';
+	import DragHandle from '../common/icons/DragHandle.svelte';
 	import TextInput from '../common/TextInput.svelte';
 	import ModernButton from '../common/ModernButton.svelte';
 	import CostBreakdown from './CostBreakdown.svelte';
@@ -16,12 +22,14 @@
 	import RecipeUnitSelectButton from './RecipeUnitSelectButton.svelte';
 	import { getCurrencyContext } from '$lib/contexts/currency.svelte';
 	import { startDrag } from '$lib/utils/dragControls';
-	import DragHandle from '../common/icons/DragHandle.svelte';
+	import { buildUnitLabels } from '$lib/utils/unitSelectUtils';
+	import { isUnsetUnit } from '$lib/utils/ingredientUtils';
 	import { m } from '$lib/paraglide/messages.js';
 
 	interface Props {
 		recipe: CompoundIngredientDoc;
 		costs: Record<string, IngredientDoc>;
+		allRecipes: Record<string, RecipeDoc>;
 		isEditingName: boolean;
 		unitConversions: UnitConversion[];
 		customUnitLabels: Record<string, string>;
@@ -32,6 +40,7 @@
 	let {
 		recipe = $bindable(),
 		costs,
+		allRecipes,
 		unitConversions = $bindable(),
 		onDelete,
 		customUnitLabels = $bindable(),
@@ -43,17 +52,9 @@
 	const recipeCosts = $derived(calculateRecipeCosts(recipe, costs, unitConversions));
 	const totalCost = $derived(getTotalRecipeCost(recipeCosts));
 	const availableIngredients = $derived(getAvailableIngredients(recipe, costs));
-	const convertedYield = $derived(
-		getConversionFactor(recipe.yield.unit, recipe.viewedUnit, recipe.id, unitConversions) *
-			recipe.yield.amount
-	);
-	const perUnitCost = $derived(totalCost / convertedYield);
+	const perUnitCost = $derived(getCompoundPerUnitCost(recipe, costs, unitConversions));
 
-	const unitLabels = $derived<Record<string, string>>({
-		...volumeUnitLabels,
-		...massUnitLabels,
-		...customUnitLabels
-	});
+	const unitLabels = $derived(buildUnitLabels(customUnitLabels, m.unitUnsetLabel()));
 
 	const compoundDoc = $derived(
 		compoundsToIngredients({ [recipe.id]: recipe }, costs, unitConversions)[recipe.id]
@@ -95,14 +96,22 @@
 					</div>
 				</div>
 				<div class="cost-amount">
-					{currencyContext.currency}{perUnitCost.toFixed(0)} / {unitLabels[recipe.viewedUnit] ||
-						recipe.viewedUnit}
+					{currencyContext.currency}{perUnitCost.toFixed(0)} / {unitLabels[
+						recipe.viewedUnit as string
+					] || recipe.viewedUnit}
 					<UnitChevronDropdownButton
 						bind:customUnitLabels
 						bind:unitConversions
 						selectedUnitId={recipe.viewedUnit}
 						ingredientDoc={compoundDoc}
-						selectUnit={(unitId: string) => (recipe.viewedUnit = unitId)}
+						{allRecipes}
+						unsetLabel={m.unitUnsetLabel()}
+						selectUnit={(unitId: string) => {
+							recipe.viewedUnit = unitId;
+							if (isUnsetUnit(recipe.yield.unit as string)) {
+								recipe.yield.unit = unitId;
+							}
+						}}
 					/>
 				</div>
 			</div>
@@ -138,8 +147,13 @@
 								ingredientDoc={compoundDoc}
 								bind:unitConversions
 								bind:customUnitLabels
+								{allRecipes}
+								promptOnlyWhenUsed={true}
 								updateRecipePortionUnit={(unitId: string) => {
 									recipe.yield.unit = unitId;
+									if (isUnsetUnit(recipe.viewedUnit as string)) {
+										recipe.viewedUnit = unitId;
+									}
 								}}
 							/>
 						</div>

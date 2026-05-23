@@ -20,7 +20,6 @@
 	import RecipeUnitSelectButton from './RecipeUnitSelectButton.svelte';
 	import { getCurrencyContext } from '$lib/contexts/currency.svelte';
 	import DragHandle from '../common/icons/DragHandle.svelte';
-	import { isPlaceholderProductUnit } from '$lib/utils/ingredientUtils';
 	import { m } from '$lib/paraglide/messages.js';
 
 	interface Props {
@@ -173,8 +172,6 @@
 											ingredientDoc={allCosts[ingredient.id]}
 											bind:unitConversions
 											bind:customUnitLabels
-											allowFirstUnitPick={ingredient.id in costs &&
-												isPlaceholderProductUnit(costs[ingredient.id].product.unit)}
 											updateRecipePortionUnit={(unitId: string) => {
 												ingredient.portion.unit = unitId;
 											}}

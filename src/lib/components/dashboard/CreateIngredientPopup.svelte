@@ -162,7 +162,6 @@
 					{recipes}
 					bind:unitConversions
 					bind:customUnitLabels
-					allowFirstUnitPick={true}
 					onUnitChange={(newUnit) => {
 						unit = newUnit;
 						tempIngredientDoc.product.unit = newUnit;

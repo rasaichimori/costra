@@ -246,6 +246,7 @@
 			<div class="ingredients">
 				<CompoundSection
 					bind:recipes={compoundIngredients}
+					regularRecipes={recipes}
 					{costs}
 					bind:unitConversions
 					bind:customUnitLabels

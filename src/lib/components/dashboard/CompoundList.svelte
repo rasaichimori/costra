@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type { CompoundIngredientDoc, IngredientDoc, UnitConversion } from '$lib/data/schema';
 	import { randomLightColorHex } from '$lib/utils/color';
-	import { calculateRecipeCosts, getTotalRecipeCost } from '$lib/utils/costCalculatorUtils';
-	import { getConversionFactor } from '$lib/utils/unit';
+	import { NEW_INGREDIENT_PLACEHOLDER_UNIT } from '$lib/utils/ingredientUtils';
+	import { getCompoundPerUnitCost } from '$lib/utils/costCalculatorUtils';
 	import RecipeListItem from './RecipeListItem.svelte';
 	import SidebarAddButton from './SidebarAddButton.svelte';
 	import { m } from '$lib/paraglide/messages.js';
@@ -22,8 +22,6 @@
 		unitConversions = [],
 		setIsEditingName
 	}: Props = $props();
-
-	let newlyCreatedRecipes = $state<Set<string>>(new Set());
 
 	const addRecipe = () => {
 		const newId = crypto.randomUUID();
@@ -53,28 +51,21 @@
 			ingredients: [],
 			yield: {
 				amount: 1,
-				unit: 'pint'
+				unit: NEW_INGREDIENT_PLACEHOLDER_UNIT
 			},
-			viewedUnit: 'pint',
+			viewedUnit: NEW_INGREDIENT_PLACEHOLDER_UNIT,
 			category: m.categoryCompound(),
 			color: randomLightColorHex()
 		};
 
 		recipes[newId] = newRecipe;
 
-		newlyCreatedRecipes.add(newId);
 		selectedRecipeId = newId;
 		setIsEditingName(true);
 	};
 
-	const getPerUnitCost = (recipe: CompoundIngredientDoc) => {
-		const recipeCosts = calculateRecipeCosts(recipe, costs, unitConversions);
-		const totalCost = getTotalRecipeCost(recipeCosts);
-		const convertedYield =
-			getConversionFactor(recipe.yield.unit, recipe.viewedUnit, recipe.id, unitConversions) *
-			recipe.yield.amount;
-		return totalCost / convertedYield;
-	};
+	const getPerUnitCost = (recipe: CompoundIngredientDoc) =>
+		getCompoundPerUnitCost(recipe, costs, unitConversions);
 </script>
 
 <div class="recipes-list">

@@ -120,6 +120,7 @@
 	"fieldCategory": "カテゴリ",
 	"fieldTotalCost": "合計コスト ({currency})",
 	"fieldPortion": "分量",
+	"unitUnsetLabel": "単位を設定",
 	"ingredientNamePlaceholder": "材料名",
 	"cancel": "キャンセル",
 	"create": "作成",

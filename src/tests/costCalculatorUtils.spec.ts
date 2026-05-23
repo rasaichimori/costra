@@ -9,10 +9,13 @@ import {
 	compoundsToIngredients,
 	getAllCosts,
 	getAvailableIngredients,
+	getCompoundConvertedYield,
+	getCompoundPerUnitCost,
 	getRecipesUsingIngredient,
 	getTotalRecipeCost,
 	removeIngredientFromAllRecipes
 } from '$lib/utils/costCalculatorUtils';
+import { UNSET_UNIT } from '$lib/utils/ingredientUtils';
 import { describe, expect, it } from 'vitest';
 
 // Test fixtures
@@ -424,5 +427,53 @@ describe('recipe using compound ingredients', () => {
 
 		expect(result['dough'].product.cost).toBeCloseTo(30, 2);
 		expect(result['batter'].product.cost).toBe(0);
+	});
+});
+
+describe('getCompoundConvertedYield', () => {
+	it('returns yield amount when yield and viewed units match', () => {
+		const compound = createCompound('dough', 'Dough', 2, 'g', []);
+
+		expect(getCompoundConvertedYield(compound, [])).toBe(2);
+	});
+
+	it('returns null when yield and viewed units differ without a conversion', () => {
+		const compound = createCompound('dough', 'Dough', 1, 'g', []);
+		compound.viewedUnit = UNSET_UNIT;
+
+		expect(getCompoundConvertedYield(compound, [])).toBeNull();
+	});
+});
+
+describe('getCompoundPerUnitCost', () => {
+	it('returns 0 instead of throwing when viewed unit conversion is missing', () => {
+		const costs: Record<string, IngredientDoc> = {
+			flour: createIngredient('flour', 'Flour', 100, 1000, 'g')
+		};
+		const compound = createCompound('dough', 'Dough', 1, 'g', [
+			{ id: 'flour', amount: 500, unit: 'g' }
+		]);
+		compound.viewedUnit = UNSET_UNIT;
+
+		expect(getCompoundPerUnitCost(compound, costs, [])).toBe(0);
+	});
+
+	it('returns 0 when yield or viewed unit is still unset', () => {
+		const compound = createCompound('dough', 'Dough', 1, UNSET_UNIT, []);
+		compound.viewedUnit = UNSET_UNIT;
+
+		expect(getCompoundConvertedYield(compound, [])).toBeNull();
+		expect(getCompoundPerUnitCost(compound, {}, [])).toBe(0);
+	});
+
+	it('calculates per-unit cost when yield and viewed units match', () => {
+		const costs: Record<string, IngredientDoc> = {
+			flour: createIngredient('flour', 'Flour', 100, 1000, 'g')
+		};
+		const compound = createCompound('dough', 'Dough', 500, 'g', [
+			{ id: 'flour', amount: 500, unit: 'g' }
+		]);
+
+		expect(getCompoundPerUnitCost(compound, costs, [])).toBeCloseTo(0.1, 5);
 	});
 });

@@ -1,36 +1,54 @@
-/** Auto-assigned product unit for new ingredients until the user picks a real one. */
-export const NEW_INGREDIENT_PLACEHOLDER_UNIT = 'cup';
+import type { RecipeDoc } from '$lib/data/schema';
+import { getPortionUnitsForIngredient } from '$lib/utils/unitSelectUtils';
 
-export const isPlaceholderProductUnit = (unit: string): boolean =>
-	unit === NEW_INGREDIENT_PLACEHOLDER_UNIT;
+/** Sentinel unit id until the user picks a real unit. */
+export const UNSET_UNIT = '';
 
-/**
- * Portion units that still use the placeholder should not force cross-type conversions
- * while the user is making their first unit choice.
- */
-export const portionUnitsExcludingPlaceholder = (
-	portionUnits: string[],
-	allowFirstUnitPick: boolean
-): string[] => {
-	if (!allowFirstUnitPick) {
-		return portionUnits;
+/** @deprecated Use UNSET_UNIT */
+export const NEW_INGREDIENT_PLACEHOLDER_UNIT = UNSET_UNIT;
+
+export const isUnsetUnit = (unit: string): boolean => unit === UNSET_UNIT;
+
+/** @deprecated Use isUnsetUnit */
+export const isPlaceholderProductUnit = isUnsetUnit;
+
+export const committedPortionUnitsForIngredient = (
+	ingredientId: string,
+	recipes: Record<string, RecipeDoc>
+): string[] =>
+	getPortionUnitsForIngredient(ingredientId, recipes).filter((unit) => !isUnsetUnit(unit));
+
+export const isIngredientUsedWithCommittedUnits = (
+	ingredientId: string,
+	recipes: Record<string, RecipeDoc>
+): boolean => committedPortionUnitsForIngredient(ingredientId, recipes).length > 0;
+
+/** Whether a unit change between committed units should prompt for conversions. */
+export const shouldPromptForUnitConversion = (options: {
+	oldUnit: string;
+	newUnit: string;
+	ingredientId: string;
+	recipes: Record<string, RecipeDoc>;
+}): boolean => {
+	if (options.oldUnit === options.newUnit) {
+		return false;
 	}
-	return portionUnits.filter((unit) => unit !== NEW_INGREDIENT_PLACEHOLDER_UNIT);
+	if (isUnsetUnit(options.oldUnit) || isUnsetUnit(options.newUnit)) {
+		return false;
+	}
+	return isIngredientUsedWithCommittedUnits(options.ingredientId, options.recipes);
 };
 
-/** True when product (and optionally recipe portion) units are still the auto placeholder. */
-export const isFirstIngredientUnitPick = (options: {
-	allowFirstUnitPick: boolean;
+/** True when product/yield and portion/viewed units are still unset. */
+export const isInitialUnitSelection = (options: {
 	productUnit: string;
 	portionUnit?: string;
 }): boolean => {
-	if (!options.allowFirstUnitPick || !isPlaceholderProductUnit(options.productUnit)) {
+	if (!isUnsetUnit(options.productUnit)) {
 		return false;
 	}
 	if (options.portionUnit === undefined) {
 		return true;
 	}
-	return (
-		isPlaceholderProductUnit(options.portionUnit) || options.portionUnit === options.productUnit
-	);
+	return isUnsetUnit(options.portionUnit) || options.portionUnit === options.productUnit;
 };

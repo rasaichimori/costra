@@ -1,57 +1,75 @@
 import { describe, expect, it } from 'vitest';
 import {
-	isFirstIngredientUnitPick,
-	isPlaceholderProductUnit,
+	isInitialUnitSelection,
+	isIngredientUsedWithCommittedUnits,
+	isUnsetUnit,
 	NEW_INGREDIENT_PLACEHOLDER_UNIT,
-	portionUnitsExcludingPlaceholder
+	shouldPromptForUnitConversion,
+	UNSET_UNIT
 } from '$lib/utils/ingredientUtils';
+import type { RecipeDoc } from '$lib/data/schema';
+
+const recipeWithIngredient = (
+	ingredientId: string,
+	portionUnit: string,
+	recipeId = 'recipe1'
+): Record<string, RecipeDoc> => ({
+	[recipeId]: {
+		id: recipeId,
+		name: 'Test',
+		ingredients: [{ id: ingredientId, portion: { amount: 1, unit: portionUnit }, hidden: false }]
+	}
+});
 
 describe('ingredientUtils', () => {
-	it('identifies the placeholder product unit', () => {
-		expect(isPlaceholderProductUnit('cup')).toBe(true);
-		expect(isPlaceholderProductUnit('g')).toBe(false);
-		expect(NEW_INGREDIENT_PLACEHOLDER_UNIT).toBe('cup');
+	it('identifies the unset unit sentinel', () => {
+		expect(isUnsetUnit('')).toBe(true);
+		expect(isUnsetUnit('g')).toBe(false);
+		expect(UNSET_UNIT).toBe('');
+		expect(NEW_INGREDIENT_PLACEHOLDER_UNIT).toBe('');
 	});
 
-	it('filters placeholder portion units during first unit pick', () => {
-		expect(portionUnitsExcludingPlaceholder(['cup', 'tbs'], true)).toEqual(['tbs']);
-		expect(portionUnitsExcludingPlaceholder(['cup', 'tbs'], false)).toEqual(['cup', 'tbs']);
+	it('detects initial unit selection while product and portion are unset', () => {
+		expect(isInitialUnitSelection({ productUnit: '', portionUnit: '' })).toBe(true);
+		expect(isInitialUnitSelection({ productUnit: 'g', portionUnit: '' })).toBe(false);
+		expect(isInitialUnitSelection({ productUnit: '', portionUnit: 'g' })).toBe(false);
 	});
 
-	it('detects first product unit pick', () => {
+	it('detects ingredient usage with committed portion units only', () => {
+		expect(isIngredientUsedWithCommittedUnits('flour', recipeWithIngredient('flour', 'g'))).toBe(
+			true
+		);
+		expect(isIngredientUsedWithCommittedUnits('flour', recipeWithIngredient('flour', ''))).toBe(
+			false
+		);
+		expect(isIngredientUsedWithCommittedUnits('flour', {})).toBe(false);
+	});
+
+	it('prompts for conversion only when used with committed units', () => {
 		expect(
-			isFirstIngredientUnitPick({
-				allowFirstUnitPick: true,
-				productUnit: 'cup'
+			shouldPromptForUnitConversion({
+				oldUnit: 'g',
+				newUnit: 'ml',
+				ingredientId: 'flour',
+				recipes: recipeWithIngredient('flour', 'g')
 			})
 		).toBe(true);
-		expect(
-			isFirstIngredientUnitPick({
-				allowFirstUnitPick: false,
-				productUnit: 'cup'
-			})
-		).toBe(false);
-		expect(
-			isFirstIngredientUnitPick({
-				allowFirstUnitPick: true,
-				productUnit: 'g'
-			})
-		).toBe(false);
-	});
 
-	it('detects first recipe portion unit pick', () => {
 		expect(
-			isFirstIngredientUnitPick({
-				allowFirstUnitPick: true,
-				productUnit: 'cup',
-				portionUnit: 'cup'
+			shouldPromptForUnitConversion({
+				oldUnit: 'g',
+				newUnit: 'ml',
+				ingredientId: 'flour',
+				recipes: {}
 			})
-		).toBe(true);
+		).toBe(false);
+
 		expect(
-			isFirstIngredientUnitPick({
-				allowFirstUnitPick: true,
-				productUnit: 'cup',
-				portionUnit: 'g'
+			shouldPromptForUnitConversion({
+				oldUnit: '',
+				newUnit: 'g',
+				ingredientId: 'flour',
+				recipes: recipeWithIngredient('flour', 'g')
 			})
 		).toBe(false);
 	});

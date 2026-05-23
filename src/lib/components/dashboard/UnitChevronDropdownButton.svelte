@@ -12,8 +12,12 @@
 		type UnitOptionGroup
 	} from '$lib/utils/unit';
 	import ModernButton from '../common/ModernButton.svelte';
-	import type { IngredientDoc, UnitConversion } from '$lib/data/schema';
+	import type { IngredientDoc, RecipeDoc, UnitConversion } from '$lib/data/schema';
 	import { buildUnitLabels } from '$lib/utils/unitSelectUtils';
+	import {
+		isInitialUnitSelection,
+		isIngredientUsedWithCommittedUnits
+	} from '$lib/utils/ingredientUtils';
 	import AddUnitConversionModal from '../modals/AddUnitConversionModal.svelte';
 
 	interface Props {
@@ -21,6 +25,8 @@
 		unitConversions: UnitConversion[];
 		selectedUnitId: string;
 		ingredientDoc: IngredientDoc;
+		allRecipes: Record<string, RecipeDoc>;
+		unsetLabel: string;
 		selectUnit: (unitId: string) => void;
 	}
 
@@ -29,6 +35,8 @@
 		unitConversions = $bindable(),
 		selectedUnitId,
 		ingredientDoc,
+		allRecipes,
+		unsetLabel,
 		selectUnit
 	}: Props = $props();
 	const { openOverlay, updateOverlay, closeOverlay } = getOverlayContext();
@@ -53,42 +61,53 @@
 		{ label: 'Mass', options: massOptions },
 		{ label: 'Custom', options: customUnitOptions }
 	]);
-	const unitLabels = $derived(buildUnitLabels(customUnitLabels));
+	const unitLabels = $derived(buildUnitLabels(customUnitLabels, unsetLabel));
+
+	const applyViewedUnit = (newUnitId: string) => {
+		selectUnit(newUnitId);
+		if (unitPopupId) {
+			closeOverlay(unitPopupId);
+		}
+	};
 
 	const handleViewedUnitSelection = (unitOption: UnitOption) => {
 		const newUnitId = unitOption.id;
-		const targetUnitId = ingredientDoc.product.unit;
+		const targetUnitId = ingredientDoc.product.unit as string;
 		const ingredientId = ingredientDoc.id;
 
-		// Check if conversion is needed
-		if (
-			newUnitId !== targetUnitId &&
-			!hasConversion(newUnitId, targetUnitId, ingredientId, unitConversions)
-		) {
-			// Open conversion modal
-			const conversionModalId = openOverlay(AddUnitConversionModal, {
-				ingredientId,
-				ingredientName: ingredientDoc.name,
-				inputUnit: newUnitId,
-				outputUnit: targetUnitId,
-				unitLabels,
-				onSave: (conversion: UnitConversion) => {
-					unitConversions = [...unitConversions, conversion];
-					selectUnit(newUnitId);
-					closeOverlay(conversionModalId);
-					closeOverlay(unitPopupId);
-				},
-				onclose: () => {
-					closeOverlay(conversionModalId);
-				}
-			});
-		} else {
-			// No conversion needed, update immediately and close popup
-			selectUnit(newUnitId);
-			if (unitPopupId) {
-				closeOverlay(unitPopupId);
-			}
+		if (isInitialUnitSelection({ productUnit: targetUnitId, portionUnit: selectedUnitId })) {
+			applyViewedUnit(newUnitId);
+			return;
 		}
+
+		if (
+			newUnitId === targetUnitId ||
+			hasConversion(newUnitId, targetUnitId, ingredientId, unitConversions)
+		) {
+			applyViewedUnit(newUnitId);
+			return;
+		}
+
+		if (!isIngredientUsedWithCommittedUnits(ingredientId, allRecipes)) {
+			applyViewedUnit(newUnitId);
+			return;
+		}
+
+		const conversionModalId = openOverlay(AddUnitConversionModal, {
+			ingredientId,
+			ingredientName: ingredientDoc.name,
+			inputUnit: newUnitId,
+			outputUnit: targetUnitId,
+			unitLabels,
+			onSave: (conversion: UnitConversion) => {
+				unitConversions = [...unitConversions, conversion];
+				applyViewedUnit(newUnitId);
+				closeOverlay(conversionModalId);
+			},
+			onclose: () => {
+				closeOverlay(conversionModalId);
+			}
+		});
 	};
 
 	const addNewUnit = (unitOption: UnitOption) => {

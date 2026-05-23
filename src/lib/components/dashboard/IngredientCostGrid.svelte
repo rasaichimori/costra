@@ -282,7 +282,6 @@
 									recipes={allRecipes}
 									bind:unitConversions
 									bind:customUnitLabels
-									allowFirstUnitPick={newlyCreatedIngredients.has(ingredientId)}
 								/>
 							</td>
 							<td class="actions-cell">

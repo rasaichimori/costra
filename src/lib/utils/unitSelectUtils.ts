@@ -15,18 +15,24 @@ import {
 	type UnitOptionGroup,
 	type VolumeUnit
 } from '$lib/utils/unit';
+import { isUnsetUnit } from '$lib/utils/ingredientUtils';
 
 /**
  * Build a combined labels object from standard units and custom units
  */
 export const buildUnitLabels = (
-	customUnitLabels: Record<string, string>
+	customUnitLabels: Record<string, string>,
+	unsetLabel?: string
 ): Record<string, string> => {
-	return {
+	const labels: Record<string, string> = {
 		...volumeUnitLabels,
 		...massUnitLabels,
 		...customUnitLabels
 	};
+	if (unsetLabel !== undefined) {
+		labels[''] = unsetLabel;
+	}
+	return labels;
 };
 
 /**
@@ -261,6 +267,8 @@ export const findAllMissingConversionsFromImport = (
 			const portionUnit = ingredient.portion.unit as string;
 
 			if (
+				!isUnsetUnit(portionUnit) &&
+				!isUnsetUnit(productUnit) &&
 				portionUnit !== productUnit &&
 				!hasConversion(portionUnit, productUnit, ingredient.id, conversions)
 			) {
@@ -275,6 +283,8 @@ export const findAllMissingConversionsFromImport = (
 		const viewedUnit = compound.viewedUnit as string;
 
 		if (
+			!isUnsetUnit(yieldUnit) &&
+			!isUnsetUnit(viewedUnit) &&
 			yieldUnit !== viewedUnit &&
 			!hasConversion(yieldUnit, viewedUnit, compound.id, conversions)
 		) {
@@ -292,6 +302,8 @@ export const findAllMissingConversionsFromImport = (
 			const productUnit = ingredientDoc.product.unit as string;
 
 			if (
+				!isUnsetUnit(portionUnit) &&
+				!isUnsetUnit(productUnit) &&
 				portionUnit !== productUnit &&
 				!hasConversion(portionUnit, productUnit, ingredient.id, conversions)
 			) {

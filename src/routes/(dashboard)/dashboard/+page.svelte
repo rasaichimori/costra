@@ -21,6 +21,7 @@
 	<div class="ingredients">
 		<CompoundSection
 			bind:recipes={data.compoundIngredients}
+			regularRecipes={data.recipes}
 			costs={data.costs}
 			bind:unitConversions={data.unitConversions}
 			bind:customUnitLabels={data.customUnitLabels}

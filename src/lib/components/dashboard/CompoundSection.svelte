@@ -1,5 +1,10 @@
 <script lang="ts">
-	import type { CompoundIngredientDoc, IngredientDoc, UnitConversion } from '$lib/data/schema';
+	import type {
+		CompoundIngredientDoc,
+		IngredientDoc,
+		RecipeDoc,
+		UnitConversion
+	} from '$lib/data/schema';
 	import { getDataContext } from '$lib/contexts/data.svelte';
 	import CompoundEditor from './CompoundEditor.svelte';
 	import CompoundList from './CompoundList.svelte';
@@ -14,17 +19,24 @@
 	let {
 		costs,
 		recipes = $bindable({}),
+		regularRecipes = {},
 		customUnitLabels = $bindable({}),
 		unitConversions = $bindable([])
 	}: {
 		costs: Record<string, IngredientDoc>;
 		recipes: Record<string, CompoundIngredientDoc>;
+		regularRecipes?: Record<string, RecipeDoc>;
 		customUnitLabels?: Record<string, string>;
 		unitConversions?: UnitConversion[];
 	} = $props();
 
 	const data = getDataContext();
 	let isEditingName = $state(false);
+
+	const allRecipes = $derived<Record<string, RecipeDoc>>({
+		...regularRecipes,
+		...recipes
+	});
 
 	const deleteRecipe = (id: string) => {
 		// Remove recipe from collection
@@ -67,6 +79,7 @@
 		<CompoundEditor
 			bind:recipe={recipes[data.selectedCompoundId]}
 			{costs}
+			{allRecipes}
 			bind:unitConversions
 			bind:customUnitLabels
 			onDelete={() => deleteRecipe(data.selectedCompoundId!)}

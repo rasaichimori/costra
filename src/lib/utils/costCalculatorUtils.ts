@@ -5,6 +5,7 @@ import type {
 	UnitConversion
 } from '$lib/data/schema';
 import { getConversionFactor, type Unit } from '$lib/utils/unit';
+import { isUnsetUnit } from '$lib/utils/ingredientUtils';
 
 export type IngredientProduct = {
 	cost: number;
@@ -91,6 +92,46 @@ export const calculateRecipeCosts = (
 export function getTotalRecipeCost(recipeCosts: Record<string, number>): number {
 	return Object.values(recipeCosts).reduce((total, cost) => total + cost, 0);
 }
+
+/** Yield amount expressed in the compound's viewed unit, or null when no conversion exists. */
+export const getCompoundConvertedYield = (
+	compound: CompoundIngredientDoc,
+	unitConversions: UnitConversion[]
+): number | null => {
+	const { yield: yieldPortion, viewedUnit, id } = compound;
+
+	if (isUnsetUnit(yieldPortion.unit as string) || isUnsetUnit(viewedUnit as string)) {
+		return null;
+	}
+
+	if (yieldPortion.unit === viewedUnit) {
+		return yieldPortion.amount;
+	}
+
+	try {
+		return (
+			getConversionFactor(yieldPortion.unit as string, viewedUnit as string, id, unitConversions) *
+			yieldPortion.amount
+		);
+	} catch {
+		return null;
+	}
+};
+
+export const getCompoundPerUnitCost = (
+	compound: CompoundIngredientDoc,
+	costs: Record<string, IngredientDoc>,
+	unitConversions: UnitConversion[]
+): number => {
+	const totalCost = getTotalRecipeCost(calculateRecipeCosts(compound, costs, unitConversions));
+	const convertedYield = getCompoundConvertedYield(compound, unitConversions);
+
+	if (convertedYield === null || convertedYield === 0) {
+		return 0;
+	}
+
+	return totalCost / convertedYield;
+};
 
 /**
  * Get available ingredients for a recipe (excluding those already in recipe and optionally excluded ones)
