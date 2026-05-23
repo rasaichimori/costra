@@ -1,0 +1,20 @@
+---
+description: Require test updates with features; think before changing existing tests; verify all tests pass before finishing
+alwaysApply: true
+---
+
+# Testing (required)
+
+Read `AGENTS.md` for full guidance. Non-negotiables:
+
+1. **Every behavior change** needs tests (unit in `src/tests/`, E2E in `e2e/`). Extract logic to `src/lib/utils/` when components are hard to test.
+2. **Before finishing**, run and confirm green:
+   - `npm run check`
+   - `npm run lint`
+   - `npm run test:unit -- --run`
+   - `npm run test:e2e` (if UI, import/export, dashboard, settings, or persistence changed)
+3. **Do not weaken or delete failing tests** to unblock work. Ask: did behavior change intentionally, or is the implementation wrong?
+4. **Domain rules to trust**: unit conversion schema (`conversionFactor` = inputs per one output), cost calculator math, import validation in `importUtils.ts`.
+5. **Changing existing tests** requires explicit reasoning: intentional product change vs bug fix in implementation vs brittle test refactor.
+
+A feature is **not complete** until tests pass.

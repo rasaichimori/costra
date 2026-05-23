@@ -232,18 +232,18 @@ export const isSmallerUnit = (unit1: Unit | string, unit2: Unit | string): boole
 
 /**
  * Normalizes a unit conversion so that the smaller unit comes first.
- * If the output unit is smaller, swaps the units and inverts the factor.
+ * If the output unit is smaller, swaps the units and keeps the factor.
  */
 export const normalizeUnitConversion = (conversion: UnitConversion): UnitConversion => {
 	const outputIsSmaller = isSmallerUnit(conversion.outputUnit, conversion.inputUnit);
 
 	if (outputIsSmaller === true) {
-		// Swap units and invert factor
+		// Swap units; factor stays the same (how many of the smaller unit per larger unit)
 		return {
 			...conversion,
 			inputUnit: conversion.outputUnit,
 			outputUnit: conversion.inputUnit,
-			conversionFactor: 1 / conversion.conversionFactor
+			conversionFactor: conversion.conversionFactor
 		};
 	}
 

@@ -20,25 +20,22 @@
 	const dataState = setDataContext(false);
 	const { openOverlay, closeOverlay } = getOverlayContext();
 
-	// Track undo/redo state changes — version bump forces derived to re-run
-	let undoRedoVersion = $state(0);
+	// Track undo/redo state changes
 	const canUndo = $derived.by(() => {
-		void undoRedoVersion;
+		void dataState.historyVersion;
 		return dataState.canUndo();
 	});
 	const canRedo = $derived.by(() => {
-		void undoRedoVersion;
+		void dataState.historyVersion;
 		return dataState.canRedo();
 	});
 
 	const handleUndo = async () => {
 		await dataState.undo();
-		undoRedoVersion++; // Trigger reactivity
 	};
 
 	const handleRedo = async () => {
 		await dataState.redo();
-		undoRedoVersion++; // Trigger reactivity
 	};
 
 	// Get current route to determine active tab
@@ -119,14 +116,15 @@
 	// Minimal $effect only for history tracking - necessary for undo/redo functionality
 	// This is the only $effect we use, and it's essential for the feature
 	$effect(() => {
-		// Access state to track changes
-		void dataState.costs;
-		void dataState.compoundIngredients;
-		void dataState.recipes;
-		void dataState.customUnitLabels;
-		void dataState.unitConversions;
+		// Deep-track nested state so edits inside records trigger history saves
+		void JSON.stringify({
+			costs: dataState.costs,
+			compoundIngredients: dataState.compoundIngredients,
+			recipes: dataState.recipes,
+			customUnitLabels: dataState.customUnitLabels,
+			unitConversions: dataState.unitConversions
+		});
 
-		// Save state to history (debounced internally)
 		dataState.saveState();
 	});
 

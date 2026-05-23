@@ -4,6 +4,8 @@ import {
 	convertVolumeUnit,
 	getConversionFactor,
 	hasConversion,
+	isSmallerUnit,
+	normalizeUnitConversion,
 	TbsMultipliers
 } from '$lib/utils/unit';
 import { describe, expect, it } from 'vitest';
@@ -212,5 +214,65 @@ describe('hasConversion', () => {
 
 	it('returns false when no path exists', () => {
 		expect(hasConversion('bunch', 'g', ingredientId, [])).toBe(false);
+	});
+});
+
+describe('isSmallerUnit', () => {
+	it('returns true when the first volume unit is smaller', () => {
+		expect(isSmallerUnit('tsp', 'cup')).toBe(true);
+		expect(isSmallerUnit('cup', 'tsp')).toBe(false);
+	});
+
+	it('returns true when mass is compared to volume', () => {
+		expect(isSmallerUnit('g', 'cup')).toBe(true);
+		expect(isSmallerUnit('cup', 'g')).toBe(false);
+	});
+
+	it('returns null for custom units', () => {
+		expect(isSmallerUnit('bunch', 'cup')).toBeNull();
+	});
+});
+
+describe('normalizeUnitConversion', () => {
+	it('keeps smaller-to-larger ordering when already normalized', () => {
+		expect(
+			normalizeUnitConversion({
+				ingredientId: 'flour',
+				inputUnit: 'g',
+				outputUnit: 'cup',
+				conversionFactor: 125
+			})
+		).toEqual({
+			ingredientId: 'flour',
+			inputUnit: 'g',
+			outputUnit: 'cup',
+			conversionFactor: 125
+		});
+	});
+
+	it('swaps units and inverts the factor when output is smaller', () => {
+		expect(
+			normalizeUnitConversion({
+				ingredientId: 'flour',
+				inputUnit: 'cup',
+				outputUnit: 'g',
+				conversionFactor: 125
+			})
+		).toEqual({
+			ingredientId: 'flour',
+			inputUnit: 'g',
+			outputUnit: 'cup',
+			conversionFactor: 125
+		});
+	});
+
+	it('returns custom conversions unchanged when order cannot be determined', () => {
+		const conversion = {
+			ingredientId: 'herbs',
+			inputUnit: 'bunch',
+			outputUnit: 'sprig',
+			conversionFactor: 12
+		};
+		expect(normalizeUnitConversion(conversion)).toEqual(conversion);
 	});
 });

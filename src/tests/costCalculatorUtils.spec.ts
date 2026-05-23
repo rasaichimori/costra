@@ -364,3 +364,65 @@ describe('removeIngredientFromAllRecipes', () => {
 		expect(result).toEqual({});
 	});
 });
+
+describe('recipe using compound ingredients', () => {
+	it('calculates recipe cost when a compound is used as an ingredient', () => {
+		const costs: Record<string, IngredientDoc> = {
+			flour: createIngredient('flour', 'Flour', 100, 1000, 'g'),
+			sugar: createIngredient('sugar', 'Sugar', 80, 500, 'g')
+		};
+
+		const compounds: Record<string, CompoundIngredientDoc> = {
+			dough: createCompound('dough', 'Dough', 500, 'g', [
+				{ id: 'flour', amount: 300, unit: 'g' },
+				{ id: 'sugar', amount: 50, unit: 'g' }
+			])
+		};
+
+		const recipe = createRecipe('cake', 'Cake', [{ id: 'dough', amount: 250, unit: 'g' }]);
+		const allCosts = getAllCosts(costs, compounds, []);
+		const recipeCosts = calculateRecipeCosts(recipe, allCosts, []);
+
+		// Dough batch cost is 38 for 500g; 250g should cost 19
+		expect(recipeCosts['dough']).toBeCloseTo(19, 2);
+	});
+
+	it('calculates compound cost using unit conversions for sub-ingredients', () => {
+		const costs: Record<string, IngredientDoc> = {
+			flour: createIngredient('flour', 'Flour', 100, 1000, 'g')
+		};
+
+		const compounds: Record<string, CompoundIngredientDoc> = {
+			batter: createCompound('batter', 'Batter', 1, 'batch', [
+				{ id: 'flour', amount: 1, unit: 'cup' }
+			])
+		};
+
+		const conversions: UnitConversion[] = [
+			{ ingredientId: 'flour', inputUnit: 'g', outputUnit: 'cup', conversionFactor: 125 }
+		];
+
+		const result = compoundsToIngredients(compounds, costs, conversions);
+
+		// 1 cup = 125g at 100 yen per 1000g => 12.5 yen per batch
+		expect(result['batter'].product.cost).toBeCloseTo(12.5, 2);
+	});
+
+	it('skips missing sub-ingredients when building nested compounds', () => {
+		const costs: Record<string, IngredientDoc> = {
+			flour: createIngredient('flour', 'Flour', 100, 1000, 'g')
+		};
+
+		const compounds: Record<string, CompoundIngredientDoc> = {
+			dough: createCompound('dough', 'Dough', 500, 'g', [{ id: 'flour', amount: 300, unit: 'g' }]),
+			batter: createCompound('batter', 'Batter', 1, 'batch', [
+				{ id: 'dough', amount: 500, unit: 'g' }
+			])
+		};
+
+		const result = compoundsToIngredients(compounds, costs, []);
+
+		expect(result['dough'].product.cost).toBeCloseTo(30, 2);
+		expect(result['batter'].product.cost).toBe(0);
+	});
+});

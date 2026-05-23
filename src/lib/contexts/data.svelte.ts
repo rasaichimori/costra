@@ -23,6 +23,7 @@ class DataState {
 	private isRestoring = $state(false);
 	private isInitialized = false;
 	private saveTimeout: ReturnType<typeof setTimeout> | null = null;
+	historyVersion = $state(0);
 
 	constructor(useMockData = false) {
 		// First, try to load from localStorage
@@ -146,6 +147,7 @@ class DataState {
 
 			// Persist to localStorage
 			saveAppData(currentState);
+			this.historyVersion++;
 		}, 300);
 	}
 
@@ -162,6 +164,7 @@ class DataState {
 		const state = historyManager.getUndoState();
 		if (state) {
 			await this.restoreState(state);
+			this.historyVersion++;
 		}
 	}
 
@@ -170,6 +173,7 @@ class DataState {
 		const state = historyManager.getRedoState();
 		if (state) {
 			await this.restoreState(state);
+			this.historyVersion++;
 		}
 	}
 
