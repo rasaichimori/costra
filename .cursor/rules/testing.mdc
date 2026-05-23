@@ -1,11 +1,11 @@
 ---
-description: Require test updates with features; think before changing existing tests; verify all tests pass before finishing
+description: Require test updates and passing checks before finishing features; see AGENTS.md
 alwaysApply: true
 ---
 
 # Testing (required)
 
-Read `AGENTS.md` for full guidance. Non-negotiables:
+Read the **Testing** section in `AGENTS.md` for full guidance. Non-negotiables:
 
 1. **Every behavior change** needs tests (unit in `src/tests/`, E2E in `e2e/`). Extract logic to `src/lib/utils/` when components are hard to test.
 2. **Before finishing**, run and confirm green:

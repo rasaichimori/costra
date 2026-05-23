@@ -1,0 +1,16 @@
+---
+description: Keep i18n in sync when adding features — no hardcoded strings; update en.json and ja.json together
+alwaysApply: true
+---
+
+# i18n (required)
+
+Read the **Internationalization** section in `AGENTS.md` for full guidance. Non-negotiables:
+
+1. **No hardcoded user-facing strings** in UI or user-visible errors. Use `m.messageKey()` from `$lib/paraglide/messages.js`.
+2. **Every new/changed message** → add or update keys in **both** `messages/en.json` and `messages/ja.json`.
+3. **Do not edit** `src/lib/paraglide/` (generated). Run `npm run check` to recompile.
+4. **Use `localPath()`** for internal navigation links.
+5. **Before finishing**, verify EN/JA key parity and that `npm run check` passes (catches invalid `m.*()` calls).
+
+A feature with new UI copy is **not complete** until both locales are updated.

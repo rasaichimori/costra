@@ -218,6 +218,37 @@ a {
 	color: var(--primary);
 }
 
+/* Instant tooltips (replaces native title delay) */
+[data-tooltip] {
+	position: relative;
+}
+
+[data-tooltip]::after {
+	content: attr(data-tooltip);
+	position: absolute;
+	bottom: calc(100% + 6px);
+	left: 50%;
+	transform: translateX(-50%);
+	padding: 4px 8px;
+	border-radius: 4px;
+	background: var(--popover, #ffffff);
+	color: var(--popover-foreground, #262626);
+	border: 1px solid var(--border, #e5e7eb);
+	font-size: 0.75rem;
+	font-weight: 500;
+	line-height: 1.2;
+	white-space: nowrap;
+	pointer-events: none;
+	visibility: hidden;
+	z-index: 1000;
+	box-shadow: var(--shadow-light, 0 1px 3px rgba(0, 0, 0, 0.06));
+}
+
+[data-tooltip]:hover::after,
+[data-tooltip]:focus-visible::after {
+	visibility: visible;
+}
+
 /* Mobile touch improvements */
 @media (max-width: 768px) {
 	/* Prevent iOS zoom on focus for inputs */

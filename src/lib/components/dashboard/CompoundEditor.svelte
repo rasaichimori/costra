@@ -26,6 +26,7 @@
 		unitConversions: UnitConversion[];
 		customUnitLabels: Record<string, string>;
 		onDelete?: () => void;
+		onDuplicate?: () => void;
 	}
 
 	let {
@@ -34,6 +35,7 @@
 		unitConversions = $bindable(),
 		onDelete,
 		customUnitLabels = $bindable(),
+		onDuplicate,
 		isEditingName = $bindable()
 	}: Props = $props();
 
@@ -71,13 +73,26 @@
 		<div class="header-left">
 			<div class="title">
 				<div class="title-label">
-					<EditableTextField
-						bind:value={recipe.name}
-						bind:isEditing={isEditingName}
-						onSave={() => {
-							isEditingName = false;
-						}}
-					/>
+					<div class="title-name-row">
+						<EditableTextField
+							bind:value={recipe.name}
+							bind:isEditing={isEditingName}
+							onSave={() => {
+								isEditingName = false;
+							}}
+						/>
+						{#if onDuplicate && !isEditingName}
+							<ModernButton
+								variant="icon"
+								size="small"
+								ariaLabel={m.duplicateCompoundAriaLabel()}
+								title={m.duplicateCompoundTitle()}
+								onclick={() => onDuplicate?.()}
+							>
+								<i class="fa-solid fa-copy"></i>
+							</ModernButton>
+						{/if}
+					</div>
 				</div>
 				<div class="cost-amount">
 					{currencyContext.currency}{perUnitCost.toFixed(0)} / {unitLabels[recipe.viewedUnit] ||
@@ -160,7 +175,7 @@
 								role="button"
 								tabindex="-1"
 								aria-label={m.dragToReorderAriaLabel()}
-								title={m.dragToReorderTitle()}
+								data-tooltip={m.dragToReorderTitle()}
 								onpointerdown={(e) => {
 									draggingId = ingredient.id;
 									startDrag(
@@ -307,6 +322,12 @@
 		font-weight: 500;
 		width: fit-content;
 		min-width: 150px;
+	}
+
+	.title-name-row {
+		display: flex;
+		align-items: center;
+		gap: 8px;
 	}
 
 	.title {

@@ -1,6 +1,6 @@
-# Agent guide: testing
+# Agent guide
 
-Every feature, bug fix, or refactor that changes behavior **must include test updates**. A feature is not done until tests pass locally and in CI.
+Instructions for implementing features in Costra. A feature is **not complete** until tests pass, i18n is updated, and CI checks are green.
 
 ## Before you finish
 
@@ -13,19 +13,23 @@ npm run test:unit -- --run
 npm run test:e2e
 ```
 
-CI runs these on every PR. Do not mark work complete with failing or skipped tests unless the user explicitly accepts that tradeoff.
+CI runs these on every PR. Do not mark work complete with failing checks unless the user explicitly accepts that tradeoff.
 
 ---
+
+# Testing
+
+Every feature, bug fix, or refactor that changes behavior **must include test updates**.
 
 ## What to test (by layer)
 
 Use the **smallest layer that catches real regressions**:
 
-| Layer | Location | Use for |
-|-------|----------|---------|
-| **Unit** | `src/tests/*.spec.ts` | Pure logic in `src/lib/utils/`, validation, calculations, history |
+| Layer         | Location                  | Use for                                                                          |
+| ------------- | ------------------------- | -------------------------------------------------------------------------------- |
+| **Unit**      | `src/tests/*.spec.ts`     | Pure logic in `src/lib/utils/`, validation, calculations, history                |
 | **Component** | `src/**/*.svelte.spec.ts` | Svelte UI that needs a browser (wrap with providers; see `TestProviders.svelte`) |
-| **E2E** | `e2e/*.test.ts` | Critical user journeys across pages, localStorage, modals, undo/redo |
+| **E2E**       | `e2e/*.test.ts`           | Critical user journeys across pages, localStorage, modals, undo/redo             |
 
 **Prefer unit tests** for business logic. Add E2E only for integration paths unit tests cannot cover (navigation, overlays, persistence).
 
@@ -41,7 +45,7 @@ Use the **smallest layer that catches real regressions**:
 ## When implementing a feature
 
 1. **Read existing tests** in the area you are changing. Understand what behavior they lock in.
-2. **Add or extend tests** that describe the *new* expected behavior.
+2. **Add or extend tests** that describe the _new_ expected behavior.
 3. **Run tests** while developing; fix failures before moving on.
 4. **Extract testable logic** from components into `src/lib/utils/` when a `.svelte` file would be awkward to test (see `importUtils.ts` as the pattern).
 
@@ -59,8 +63,8 @@ Use the **smallest layer that catches real regressions**:
 
 Before modifying an existing test, answer:
 
-1. **Did the product behavior intentionally change?**  
-   - Yes → update the test *and* confirm the new behavior is correct (UI copy, schema, cost math, import format).  
+1. **Did the product behavior intentionally change?**
+   - Yes → update the test _and_ confirm the new behavior is correct (UI copy, schema, cost math, import format).
    - No → fix the implementation, not the test.
 
 2. **Is the test wrong about domain rules?**  
@@ -116,10 +120,66 @@ npm run test:unit
 
 ---
 
+# Internationalization (i18n)
+
+Every user-facing string change **must stay in sync across locales**. Do not ship English-only copy.
+
+## Stack
+
+| Piece                          | Location                                         |
+| ------------------------------ | ------------------------------------------------ |
+| Message source (edit these)    | `messages/en.json`, `messages/ja.json`           |
+| Generated output (do not edit) | `src/lib/paraglide/`                             |
+| Project config                 | `project.inlang/settings.json`                   |
+| Usage in code                  | `import { m } from '$lib/paraglide/messages.js'` |
+| Localized routes               | `localPath()` from `$lib/i18n.ts`                |
+
+Paraglide regenerates `src/lib/paraglide/` via the Vite plugin on `dev` / `build` / `check`. **Never hand-edit generated paraglide files.**
+
+Base locale is **English** (`en`). **Japanese** (`ja`) must stay in parity.
+
+## When implementing a feature
+
+1. **No hardcoded user-facing strings** in `.svelte`, routes, or utils shown to users (labels, buttons, errors, toasts, placeholders, aria-labels, page titles).
+2. **Add a message key** to `messages/en.json` first — use camelCase names consistent with existing keys (e.g. `importValidationMissingCostsRecipes`, `fieldTotalCost`).
+3. **Add the same key** to `messages/ja.json` with a proper Japanese translation. If you cannot translate confidently, use a clear placeholder and note it for the user — but **never leave the key missing from `ja.json`**.
+4. **Use parameterized messages** for dynamic text: `"fieldTotalCost": "Total Cost ({currency})"` → `m.fieldTotalCost({ currency })`.
+5. **Use `m.*()` in TS too** when returning user-visible errors (see `importUtils.ts`).
+6. **Use `localPath('/…')`** for internal links so locale prefix/cookie routing works (see `LandingNav.svelte`).
+
+### Changing existing messages
+
+- **Copy change** → update both `en.json` and `ja.json`.
+- **Key rename** → update all `m.oldKey()` call sites; remove or migrate old keys from both locale files.
+- **Do not change message meaning** in one locale only; keep EN/JA aligned in intent.
+
+### What not to i18n
+
+- Console logs, test fixtures, mock data ingredient names, JSON export field names, CSS, or internal developer comments.
+
+## Verify locale parity
+
+Before finishing, confirm every new or renamed key exists in **both** files:
+
+```bash
+# Keys in en but missing from ja (should print nothing)
+comm -23 <(jq -r 'keys[]' messages/en.json | sort) <(jq -r 'keys[]' messages/ja.json | sort)
+
+# Keys in ja but missing from en (should print nothing)
+comm -13 <(jq -r 'keys[]' messages/en.json | sort) <(jq -r 'keys[]' messages/ja.json | sort)
+```
+
+Then run `npm run check` so Paraglide recompiles and TypeScript catches typos in `m.*()` calls.
+
+---
+
 ## Checklist (copy before marking done)
 
 - [ ] New/changed behavior has tests at the appropriate layer(s)
 - [ ] Existing test changes are justified (intentional behavior change, not masking bugs)
+- [ ] All new/changed user-facing strings use `m.*()` — nothing hardcoded
+- [ ] New message keys added to **both** `messages/en.json` and `messages/ja.json`
+- [ ] EN/JA key sets are in parity (see `comm` commands above)
 - [ ] `npm run test:unit -- --run` passes
 - [ ] `npm run test:e2e` passes (when touching UI flows, import/export, dashboard, or settings)
 - [ ] `npm run check` and `npm run lint` pass

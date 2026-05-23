@@ -9,6 +9,8 @@
 	import RecipeEditor from './RecipeEditor.svelte';
 	import RecipeEditorPlaceholder from './RecipeEditorPlaceholder.svelte';
 	import RecipesList from './RecipesList.svelte';
+	import { createDuplicateRecipe, insertRecordAfter } from '$lib/utils/recipeUtils';
+	import { m } from '$lib/paraglide/messages.js';
 
 	let {
 		costs,
@@ -35,6 +37,21 @@
 			data.selectedRecipeId = undefined;
 		}
 	};
+
+	const duplicateRecipe = (id: string) => {
+		const original = recipes[id];
+		if (!original) return;
+
+		const newId = crypto.randomUUID();
+		recipes = insertRecordAfter(
+			recipes,
+			id,
+			newId,
+			createDuplicateRecipe(original, newId, m.recipeDuplicateName({ name: original.name }))
+		);
+		data.selectedRecipeId = newId;
+		isEditingName = true;
+	};
 </script>
 
 <div class="recipes">
@@ -54,6 +71,7 @@
 			{costs}
 			{compounds}
 			onDelete={() => deleteRecipe(data.selectedRecipeId!)}
+			onDuplicate={() => duplicateRecipe(data.selectedRecipeId!)}
 			bind:unitConversions
 			bind:customUnitLabels
 			bind:isEditingName

@@ -4,6 +4,12 @@
 	import CompoundEditor from './CompoundEditor.svelte';
 	import CompoundList from './CompoundList.svelte';
 	import RecipeEditorPlaceholder from './RecipeEditorPlaceholder.svelte';
+	import {
+		createDuplicateCompound,
+		duplicateUnitConversionsForIngredient,
+		insertRecordAfter
+	} from '$lib/utils/recipeUtils';
+	import { m } from '$lib/paraglide/messages.js';
 
 	let {
 		costs,
@@ -29,6 +35,22 @@
 			data.selectedCompoundId = undefined;
 		}
 	};
+
+	const duplicateCompound = (id: string) => {
+		const original = recipes[id];
+		if (!original) return;
+
+		const newId = crypto.randomUUID();
+		recipes = insertRecordAfter(
+			recipes,
+			id,
+			newId,
+			createDuplicateCompound(original, newId, m.recipeDuplicateName({ name: original.name }))
+		);
+		unitConversions = duplicateUnitConversionsForIngredient(unitConversions, id, newId);
+		data.selectedCompoundId = newId;
+		isEditingName = true;
+	};
 </script>
 
 <div class="recipes">
@@ -48,6 +70,7 @@
 			bind:unitConversions
 			bind:customUnitLabels
 			onDelete={() => deleteRecipe(data.selectedCompoundId!)}
+			onDuplicate={() => duplicateCompound(data.selectedCompoundId!)}
 			bind:isEditingName
 		/>
 	{:else}

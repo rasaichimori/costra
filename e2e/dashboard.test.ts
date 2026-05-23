@@ -64,6 +64,44 @@ test.describe('dashboard workflows', () => {
 		await expect(page.getByRole('button', { name: 'Imported Cake' })).toBeVisible();
 	});
 
+	test('duplicates a recipe below the original', async ({ page }) => {
+		await gotoDashboard(page);
+		await page.getByRole('button', { name: 'Vanilla Cake' }).click();
+
+		await page.getByRole('button', { name: 'Duplicate recipe' }).click();
+
+		await expect(page.getByRole('button', { name: 'Vanilla Cake - copy' })).toBeVisible();
+		await expect(page.getByRole('textbox', { name: 'Edit ingredient name' })).toBeVisible();
+		await expect(page.getByRole('button', { name: 'Save name' })).toBeVisible();
+
+		const recipeButtons = page.locator('.recipes-list').first().getByRole('button');
+		const labels = await recipeButtons.allTextContents();
+		const vanillaIndex = labels.findIndex(
+			(label) => label.includes('Vanilla Cake') && !label.includes('copy')
+		);
+		const copyIndex = labels.findIndex((label) => label.includes('Vanilla Cake - copy'));
+		expect(copyIndex).toBe(vanillaIndex + 1);
+	});
+
+	test('duplicates a compound ingredient below the original', async ({ page }) => {
+		await gotoDashboard(page);
+		await page.getByRole('button', { name: 'Cake Mix' }).click();
+
+		await page.getByRole('button', { name: 'Duplicate ingredient' }).click();
+
+		await expect(page.getByRole('button', { name: 'Cake Mix - copy' })).toBeVisible();
+		await expect(page.getByRole('textbox', { name: 'Edit ingredient name' })).toBeVisible();
+		await expect(page.getByRole('button', { name: 'Save name' })).toBeVisible();
+
+		const compoundButtons = page.locator('.recipes-list').nth(1).getByRole('button');
+		const labels = await compoundButtons.allTextContents();
+		const mixIndex = labels.findIndex(
+			(label) => label.includes('Cake Mix') && !label.includes('copy')
+		);
+		const copyIndex = labels.findIndex((label) => label.includes('Cake Mix - copy'));
+		expect(copyIndex).toBe(mixIndex + 1);
+	});
+
 	test('undoes an ingredient price change', async ({ page }) => {
 		await gotoDashboard(page);
 		await page.getByRole('button', { name: 'Vanilla Cake' }).click();
