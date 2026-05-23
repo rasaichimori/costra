@@ -179,7 +179,15 @@
 			{/if}
 		</div>
 	{:else}
-		<p class="no-ingredients-message">{m.noIngredientsLeftToAdd()}</p>
+		<div class="no-results">
+			<p class="no-ingredients-message">{m.noIngredientsLeftToAdd()}</p>
+			{#if costs}
+				<ModernButton variant="primary" onclick={openCreateIngredientPopup}>
+					<i class="fa-solid fa-plus"></i>
+					{m.createIngredientButton()}
+				</ModernButton>
+			{/if}
+		</div>
 	{/if}
 </div>
 

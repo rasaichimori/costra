@@ -114,6 +114,7 @@
 	"noIngredientsMatching": "No ingredients found matching \"{term}\"",
 	"createIngredientNamed": "Create \"{term}\"",
 	"noIngredientsLeftToAdd": "No ingredients left to add",
+	"createIngredientButton": "Create ingredient",
 	"createIngredientTitle": "Create Ingredient",
 	"fieldName": "Name",
 	"fieldCategory": "Category",

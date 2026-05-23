@@ -114,6 +114,7 @@
 	"noIngredientsMatching": "「{term}」に一致する材料が見つかりません",
 	"createIngredientNamed": "「{term}」を作成",
 	"noIngredientsLeftToAdd": "追加できる材料がありません",
+	"createIngredientButton": "材料を作成",
 	"createIngredientTitle": "材料を作成",
 	"fieldName": "名前",
 	"fieldCategory": "カテゴリ",
