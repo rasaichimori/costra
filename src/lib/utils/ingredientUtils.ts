@@ -1,4 +1,4 @@
-import type { RecipeDoc } from '$lib/data/schema';
+import type { RecipeLikeDoc } from '$lib/data/schema';
 import { getPortionUnitsForIngredient } from '$lib/utils/unitSelectUtils';
 
 /** Sentinel unit id until the user picks a real unit. */
@@ -14,13 +14,13 @@ export const isPlaceholderProductUnit = isUnsetUnit;
 
 export const committedPortionUnitsForIngredient = (
 	ingredientId: string,
-	recipes: Record<string, RecipeDoc>
+	recipes: Record<string, RecipeLikeDoc>
 ): string[] =>
 	getPortionUnitsForIngredient(ingredientId, recipes).filter((unit) => !isUnsetUnit(unit));
 
 export const isIngredientUsedWithCommittedUnits = (
 	ingredientId: string,
-	recipes: Record<string, RecipeDoc>
+	recipes: Record<string, RecipeLikeDoc>
 ): boolean => committedPortionUnitsForIngredient(ingredientId, recipes).length > 0;
 
 /** Whether a unit change between committed units should prompt for conversions. */
@@ -28,7 +28,7 @@ export const shouldPromptForUnitConversion = (options: {
 	oldUnit: string;
 	newUnit: string;
 	ingredientId: string;
-	recipes: Record<string, RecipeDoc>;
+	recipes: Record<string, RecipeLikeDoc>;
 }): boolean => {
 	if (options.oldUnit === options.newUnit) {
 		return false;

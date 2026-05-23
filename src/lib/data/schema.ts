@@ -19,18 +19,35 @@ export interface IngredientDoc {
 	color: string;
 }
 
+export interface RecipeIngredientEntry {
+	id: string;
+	portion: Portion;
+	/** When true, ingredient is hidden from calculations & charts */
+	hidden: boolean;
+}
+
+export interface RecipeSize {
+	id: string;
+	name: string;
+	ingredients: RecipeIngredientEntry[];
+}
+
 export interface RecipeDoc {
 	id: string;
 	name: string;
-	ingredients: {
-		id: string;
-		portion: Portion;
-		/** When true, ingredient is hidden from calculations & charts */
-		hidden: boolean;
-	}[];
+	sizes: RecipeSize[];
+	/** Which size tab is selected in the recipe editor */
+	activeSizeId: string;
 }
 
-export interface CompoundIngredientDoc extends RecipeDoc {
+/** Recipes and compounds that expose an ingredient list for cost calculation */
+export interface RecipeWithIngredients {
+	id: string;
+	ingredients: RecipeIngredientEntry[];
+}
+
+export interface CompoundIngredientDoc extends RecipeWithIngredients {
+	name: string;
 	/** Category controls filtering & colours in UI */
 	category: string;
 	/** Hex or CSS colour string for chart slice */
@@ -47,4 +64,13 @@ export interface UnitConversion {
 	inputUnit: Unit | string; // Gram
 	outputUnit: Unit | string; // KG
 	conversionFactor: number; // 1000
+}
+
+export type RecipeLikeDoc = RecipeDoc | CompoundIngredientDoc;
+
+/** Legacy recipe shape stored in older exports / localStorage */
+export interface LegacyRecipeDoc {
+	id: string;
+	name: string;
+	ingredients: RecipeIngredientEntry[];
 }

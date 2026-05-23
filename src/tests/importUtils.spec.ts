@@ -1,8 +1,8 @@
-import type { ImportData } from '$lib/utils/importUtils';
+import type { ImportInputData } from '$lib/utils/importUtils';
 import type {
 	CompoundIngredientDoc,
 	IngredientDoc,
-	RecipeDoc,
+	LegacyRecipeDoc,
 	UnitConversion
 } from '$lib/data/schema';
 import { mockData } from '$lib/data/mockData';
@@ -32,7 +32,7 @@ const createRecipe = (
 	id: string,
 	name: string,
 	ingredients: { id: string; amount: number; unit: string; hidden?: boolean }[]
-): RecipeDoc => ({
+): LegacyRecipeDoc => ({
 	id,
 	name,
 	ingredients: ingredients.map((i) => ({
@@ -62,7 +62,7 @@ const createCompound = (
 	}))
 });
 
-const validImport: ImportData = {
+const validImport: ImportInputData = {
 	costs: {
 		flour: createIngredient('flour', 'Flour', 100, 1000, 'g')
 	},
@@ -71,7 +71,7 @@ const validImport: ImportData = {
 	}
 };
 
-const mockImportData: ImportData = {
+const mockImportData: ImportInputData = {
 	costs: mockData.costs,
 	recipes: mockData.recipes,
 	compoundIngredients: mockData.compoundIngredients,
@@ -131,7 +131,7 @@ describe('validateImportData', () => {
 	});
 
 	it('rejects compound referencing missing ingredient', () => {
-		const data: ImportData = {
+		const data: ImportInputData = {
 			...validImport,
 			compoundIngredients: {
 				dough: createCompound('dough', 'Dough', 1, 'batch', [
@@ -143,7 +143,7 @@ describe('validateImportData', () => {
 	});
 
 	it('allows recipe to reference compound ingredient id', () => {
-		const data: ImportData = {
+		const data: ImportInputData = {
 			costs: validImport.costs,
 			recipes: {
 				cake: createRecipe('cake', 'Cake', [{ id: 'dough', amount: 1, unit: 'batch' }])
@@ -169,8 +169,15 @@ describe('validateImportData', () => {
 });
 
 describe('prepareImportData', () => {
+	it('normalizes legacy recipes to sizes on import', () => {
+		const prepared = prepareImportData(validImport);
+		expect(prepared.recipes.cake.sizes).toHaveLength(1);
+		expect(prepared.recipes.cake.sizes[0].ingredients).toHaveLength(1);
+		expect(prepared.recipes.cake.activeSizeId).toBe(prepared.recipes.cake.sizes[0].id);
+	});
+
 	it('normalizes unit conversions on import', () => {
-		const data: ImportData = {
+		const data: ImportInputData = {
 			...validImport,
 			unitConversions: [
 				{

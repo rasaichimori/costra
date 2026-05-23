@@ -8,13 +8,14 @@
 		CompoundIngredientDoc,
 		IngredientDoc,
 		RecipeDoc,
+		RecipeIngredientEntry,
 		UnitConversion
 	} from '$lib/data/schema';
 
 	interface Props {
 		availableIngredients: IngredientDoc[];
 		availableCompounds?: CompoundIngredientDoc[];
-		recipe: RecipeDoc;
+		ingredients: RecipeIngredientEntry[];
 		costs?: Record<string, IngredientDoc>;
 		recipes?: Record<string, RecipeDoc>;
 		unitConversions?: UnitConversion[];
@@ -24,7 +25,7 @@
 	let {
 		availableIngredients,
 		availableCompounds,
-		recipe,
+		ingredients = $bindable(),
 		costs,
 		recipes = {},
 		unitConversions = [],
@@ -42,7 +43,7 @@
 			{
 				availableIngredients,
 				availableCompounds,
-				recipe,
+				ingredients,
 				costs,
 				recipes,
 				unitConversions,
@@ -64,7 +65,7 @@
 			{
 				availableIngredients,
 				availableCompounds,
-				recipe,
+				ingredients,
 				costs,
 				recipes,
 				unitConversions,

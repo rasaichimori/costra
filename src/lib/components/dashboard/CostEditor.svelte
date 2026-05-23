@@ -13,6 +13,7 @@
 	import ConversionsSection from './ConversionsSection.svelte';
 	import SettingsSection from './SettingsSection.svelte';
 	import { historyManager } from '$lib/utils/history';
+	import { normalizeRecipes } from '$lib/utils/recipeUtils';
 	import { onMount, untrack, tick } from 'svelte';
 	import ModernButton from '../common/ModernButton.svelte';
 	import { m } from '$lib/paraglide/messages.js';
@@ -24,7 +25,7 @@
 	let compoundIngredients = $state<Record<string, CompoundIngredientDoc>>(
 		mockData.compoundIngredients
 	);
-	let recipes = $state<Record<string, RecipeDoc>>(mockData.recipes);
+	let recipes = $state<Record<string, RecipeDoc>>(normalizeRecipes(mockData.recipes));
 	let customUnitLabels = $state<Record<string, string>>(mockData.unitLabels);
 	let unitConversions = $state<UnitConversion[]>(mockData.unitConversions);
 

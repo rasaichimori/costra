@@ -16,6 +16,7 @@ import {
 	removeIngredientFromAllRecipes
 } from '$lib/utils/costCalculatorUtils';
 import { UNSET_UNIT } from '$lib/utils/ingredientUtils';
+import { createRecipeSize, DEFAULT_SIZE_NAME, recipeToCostInput } from '$lib/utils/recipeUtils';
 import { describe, expect, it } from 'vitest';
 
 // Test fixtures
@@ -37,15 +38,22 @@ const createRecipe = (
 	id: string,
 	name: string,
 	ingredients: { id: string; amount: number; unit: string; hidden?: boolean }[]
-): RecipeDoc => ({
-	id,
-	name,
-	ingredients: ingredients.map((i) => ({
-		id: i.id,
-		portion: { amount: i.amount, unit: i.unit },
-		hidden: i.hidden ?? false
-	}))
-});
+): RecipeDoc => {
+	const size = createRecipeSize(
+		DEFAULT_SIZE_NAME,
+		ingredients.map((i) => ({
+			id: i.id,
+			portion: { amount: i.amount, unit: i.unit },
+			hidden: i.hidden ?? false
+		}))
+	);
+	return {
+		id,
+		name,
+		sizes: [size],
+		activeSizeId: size.id
+	};
+};
 
 const createCompound = (
 	id: string,
@@ -75,7 +83,7 @@ describe('calculateRecipeCosts', () => {
 
 		const recipe = createRecipe('cake', 'Cake', [{ id: 'flour', amount: 500, unit: 'g' }]);
 
-		const recipeCosts = calculateRecipeCosts(recipe, costs, []);
+		const recipeCosts = calculateRecipeCosts(recipeToCostInput(recipe), costs, []);
 
 		// 500g of flour at 100 yen per 1000g = 50 yen
 		expect(recipeCosts['flour']).toBe(50);
@@ -92,7 +100,7 @@ describe('calculateRecipeCosts', () => {
 			{ id: 'sugar', amount: 100, unit: 'g' }
 		]);
 
-		const recipeCosts = calculateRecipeCosts(recipe, costs, []);
+		const recipeCosts = calculateRecipeCosts(recipeToCostInput(recipe), costs, []);
 
 		// flour: 200g at 100 yen per 1000g = 20 yen
 		// sugar: 100g at 80 yen per 500g = 16 yen
@@ -111,7 +119,7 @@ describe('calculateRecipeCosts', () => {
 			{ id: 'sugar', amount: 100, unit: 'g', hidden: true }
 		]);
 
-		const recipeCosts = calculateRecipeCosts(recipe, costs, []);
+		const recipeCosts = calculateRecipeCosts(recipeToCostInput(recipe), costs, []);
 
 		expect(recipeCosts['flour']).toBe(20);
 		expect(recipeCosts['sugar']).toBeUndefined();
@@ -127,7 +135,7 @@ describe('calculateRecipeCosts', () => {
 			{ id: 'missingIngredient', amount: 100, unit: 'g' }
 		]);
 
-		const recipeCosts = calculateRecipeCosts(recipe, costs, []);
+		const recipeCosts = calculateRecipeCosts(recipeToCostInput(recipe), costs, []);
 
 		expect(recipeCosts['flour']).toBe(20);
 		expect(recipeCosts['missingIngredient']).toBeUndefined();
@@ -144,7 +152,7 @@ describe('calculateRecipeCosts', () => {
 			{ ingredientId: 'flour', inputUnit: 'g', outputUnit: 'cup', conversionFactor: 125 }
 		];
 
-		const recipeCosts = calculateRecipeCosts(recipe, costs, conversions);
+		const recipeCosts = calculateRecipeCosts(recipeToCostInput(recipe), costs, conversions);
 
 		// 1 cup = 125g (from conversion), at 100 yen per 1000g = 12.5 yen
 		expect(recipeCosts['flour']).toBeCloseTo(12.5, 2);
@@ -158,7 +166,7 @@ describe('calculateRecipeCosts', () => {
 		const recipe = createRecipe('cake', 'Cake', [{ id: 'flour', amount: 1, unit: 'cup' }]);
 
 		// No conversion provided
-		const recipeCosts = calculateRecipeCosts(recipe, costs, []);
+		const recipeCosts = calculateRecipeCosts(recipeToCostInput(recipe), costs, []);
 
 		expect(recipeCosts['flour']).toBe(0);
 	});
@@ -255,7 +263,7 @@ describe('getAvailableIngredients', () => {
 
 		const recipe = createRecipe('cake', 'Cake', [{ id: 'flour', amount: 200, unit: 'g' }]);
 
-		const available = getAvailableIngredients(recipe, costs);
+		const available = getAvailableIngredients(recipeToCostInput(recipe), costs);
 
 		expect(available).toHaveLength(2);
 		expect(available.map((i) => i.id)).toContain('sugar');
@@ -271,7 +279,7 @@ describe('getAvailableIngredients', () => {
 
 		const recipe = createRecipe('cake', 'Cake', []);
 
-		const available = getAvailableIngredients(recipe, costs);
+		const available = getAvailableIngredients(recipeToCostInput(recipe), costs);
 
 		expect(available).toHaveLength(2);
 	});
@@ -283,7 +291,7 @@ describe('getAvailableIngredients', () => {
 
 		const recipe = createRecipe('cake', 'Cake', [{ id: 'flour', amount: 200, unit: 'g' }]);
 
-		const available = getAvailableIngredients(recipe, costs);
+		const available = getAvailableIngredients(recipeToCostInput(recipe), costs);
 
 		expect(available).toHaveLength(0);
 	});
@@ -336,10 +344,10 @@ describe('removeIngredientFromAllRecipes', () => {
 
 		const result = removeIngredientFromAllRecipes('flour', recipes);
 
-		expect(result['cake'].ingredients).toHaveLength(1);
-		expect(result['cake'].ingredients[0].id).toBe('sugar');
-		expect(result['bread'].ingredients).toHaveLength(1);
-		expect(result['bread'].ingredients[0].id).toBe('butter');
+		expect(result['cake'].sizes[0].ingredients).toHaveLength(1);
+		expect(result['cake'].sizes[0].ingredients[0].id).toBe('sugar');
+		expect(result['bread'].sizes[0].ingredients).toHaveLength(1);
+		expect(result['bread'].sizes[0].ingredients[0].id).toBe('butter');
 	});
 
 	it('does not modify original recipes', () => {
@@ -349,7 +357,7 @@ describe('removeIngredientFromAllRecipes', () => {
 
 		removeIngredientFromAllRecipes('flour', recipes);
 
-		expect(recipes['cake'].ingredients).toHaveLength(1);
+		expect(recipes['cake'].sizes[0].ingredients).toHaveLength(1);
 	});
 
 	it('handles ingredient not in any recipe', () => {
@@ -359,7 +367,7 @@ describe('removeIngredientFromAllRecipes', () => {
 
 		const result = removeIngredientFromAllRecipes('butter', recipes);
 
-		expect(result['cake'].ingredients).toHaveLength(1);
+		expect(result['cake'].sizes[0].ingredients).toHaveLength(1);
 	});
 
 	it('handles empty recipes', () => {
@@ -384,7 +392,7 @@ describe('recipe using compound ingredients', () => {
 
 		const recipe = createRecipe('cake', 'Cake', [{ id: 'dough', amount: 250, unit: 'g' }]);
 		const allCosts = getAllCosts(costs, compounds, []);
-		const recipeCosts = calculateRecipeCosts(recipe, allCosts, []);
+		const recipeCosts = calculateRecipeCosts(recipeToCostInput(recipe), allCosts, []);
 
 		// Dough batch cost is 38 for 500g; 250g should cost 19
 		expect(recipeCosts['dough']).toBeCloseTo(19, 2);

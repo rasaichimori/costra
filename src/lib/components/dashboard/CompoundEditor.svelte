@@ -9,7 +9,7 @@
 	import type {
 		CompoundIngredientDoc,
 		IngredientDoc,
-		RecipeDoc,
+		RecipeLikeDoc,
 		UnitConversion
 	} from '$lib/data/schema';
 	import DragHandle from '../common/icons/DragHandle.svelte';
@@ -29,7 +29,7 @@
 	interface Props {
 		recipe: CompoundIngredientDoc;
 		costs: Record<string, IngredientDoc>;
-		allRecipes: Record<string, RecipeDoc>;
+		allRecipes: Record<string, RecipeLikeDoc>;
 		isEditingName: boolean;
 		unitConversions: UnitConversion[];
 		customUnitLabels: Record<string, string>;
@@ -293,14 +293,19 @@
 			{/if}
 			<AddRecipeIngredientsButton
 				{availableIngredients}
-				{recipe}
+				bind:ingredients={recipe.ingredients}
 				{costs}
 				recipes={{}}
 				{unitConversions}
 				{customUnitLabels}
 			/>
 		</div>
-		<CostBreakdown bind:recipe {costs} {unitConversions} />
+		<CostBreakdown
+			bind:ingredients={recipe.ingredients}
+			chartId={recipe.id}
+			{costs}
+			{unitConversions}
+		/>
 	</div>
 </div>
 

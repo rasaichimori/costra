@@ -3,6 +3,7 @@
 		CompoundIngredientDoc,
 		IngredientDoc,
 		RecipeDoc,
+		RecipeLikeDoc,
 		UnitConversion
 	} from '$lib/data/schema';
 	import {
@@ -36,7 +37,7 @@
 	} = $props();
 
 	// Merge recipes and compound ingredients for checking portion units
-	const allRecipes = $derived<Record<string, RecipeDoc>>({
+	const allRecipes = $derived<Record<string, RecipeLikeDoc>>({
 		...recipes,
 		...compoundIngredients
 	});

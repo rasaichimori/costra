@@ -3,6 +3,7 @@
 		CompoundIngredientDoc,
 		IngredientDoc,
 		RecipeDoc,
+		RecipeLikeDoc,
 		UnitConversion
 	} from '$lib/data/schema';
 	import { getDataContext } from '$lib/contexts/data.svelte';
@@ -33,7 +34,7 @@
 	const data = getDataContext();
 	let isEditingName = $state(false);
 
-	const allRecipes = $derived<Record<string, RecipeDoc>>({
+	const allRecipes = $derived<Record<string, RecipeLikeDoc>>({
 		...regularRecipes,
 		...recipes
 	});

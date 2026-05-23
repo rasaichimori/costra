@@ -2,8 +2,10 @@ import type {
 	CompoundIngredientDoc,
 	IngredientDoc,
 	RecipeDoc,
+	RecipeWithIngredients,
 	UnitConversion
 } from '$lib/data/schema';
+import { iterateRecipeIngredients } from '$lib/utils/recipeUtils';
 import { getConversionFactor, type Unit } from '$lib/utils/unit';
 import { isUnsetUnit } from '$lib/utils/ingredientUtils';
 
@@ -46,7 +48,7 @@ export const compoundsToIngredients = (
  * Calculate costs for a specific recipe.
  */
 export const calculateRecipeCosts = (
-	recipe: RecipeDoc,
+	recipe: RecipeWithIngredients,
 	costs: Record<string, IngredientDoc>,
 	conversions: UnitConversion[]
 ) => {
@@ -136,7 +138,10 @@ export const getCompoundPerUnitCost = (
 /**
  * Get available ingredients for a recipe (excluding those already in recipe and optionally excluded ones)
  */
-export const getAvailableIngredients = (recipe: RecipeDoc, costs: Record<string, IngredientDoc>) =>
+export const getAvailableIngredients = (
+	recipe: RecipeWithIngredients,
+	costs: Record<string, IngredientDoc>
+) =>
 	Object.values(costs).filter(
 		(ingredient) =>
 			!recipe.ingredients.some((recipeIngredient) => recipeIngredient.id === ingredient.id)
@@ -149,9 +154,15 @@ export const getRecipesUsingIngredient = (
 	ingredientId: string,
 	recipes: Record<string, RecipeDoc>
 ): RecipeDoc[] => {
-	return Object.values(recipes).filter((recipe) =>
-		recipe.ingredients.some((ingredient) => ingredient.id === ingredientId)
-	);
+	return Object.values(recipes).filter((recipe) => {
+		let usesIngredient = false;
+		iterateRecipeIngredients(recipe, (ingredient) => {
+			if (ingredient.id === ingredientId) {
+				usesIngredient = true;
+			}
+		});
+		return usesIngredient;
+	});
 };
 
 /**
@@ -164,11 +175,13 @@ export const removeIngredientFromAllRecipes = (
 	const updatedRecipes = { ...recipes };
 
 	Object.keys(updatedRecipes).forEach((recipeId) => {
+		const recipe = updatedRecipes[recipeId];
 		updatedRecipes[recipeId] = {
-			...updatedRecipes[recipeId],
-			ingredients: updatedRecipes[recipeId].ingredients.filter(
-				(ingredient) => ingredient.id !== ingredientId
-			)
+			...recipe,
+			sizes: recipe.sizes.map((size) => ({
+				...size,
+				ingredients: size.ingredients.filter((ingredient) => ingredient.id !== ingredientId)
+			}))
 		};
 	});
 

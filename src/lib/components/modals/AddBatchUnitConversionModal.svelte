@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { RecipeDoc, UnitConversion } from '$lib/data/schema';
+	import type { RecipeLikeDoc, UnitConversion } from '$lib/data/schema';
 	import ModernButton from '../common/ModernButton.svelte';
 	import TextInput from '../common/TextInput.svelte';
 	import { getRecipesUsingIngredientWithUnit } from '$lib/utils/unitSelectUtils';
@@ -14,7 +14,7 @@
 			outputUnit: string;
 		}[];
 		unitLabels: Record<string, string>;
-		recipes: Record<string, RecipeDoc>;
+		recipes: Record<string, RecipeLikeDoc>;
 		onSave: (conversions: UnitConversion[]) => void;
 		onclose?: () => void;
 	}
@@ -86,11 +86,11 @@
 		return unitLabels[unitId] || unitId;
 	};
 
-	const getRecipesForUnit = (unitId: string): RecipeDoc[] => {
+	const getRecipesForUnit = (unitId: string): RecipeLikeDoc[] => {
 		return getRecipesUsingIngredientWithUnit(ingredientId, unitId, recipes);
 	};
 
-	const isCompoundIngredient = (recipe: RecipeDoc): boolean => {
+	const isCompoundIngredient = (recipe: RecipeLikeDoc): boolean => {
 		return 'category' in recipe && 'yield' in recipe;
 	};
 </script>

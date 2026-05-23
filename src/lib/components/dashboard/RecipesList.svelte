@@ -10,6 +10,7 @@
 		getAllCosts,
 		getTotalRecipeCost
 	} from '$lib/utils/costCalculatorUtils';
+	import { createRecipeSize, recipeToCostInput } from '$lib/utils/recipeUtils';
 	import RecipeListItem from './RecipeListItem.svelte';
 	import SidebarAddButton from './SidebarAddButton.svelte';
 	import { m } from '$lib/paraglide/messages.js';
@@ -56,10 +57,12 @@
 		}
 
 		// Create new ingredient with placeholder values
+		const defaultSize = createRecipeSize(m.defaultRecipeSizeName({ number: 1 }));
 		const newRecipe: RecipeDoc = {
 			id: newId,
 			name: m.defaultRecipeName({ number: nextNumber }),
-			ingredients: []
+			sizes: [defaultSize],
+			activeSizeId: defaultSize.id
 		};
 		recipes[newId] = newRecipe;
 
@@ -70,9 +73,7 @@
 
 	const getRecipeCost = (recipe: RecipeDoc) => {
 		const allCosts = getAllCosts(costs, compounds, unitConversions);
-
-		// Reactive calculations
-		const recipeCosts = calculateRecipeCosts(recipe, allCosts, unitConversions);
+		const recipeCosts = calculateRecipeCosts(recipeToCostInput(recipe), allCosts, unitConversions);
 		return getTotalRecipeCost(recipeCosts);
 	};
 </script>

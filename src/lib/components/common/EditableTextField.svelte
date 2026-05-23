@@ -7,12 +7,18 @@
 		value = $bindable(),
 		isEditing = $bindable(),
 		onSave,
-		onCancel
+		onCancel,
+		placeholder = m.ingredientNamePlaceholder(),
+		editAriaLabel = m.editIngredientNameAriaLabel(),
+		editTitle = m.editIngredientNameTitle()
 	}: {
 		value: string;
 		isEditing?: boolean;
 		onSave?: (newValue: string) => void;
 		onCancel?: (oldValue: string) => void;
+		placeholder?: string;
+		editAriaLabel?: string;
+		editTitle?: string;
 	} = $props();
 
 	let editingValue = $derived(value);
@@ -51,8 +57,8 @@
 			bind:value={editingValue}
 			size="small"
 			variant="inline"
-			placeholder={m.ingredientNamePlaceholder()}
-			ariaLabel={m.editIngredientNameAriaLabel()}
+			{placeholder}
+			ariaLabel={editAriaLabel}
 			onkeydown={handleKeydown}
 		/>
 		<ModernButton
@@ -78,8 +84,8 @@
 		<ModernButton
 			variant="icon"
 			size="small"
-			ariaLabel={m.editIngredientNameAriaLabel()}
-			title={m.editIngredientNameTitle()}
+			ariaLabel={editAriaLabel}
+			title={editTitle}
 			onclick={startEditing}
 		>
 			<i class="fa-solid fa-pencil"></i>

@@ -8,6 +8,7 @@ import type {
 import { historyManager } from '$lib/utils/history';
 import { mockData } from '$lib/data/mockData';
 import { loadAppData, saveAppData, hasSavedData, clearAppData } from '$lib/utils/localStorage';
+import { normalizeRecipes } from '$lib/utils/recipeUtils';
 
 class DataState {
 	costs = $state<Record<string, IngredientDoc>>({});
@@ -33,14 +34,14 @@ class DataState {
 			// Restore from localStorage
 			this.costs = savedData.costs;
 			this.compoundIngredients = savedData.compoundIngredients;
-			this.recipes = savedData.recipes;
+			this.recipes = normalizeRecipes(savedData.recipes);
 			this.customUnitLabels = savedData.customUnitLabels;
 			this.unitConversions = savedData.unitConversions;
 		} else if (useMockData) {
 			// No saved data, use mock data if requested
 			this.costs = mockData.costs;
 			this.compoundIngredients = mockData.compoundIngredients;
-			this.recipes = mockData.recipes;
+			this.recipes = normalizeRecipes(mockData.recipes);
 			this.customUnitLabels = mockData.unitLabels;
 			this.unitConversions = mockData.unitConversions;
 		}
@@ -69,7 +70,7 @@ class DataState {
 	initializeWithMockData() {
 		this.costs = mockData.costs;
 		this.compoundIngredients = mockData.compoundIngredients;
-		this.recipes = mockData.recipes;
+		this.recipes = normalizeRecipes(mockData.recipes);
 		this.customUnitLabels = mockData.unitLabels;
 		this.unitConversions = mockData.unitConversions;
 

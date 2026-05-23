@@ -2,6 +2,7 @@
 	import type {
 		IngredientDoc,
 		RecipeDoc,
+		RecipeIngredientEntry,
 		CompoundIngredientDoc,
 		UnitConversion
 	} from '$lib/data/schema';
@@ -14,7 +15,7 @@
 	interface Props {
 		availableIngredients: IngredientDoc[];
 		availableCompounds?: CompoundIngredientDoc[];
-		recipe: RecipeDoc;
+		ingredients: RecipeIngredientEntry[];
 		costs?: Record<string, IngredientDoc>;
 		recipes?: Record<string, RecipeDoc>;
 		unitConversions?: UnitConversion[];
@@ -25,7 +26,7 @@
 	let {
 		availableIngredients,
 		availableCompounds = [],
-		recipe,
+		ingredients = $bindable(),
 		costs,
 		recipes = {},
 		unitConversions = [],
@@ -82,7 +83,7 @@
 						// Add the newly created ingredient to the recipe
 						const newIngredient = costs[createdIngredientId];
 						if (newIngredient) {
-							recipe.ingredients.push({
+							ingredients.push({
 								id: createdIngredientId,
 								portion: { amount: 1, unit: newIngredient.product.unit },
 								hidden: false
@@ -147,14 +148,14 @@
 					onclick={() => {
 						if ('yield' in ingredient) {
 							const compound = ingredient as CompoundIngredientDoc;
-							recipe.ingredients.push({
+							ingredients.push({
 								id: compound.id,
 								portion: { amount: 1, unit: compound.viewedUnit },
 								hidden: false
 							});
 						} else {
 							// regular ingredient
-							recipe.ingredients.push({
+							ingredients.push({
 								id: ingredient.id,
 								portion: { amount: 1, unit: ingredient.product.unit },
 								hidden: false

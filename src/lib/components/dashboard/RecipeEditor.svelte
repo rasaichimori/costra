@@ -18,8 +18,10 @@
 	import { startDrag } from '$lib/utils/dragControls';
 	import AddRecipeIngredientsButton from './AddRecipeIngredientsButton.svelte';
 	import RecipeUnitSelectButton from './RecipeUnitSelectButton.svelte';
+	import RecipeSizeTabs from './RecipeSizeTabs.svelte';
 	import { getCurrencyContext } from '$lib/contexts/currency.svelte';
 	import DragHandle from '../common/icons/DragHandle.svelte';
+	import { getActiveSize, recipeToCostInput } from '$lib/utils/recipeUtils';
 	import { m } from '$lib/paraglide/messages.js';
 
 	interface Props {
@@ -45,21 +47,25 @@
 	}: Props = $props();
 
 	let draggingId = $state<string | null>(null);
+	let editingSizeId = $state<string | undefined>(undefined);
 	const ingredientEls: Record<string, HTMLElement> = $state({});
 
+	const activeSize = $derived(getActiveSize(recipe));
+	const costRecipe = $derived(recipeToCostInput(recipe));
+	const chartRecipeId = $derived(`${recipe.id}-${activeSize.id}`);
+
 	const swap = (from: number, to: number) => {
-		const moved = recipe.ingredients.splice(from, 1)[0];
-		recipe.ingredients.splice(to, 0, moved);
+		const moved = activeSize.ingredients.splice(from, 1)[0];
+		activeSize.ingredients.splice(to, 0, moved);
 	};
 
 	const allCosts = $derived(getAllCosts(costs, compounds, unitConversions));
 
-	// Reactive calculations
-	const recipeCosts = $derived(calculateRecipeCosts(recipe, allCosts, unitConversions));
+	const recipeCosts = $derived(calculateRecipeCosts(costRecipe, allCosts, unitConversions));
 	const totalCost = $derived(getTotalRecipeCost(recipeCosts));
-	const availableIngredients = $derived(getAvailableIngredients(recipe, costs));
+	const availableIngredients = $derived(getAvailableIngredients(costRecipe, costs));
 	const availableCompounds = $derived(
-		Object.values(compounds).filter((c) => !recipe.ingredients.some((i) => i.id === c.id))
+		Object.values(compounds).filter((c) => !activeSize.ingredients.some((i) => i.id === c.id))
 	);
 	const currencyContext = getCurrencyContext();
 </script>
@@ -106,142 +112,155 @@
 	</div>
 	<div class="recipe-section">
 		<div class="recipe-breakdown">
-			<h3>{m.ingredientBreakdownTitle()}</h3>
-			{#if recipe.ingredients.length > 0}
-				<div class="ingredient-list">
-					{#each recipe.ingredients as ingredient, idx (ingredient.id)}
-						<div
-							bind:this={ingredientEls[ingredient.id]}
-							class="ingredient-cost-item"
-							role="listitem"
-							data-id={ingredient.id}
-							class:compound={ingredient.id in compounds}
-							class:hidden={ingredient.hidden}
-							class:dragging={ingredient.id === draggingId}
-						>
-							<span
-								class="drag-handle"
-								role="button"
-								tabindex="-1"
-								aria-label={m.dragToReorderAriaLabel()}
-								data-tooltip={m.dragToReorderTitle()}
-								onpointerdown={(e) => {
-									draggingId = ingredient.id;
-									startDrag(
-										e,
-										(moveEvent) => {
-											moveEvent.preventDefault();
-											const targetEl = document.elementFromPoint(
-												moveEvent.clientX,
-												moveEvent.clientY
-											) as HTMLElement;
-											const targetId = targetEl.dataset.id;
-											if (targetId && targetId !== ingredient.id) {
-												swap(
-													idx,
-													recipe.ingredients.findIndex((i) => i.id === targetId)
-												);
-											}
-										},
-										() => (draggingId = null)
-									);
-								}}
+			{#key recipe.id}
+				<RecipeSizeTabs bind:recipe bind:editingSizeId />
+			{/key}
+			<div class="breakdown-content">
+				<h3>{m.ingredientBreakdownTitle()}</h3>
+				{#if activeSize.ingredients.length > 0}
+					<div class="ingredient-list">
+						{#each activeSize.ingredients as ingredient, idx (ingredient.id)}
+							<div
+								bind:this={ingredientEls[ingredient.id]}
+								class="ingredient-cost-item"
+								role="listitem"
+								data-id={ingredient.id}
+								class:compound={ingredient.id in compounds}
+								class:hidden={ingredient.hidden}
+								class:dragging={ingredient.id === draggingId}
 							>
-								<DragHandle />
-							</span>
-							<div class="ingredient-details">
-								<span class="ingredient-name">{allCosts[ingredient.id]?.name ?? ingredient.id}</span
+								<span
+									class="drag-handle"
+									role="button"
+									tabindex="-1"
+									aria-label={m.dragToReorderAriaLabel()}
+									data-tooltip={m.dragToReorderTitle()}
+									onpointerdown={(e) => {
+										draggingId = ingredient.id;
+										startDrag(
+											e,
+											(moveEvent) => {
+												moveEvent.preventDefault();
+												const targetEl = document.elementFromPoint(
+													moveEvent.clientX,
+													moveEvent.clientY
+												) as HTMLElement;
+												const targetId = targetEl.dataset.id;
+												if (targetId && targetId !== ingredient.id) {
+													swap(
+														idx,
+														activeSize.ingredients.findIndex((i) => i.id === targetId)
+													);
+												}
+											},
+											() => (draggingId = null)
+										);
+									}}
 								>
-								<div class="amount-input-group">
-									<TextInput
-										value={ingredient.portion.amount}
-										onchange={(value) => {
-											ingredient.portion.amount = value;
-										}}
-										size="small"
-										variant="inline"
-										min={0}
-										step={1}
-										spinner={true}
-									/>
+									<DragHandle />
+								</span>
+								<div class="ingredient-details">
+									<span class="ingredient-name"
+										>{allCosts[ingredient.id]?.name ?? ingredient.id}</span
+									>
+									<div class="amount-input-group">
+										<TextInput
+											value={ingredient.portion.amount}
+											onchange={(value) => {
+												ingredient.portion.amount = value;
+											}}
+											size="small"
+											variant="inline"
+											min={0}
+											step={1}
+											spinner={true}
+										/>
+									</div>
+									<div class="unit-input-group">
+										{#if allCosts[ingredient.id]}
+											<RecipeUnitSelectButton
+												recipePortion={ingredient.portion}
+												ingredientDoc={allCosts[ingredient.id]}
+												bind:unitConversions
+												bind:customUnitLabels
+												updateRecipePortionUnit={(unitId: string) => {
+													ingredient.portion.unit = unitId;
+												}}
+											/>
+										{:else}
+											<span class="error-text"
+												>{m.missingIngredientError({ id: ingredient.id })}</span
+											>
+										{/if}
+									</div>
 								</div>
-								<div class="unit-input-group">
+								<div class="ingredient-cost">
+									{currencyContext.currency}{recipeCosts[ingredient.id]?.toFixed(0) || '0'}
+								</div>
+								<div class="color-input-group">
 									{#if allCosts[ingredient.id]}
-										<RecipeUnitSelectButton
-											recipePortion={ingredient.portion}
-											ingredientDoc={allCosts[ingredient.id]}
-											bind:unitConversions
-											bind:customUnitLabels
-											updateRecipePortionUnit={(unitId: string) => {
-												ingredient.portion.unit = unitId;
+										<input
+											type="color"
+											class="color-picker"
+											value={allCosts[ingredient.id].color}
+											oninput={(e) => {
+												if (ingredient.id in compounds) {
+													compounds[ingredient.id].color = e.currentTarget.value;
+												} else if (ingredient.id in costs) {
+													costs[ingredient.id].color = e.currentTarget.value;
+												}
 											}}
 										/>
-									{:else}
-										<span class="error-text">{m.missingIngredientError({ id: ingredient.id })}</span
-										>
 									{/if}
 								</div>
+								<ModernButton
+									variant="icon"
+									size="small"
+									ariaLabel={ingredient.hidden ? m.showIngredient() : m.hideIngredient()}
+									title={ingredient.hidden ? m.showIngredient() : m.hideIngredient()}
+									onclick={() => {
+										ingredient.hidden = !ingredient.hidden;
+									}}
+								>
+									<i class={`fa-solid ${ingredient.hidden ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+								</ModernButton>
+								<ModernButton
+									variant="icon"
+									size="small"
+									ariaLabel={m.deleteIngredientAriaLabel()}
+									title={m.deleteIngredientTitle()}
+									onclick={() => {
+										activeSize.ingredients = activeSize.ingredients.filter(
+											(i) => i.id !== ingredient.id
+										);
+									}}
+								>
+									<i class="fa-solid fa-trash"></i>
+								</ModernButton>
 							</div>
-							<div class="ingredient-cost">
-								{currencyContext.currency}{recipeCosts[ingredient.id]?.toFixed(0) || '0'}
-							</div>
-							<div class="color-input-group">
-								{#if allCosts[ingredient.id]}
-									<input
-										type="color"
-										class="color-picker"
-										value={allCosts[ingredient.id].color}
-										oninput={(e) => {
-											if (ingredient.id in compounds) {
-												compounds[ingredient.id].color = e.currentTarget.value;
-											} else if (ingredient.id in costs) {
-												costs[ingredient.id].color = e.currentTarget.value;
-											}
-										}}
-									/>
-								{/if}
-							</div>
-							<!-- Hide/Show Button -->
-							<ModernButton
-								variant="icon"
-								size="small"
-								ariaLabel={ingredient.hidden ? m.showIngredient() : m.hideIngredient()}
-								title={ingredient.hidden ? m.showIngredient() : m.hideIngredient()}
-								onclick={() => {
-									ingredient.hidden = !ingredient.hidden;
-								}}
-							>
-								<i class={`fa-solid ${ingredient.hidden ? 'fa-eye-slash' : 'fa-eye'}`}></i>
-							</ModernButton>
-							<!-- Delete Button -->
-							<ModernButton
-								variant="icon"
-								size="small"
-								ariaLabel={m.deleteIngredientAriaLabel()}
-								title={m.deleteIngredientTitle()}
-								onclick={() => {
-									recipe.ingredients = recipe.ingredients.filter((i) => i.id !== ingredient.id);
-								}}
-							>
-								<i class="fa-solid fa-trash"></i>
-							</ModernButton>
-						</div>
-					{/each}
-				</div>
-			{:else}
-				<div class="no-ingredients-message">{m.noIngredientsAdded()}</div>
-			{/if}
-			<AddRecipeIngredientsButton
-				{availableIngredients}
-				{availableCompounds}
-				{recipe}
-				{costs}
-				recipes={{}}
-				{unitConversions}
-				{customUnitLabels}
-			/>
+						{/each}
+					</div>
+				{:else}
+					<div class="no-ingredients-message">{m.noIngredientsAdded()}</div>
+				{/if}
+				<AddRecipeIngredientsButton
+					{availableIngredients}
+					{availableCompounds}
+					bind:ingredients={activeSize.ingredients}
+					{costs}
+					recipes={{}}
+					{unitConversions}
+					{customUnitLabels}
+				/>
+			</div>
 		</div>
-		<CostBreakdown bind:recipe costs={allCosts} {compounds} {unitConversions} />
+		<CostBreakdown
+			bind:ingredients={activeSize.ingredients}
+			chartId={chartRecipeId}
+			costs={allCosts}
+			{compounds}
+			{unitConversions}
+		/>
 	</div>
 </div>
 
@@ -253,6 +272,7 @@
 		border-radius: 12px;
 		box-shadow: var(--shadow-light);
 		flex: 1;
+		min-width: 0;
 	}
 
 	.recipe-cost-calculator h3 {
@@ -302,18 +322,31 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: 32px;
+		min-width: 0;
 	}
 
 	.recipe-breakdown {
 		display: flex;
 		flex-direction: column;
 		flex: 1;
+		min-width: 0;
+		max-width: 100%;
 		margin-top: 18px;
-		gap: 8px;
 		padding-top: 15px;
 		border-top: 1px solid var(--border);
 		text-align: left;
 	}
+
+	.breakdown-content {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		padding: 12px;
+		background: var(--card);
+		border: 1px solid var(--border);
+		border-radius: 0 10px 10px 10px;
+	}
+
 	.ingredient-list {
 		display: flex;
 		flex-direction: column;
@@ -435,7 +468,6 @@
 		border: 1px dashed var(--border);
 	}
 
-	/* Hidden row greyed out */
 	.ingredient-cost-item.hidden {
 		opacity: 0.35;
 		filter: grayscale(0.3);
@@ -452,7 +484,6 @@
 		box-shadow: var(--shadow-medium);
 	}
 
-	/* Mobile responsive styles */
 	@media (max-width: 768px) {
 		.recipe-cost-calculator {
 			padding: 14px;
@@ -545,6 +576,10 @@
 		.recipe-breakdown {
 			margin-top: 12px;
 			padding-top: 12px;
+		}
+
+		.breakdown-content {
+			padding: 8px;
 		}
 
 		.ingredient-list {

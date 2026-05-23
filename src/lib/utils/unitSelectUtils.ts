@@ -2,6 +2,7 @@ import type {
 	CompoundIngredientDoc,
 	IngredientDoc,
 	RecipeDoc,
+	RecipeLikeDoc,
 	UnitConversion
 } from '$lib/data/schema';
 import {
@@ -16,6 +17,7 @@ import {
 	type VolumeUnit
 } from '$lib/utils/unit';
 import { isUnsetUnit } from '$lib/utils/ingredientUtils';
+import { getRecipeLikeIngredients, iterateRecipeIngredients } from '$lib/utils/recipeUtils';
 
 /**
  * Build a combined labels object from standard units and custom units
@@ -66,12 +68,12 @@ export const buildUnitGroups = (customUnitLabels: Record<string, string>): UnitO
  */
 export const getPortionUnitsForIngredient = (
 	ingredientId: string,
-	recipes: Record<string, RecipeDoc>
+	recipes: Record<string, RecipeLikeDoc>
 ): string[] => {
 	const unitIds = new Set<string>();
 
-	for (const recipe of Object.values(recipes)) {
-		for (const ingredient of recipe.ingredients) {
+	for (const doc of Object.values(recipes)) {
+		for (const ingredient of getRecipeLikeIngredients(doc)) {
 			if (ingredient.id === ingredientId && !ingredient.hidden) {
 				unitIds.add(ingredient.portion.unit as string);
 			}
@@ -87,10 +89,10 @@ export const getPortionUnitsForIngredient = (
 export const getRecipesUsingIngredientWithUnit = (
 	ingredientId: string,
 	unitId: string,
-	recipes: Record<string, RecipeDoc>
-): RecipeDoc[] => {
-	return Object.values(recipes).filter((recipe) =>
-		recipe.ingredients.some(
+	recipes: Record<string, RecipeLikeDoc>
+): RecipeLikeDoc[] => {
+	return Object.values(recipes).filter((doc) =>
+		getRecipeLikeIngredients(doc).some(
 			(ingredient) =>
 				ingredient.id === ingredientId && !ingredient.hidden && ingredient.portion.unit === unitId
 		)
@@ -245,8 +247,8 @@ export const findAllMissingConversionsFromImport = (
 	// Check regular recipe ingredients: portion unit -> product unit
 	// This includes recipes that reference compound ingredients
 	for (const recipe of Object.values(recipes)) {
-		for (const ingredient of recipe.ingredients) {
-			if (ingredient.hidden) continue;
+		iterateRecipeIngredients(recipe, (ingredient) => {
+			if (ingredient.hidden) return;
 
 			// Check if it's a base ingredient
 			const ingredientDoc = costs[ingredient.id];
@@ -259,7 +261,7 @@ export const findAllMissingConversionsFromImport = (
 			} else {
 				// Check if it's a compound ingredient
 				const compoundDoc = compoundIngredients[ingredient.id];
-				if (!compoundDoc) continue;
+				if (!compoundDoc) return;
 				productUnit = compoundDoc.yield.unit as string;
 				ingredientName = compoundDoc.name;
 			}
@@ -274,7 +276,7 @@ export const findAllMissingConversionsFromImport = (
 			) {
 				addMissingConversion(ingredient.id, ingredientName, portionUnit, productUnit);
 			}
-		}
+		});
 	}
 
 	// Check compound ingredients: yield unit -> viewed unit

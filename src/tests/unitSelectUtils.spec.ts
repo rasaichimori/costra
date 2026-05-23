@@ -12,6 +12,7 @@ import {
 	getPortionUnitsForIngredient,
 	getRecipesUsingIngredientWithUnit
 } from '$lib/utils/unitSelectUtils';
+import { createRecipeSize, DEFAULT_SIZE_NAME } from '$lib/utils/recipeUtils';
 import { describe, expect, it } from 'vitest';
 
 // Test fixtures
@@ -27,15 +28,22 @@ const createRecipe = (
 	id: string,
 	name: string,
 	ingredients: { id: string; amount: number; unit: string; hidden?: boolean }[]
-): RecipeDoc => ({
-	id,
-	name,
-	ingredients: ingredients.map((i) => ({
-		id: i.id,
-		portion: { amount: i.amount, unit: i.unit },
-		hidden: i.hidden ?? false
-	}))
-});
+): RecipeDoc => {
+	const size = createRecipeSize(
+		DEFAULT_SIZE_NAME,
+		ingredients.map((i) => ({
+			id: i.id,
+			portion: { amount: i.amount, unit: i.unit },
+			hidden: i.hidden ?? false
+		}))
+	);
+	return {
+		id,
+		name,
+		sizes: [size],
+		activeSizeId: size.id
+	};
+};
 
 const createCompound = (
 	id: string,

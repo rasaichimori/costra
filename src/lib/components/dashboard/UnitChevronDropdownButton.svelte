@@ -12,7 +12,7 @@
 		type UnitOptionGroup
 	} from '$lib/utils/unit';
 	import ModernButton from '../common/ModernButton.svelte';
-	import type { IngredientDoc, RecipeDoc, UnitConversion } from '$lib/data/schema';
+	import type { IngredientDoc, RecipeLikeDoc, UnitConversion } from '$lib/data/schema';
 	import { buildUnitLabels } from '$lib/utils/unitSelectUtils';
 	import {
 		isInitialUnitSelection,
@@ -25,7 +25,7 @@
 		unitConversions: UnitConversion[];
 		selectedUnitId: string;
 		ingredientDoc: IngredientDoc;
-		allRecipes: Record<string, RecipeDoc>;
+		allRecipes: Record<string, RecipeLikeDoc>;
 		unsetLabel: string;
 		selectUnit: (unitId: string) => void;
 	}

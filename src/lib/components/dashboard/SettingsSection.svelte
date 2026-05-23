@@ -19,6 +19,7 @@
 	import { findAllMissingConversionsFromImport } from '$lib/utils/unitSelectUtils';
 	import { buildUnitLabels } from '$lib/utils/unitSelectUtils';
 	import { mockData } from '$lib/data/mockData';
+	import { normalizeRecipes } from '$lib/utils/recipeUtils';
 
 	let {
 		costs = $bindable({}),
@@ -144,7 +145,10 @@
 				for (const [recipeId, recipe] of Object.entries(importedRecipes)) {
 					cleanedRecipes[recipeId] = {
 						...recipe,
-						ingredients: recipe.ingredients.filter((ing) => allAvailableIds.has(ing.id))
+						sizes: recipe.sizes.map((size) => ({
+							...size,
+							ingredients: size.ingredients.filter((ing) => allAvailableIds.has(ing.id))
+						}))
 					};
 				}
 
@@ -229,7 +233,7 @@
 
 	const loadExampleData = () => {
 		costs = mockData.costs;
-		recipes = mockData.recipes;
+		recipes = normalizeRecipes(mockData.recipes);
 		compoundIngredients = mockData.compoundIngredients;
 		unitConversions = mockData.unitConversions;
 		customUnitLabels = mockData.unitLabels;

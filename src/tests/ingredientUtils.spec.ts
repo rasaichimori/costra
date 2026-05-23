@@ -8,18 +8,25 @@ import {
 	UNSET_UNIT
 } from '$lib/utils/ingredientUtils';
 import type { RecipeDoc } from '$lib/data/schema';
+import { createRecipeSize, DEFAULT_SIZE_NAME } from '$lib/utils/recipeUtils';
 
 const recipeWithIngredient = (
 	ingredientId: string,
 	portionUnit: string,
 	recipeId = 'recipe1'
-): Record<string, RecipeDoc> => ({
-	[recipeId]: {
-		id: recipeId,
-		name: 'Test',
-		ingredients: [{ id: ingredientId, portion: { amount: 1, unit: portionUnit }, hidden: false }]
-	}
-});
+): Record<string, RecipeDoc> => {
+	const size = createRecipeSize(DEFAULT_SIZE_NAME, [
+		{ id: ingredientId, portion: { amount: 1, unit: portionUnit }, hidden: false }
+	]);
+	return {
+		[recipeId]: {
+			id: recipeId,
+			name: 'Test',
+			sizes: [size],
+			activeSizeId: size.id
+		}
+	};
+};
 
 describe('ingredientUtils', () => {
 	it('identifies the unset unit sentinel', () => {

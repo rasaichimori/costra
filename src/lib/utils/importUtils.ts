@@ -1,10 +1,14 @@
 import type {
 	CompoundIngredientDoc,
 	IngredientDoc,
+	LegacyRecipeDoc,
 	RecipeDoc,
+	RecipeIngredientEntry,
+	RecipeSize,
 	UnitConversion
 } from '$lib/data/schema';
 import { m } from '$lib/paraglide/messages.js';
+import { normalizeRecipes } from '$lib/utils/recipeUtils';
 import { normalizeUnitConversion } from '$lib/utils/unit';
 
 export interface ImportData {
@@ -14,6 +18,46 @@ export interface ImportData {
 	unitConversions?: UnitConversion[];
 	customUnitLabels?: Record<string, string>;
 }
+
+export interface ImportInputData {
+	costs: Record<string, IngredientDoc>;
+	recipes: Record<string, RecipeDoc | LegacyRecipeDoc>;
+	compoundIngredients?: Record<string, CompoundIngredientDoc>;
+	unitConversions?: UnitConversion[];
+	customUnitLabels?: Record<string, string>;
+}
+
+const validateRecipeIngredient = (ingredient: unknown, key: string): string | null => {
+	if (!ingredient || typeof ingredient !== 'object' || Array.isArray(ingredient)) {
+		return m.importValidationRecipeHasInvalidIngredient({ key });
+	}
+	const entry = ingredient as RecipeIngredientEntry;
+	if (typeof entry.id !== 'string') {
+		return m.importValidationRecipeIngredientMustHaveId({ key });
+	}
+	if (typeof entry.hidden !== 'boolean') {
+		return m.importValidationRecipeIngredientMustHaveHidden({ key });
+	}
+	if (!entry.portion || typeof entry.portion !== 'object' || Array.isArray(entry.portion)) {
+		return m.importValidationRecipeIngredientMustHavePortion({ key });
+	}
+	if (typeof entry.portion.amount !== 'number' || !isFinite(entry.portion.amount)) {
+		return m.importValidationRecipeIngredientPortionMustHaveAmount({ key });
+	}
+	if (typeof entry.portion.unit !== 'string') {
+		return m.importValidationRecipeIngredientPortionMustHaveUnit({ key });
+	}
+	return null;
+};
+
+const getRecipeIngredientsForValidation = (
+	recipe: RecipeDoc | LegacyRecipeDoc
+): RecipeIngredientEntry[] => {
+	if ('sizes' in recipe && Array.isArray(recipe.sizes)) {
+		return recipe.sizes.flatMap((size) => size.ingredients);
+	}
+	return (recipe as LegacyRecipeDoc).ingredients;
+};
 
 export const validateImportData = (data: unknown): string | null => {
 	if (!data || typeof data !== 'object' || Array.isArray(data)) {
@@ -71,39 +115,46 @@ export const validateImportData = (data: unknown): string | null => {
 			return m.importValidationRecipeMustBeObject({ key });
 		}
 
-		const rec = recipe as RecipeDoc;
+		const rec = recipe as RecipeDoc | LegacyRecipeDoc;
 		if (typeof rec.id !== 'string') {
 			return m.importValidationRecipeMustHaveId({ key });
 		}
 		if (typeof rec.name !== 'string') {
 			return m.importValidationRecipeMustHaveName({ key });
 		}
-		if (!Array.isArray(rec.ingredients)) {
+
+		const hasSizes = 'sizes' in rec && Array.isArray(rec.sizes);
+		const hasLegacyIngredients = 'ingredients' in rec && Array.isArray(rec.ingredients);
+
+		if (!hasSizes && !hasLegacyIngredients) {
 			return m.importValidationRecipeMustHaveIngredientsArray({ key });
 		}
 
-		for (const ingredient of rec.ingredients) {
-			if (!ingredient || typeof ingredient !== 'object' || Array.isArray(ingredient)) {
-				return m.importValidationRecipeHasInvalidIngredient({ key });
+		if (hasSizes) {
+			for (const size of rec.sizes as RecipeSize[]) {
+				if (!size || typeof size !== 'object' || Array.isArray(size)) {
+					return m.importValidationRecipeHasInvalidSize({ key });
+				}
+				if (typeof size.id !== 'string') {
+					return m.importValidationRecipeSizeMustHaveId({ key });
+				}
+				if (typeof size.name !== 'string') {
+					return m.importValidationRecipeSizeMustHaveName({ key });
+				}
+				if (!Array.isArray(size.ingredients)) {
+					return m.importValidationRecipeSizeMustHaveIngredientsArray({ key });
+				}
+				for (const ingredient of size.ingredients) {
+					const ingredientError = validateRecipeIngredient(ingredient, key);
+					if (ingredientError) return ingredientError;
+				}
 			}
-			if (typeof ingredient.id !== 'string') {
-				return m.importValidationRecipeIngredientMustHaveId({ key });
-			}
-			if (typeof ingredient.hidden !== 'boolean') {
-				return m.importValidationRecipeIngredientMustHaveHidden({ key });
-			}
-			if (
-				!ingredient.portion ||
-				typeof ingredient.portion !== 'object' ||
-				Array.isArray(ingredient.portion)
-			) {
-				return m.importValidationRecipeIngredientMustHavePortion({ key });
-			}
-			if (typeof ingredient.portion.amount !== 'number' || !isFinite(ingredient.portion.amount)) {
-				return m.importValidationRecipeIngredientPortionMustHaveAmount({ key });
-			}
-			if (typeof ingredient.portion.unit !== 'string') {
-				return m.importValidationRecipeIngredientPortionMustHaveUnit({ key });
+		}
+
+		if (hasLegacyIngredients) {
+			for (const ingredient of rec.ingredients) {
+				const ingredientError = validateRecipeIngredient(ingredient, key);
+				if (ingredientError) return ingredientError;
 			}
 		}
 	}
@@ -192,7 +243,7 @@ export const validateImportData = (data: unknown): string | null => {
 	}
 
 	const costs = record.costs as Record<string, IngredientDoc>;
-	const recipes = record.recipes as Record<string, RecipeDoc>;
+	const recipes = record.recipes as Record<string, RecipeDoc | LegacyRecipeDoc>;
 	const compoundIngredients = (record.compoundIngredients || {}) as Record<
 		string,
 		CompoundIngredientDoc
@@ -207,7 +258,7 @@ export const validateImportData = (data: unknown): string | null => {
 	}
 
 	for (const [recipeKey, recipe] of Object.entries(recipes)) {
-		for (const ingredient of recipe.ingredients) {
+		for (const ingredient of getRecipeIngredientsForValidation(recipe)) {
 			if (!availableIngredientIds.has(ingredient.id)) {
 				return m.importValidationRecipeReferencesMissingIngredient({
 					recipeName: recipe.name,
@@ -233,14 +284,16 @@ export const validateImportData = (data: unknown): string | null => {
 	return null;
 };
 
-export const prepareImportData = (data: ImportData): ImportData => {
-	if (!data.unitConversions?.length) {
-		return data;
-	}
+export const prepareImportData = (data: ImportInputData): ImportData => {
+	const normalizedRecipes = normalizeRecipes(data.recipes);
+	const normalizedConversions = data.unitConversions?.length
+		? data.unitConversions.map((conv) => normalizeUnitConversion(conv))
+		: data.unitConversions;
 
 	return {
 		...data,
-		unitConversions: data.unitConversions.map((conv) => normalizeUnitConversion(conv))
+		recipes: normalizedRecipes,
+		unitConversions: normalizedConversions
 	};
 };
 
@@ -252,7 +305,7 @@ export class ImportValidationError extends Error {
 }
 
 export const parseAndPrepareImportData = (jsonText: string): ImportData => {
-	const data = JSON.parse(jsonText) as ImportData;
+	const data = JSON.parse(jsonText) as ImportInputData;
 	const validationError = validateImportData(data);
 	if (validationError) {
 		throw new ImportValidationError(validationError);

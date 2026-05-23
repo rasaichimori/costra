@@ -42,7 +42,14 @@ const sampleData: AppData = {
 		cake: {
 			id: 'cake',
 			name: 'Cake',
-			ingredients: [{ id: 'flour', portion: { amount: 100, unit: 'g' }, hidden: false }]
+			sizes: [
+				{
+					id: 'size-1',
+					name: 'Regular',
+					ingredients: [{ id: 'flour', portion: { amount: 100, unit: 'g' }, hidden: false }]
+				}
+			],
+			activeSizeId: 'size-1'
 		}
 	},
 	customUnitLabels: {},

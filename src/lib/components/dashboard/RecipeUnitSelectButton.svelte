@@ -3,7 +3,7 @@
 	import { onMount } from 'svelte';
 	import UnitSelectPopup from './UnitSelectPopup.svelte';
 	import { hasConversion, type UnitOption, type Portion } from '$lib/utils/unit';
-	import type { IngredientDoc, RecipeDoc, UnitConversion } from '$lib/data/schema';
+	import type { IngredientDoc, RecipeLikeDoc, UnitConversion } from '$lib/data/schema';
 	import AddUnitConversionModal from '../modals/AddUnitConversionModal.svelte';
 	import { buildUnitGroups, buildUnitLabels } from '$lib/utils/unitSelectUtils';
 	import {
@@ -19,7 +19,7 @@
 		unitConversions: UnitConversion[];
 		customUnitLabels: Record<string, string>;
 		/** When set, product-unit changes skip conversion prompts unless used elsewhere. */
-		allRecipes?: Record<string, RecipeDoc>;
+		allRecipes?: Record<string, RecipeLikeDoc>;
 		promptOnlyWhenUsed?: boolean;
 		updateRecipePortionUnit: (unitId: string) => void;
 	}

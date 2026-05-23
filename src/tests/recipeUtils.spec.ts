@@ -2,20 +2,36 @@ import type { CompoundIngredientDoc, RecipeDoc, UnitConversion } from '$lib/data
 import {
 	createDuplicateCompound,
 	createDuplicateRecipe,
+	createRecipeSize,
+	DEFAULT_SIZE_NAME,
 	duplicateUnitConversionsForIngredient,
-	insertRecordAfter
+	getActiveSize,
+	getNextRecipeSizeNumber,
+	insertRecordAfter,
+	normalizeRecipeDoc
 } from '$lib/utils/recipeUtils';
 import { describe, expect, it } from 'vitest';
 
 const createRecipe = (
 	id: string,
 	name: string,
-	ingredients: RecipeDoc['ingredients'] = []
-): RecipeDoc => ({
-	id,
-	name,
-	ingredients
-});
+	ingredients: { id: string; amount: number; unit: string; hidden?: boolean }[] = []
+): RecipeDoc => {
+	const size = createRecipeSize(
+		DEFAULT_SIZE_NAME,
+		ingredients.map((i) => ({
+			id: i.id,
+			portion: { amount: i.amount, unit: i.unit },
+			hidden: i.hidden ?? false
+		}))
+	);
+	return {
+		id,
+		name,
+		sizes: [size],
+		activeSizeId: size.id
+	};
+};
 
 const createCompound = (
 	id: string,
@@ -49,20 +65,62 @@ describe('insertRecordAfter', () => {
 	});
 });
 
+describe('normalizeRecipeDoc', () => {
+	it('migrates legacy recipes with ingredients to sizes', () => {
+		const legacy = {
+			id: 'cake',
+			name: 'Cake',
+			ingredients: [{ id: 'flour', portion: { amount: 100, unit: 'g' }, hidden: false }]
+		};
+
+		const normalized = normalizeRecipeDoc(legacy);
+
+		expect(normalized.sizes).toHaveLength(1);
+		expect(normalized.sizes[0].name).toBe(DEFAULT_SIZE_NAME);
+		expect(normalized.sizes[0].ingredients).toEqual(legacy.ingredients);
+		expect(normalized.activeSizeId).toBe(normalized.sizes[0].id);
+	});
+});
+
+describe('getActiveSize', () => {
+	it('returns the active size when activeSizeId is set', () => {
+		const recipe = createRecipe('cake', 'Cake');
+		const secondSize = createRecipeSize('Large');
+		recipe.sizes.push(secondSize);
+		recipe.activeSizeId = secondSize.id;
+
+		expect(getActiveSize(recipe).id).toBe(secondSize.id);
+	});
+});
+
+describe('getNextRecipeSizeNumber', () => {
+	it('returns the next unused sequential size number', () => {
+		const recipe = createRecipe('cake', 'Cake');
+		recipe.sizes.push(createRecipeSize('Size 1'));
+		recipe.sizes.push(createRecipeSize('Size 2'));
+
+		expect(getNextRecipeSizeNumber(recipe)).toBe(3);
+	});
+});
+
 describe('createDuplicateRecipe', () => {
-	it('copies recipe content with a new id and name', () => {
+	it('copies all sizes with a new id and name', () => {
 		const original = createRecipe('cake', 'Vanilla Cake', [
-			{ id: 'flour', portion: { amount: 250, unit: 'g' }, hidden: false },
-			{ id: 'sugar', portion: { amount: 200, unit: 'g' }, hidden: true }
+			{ id: 'flour', amount: 250, unit: 'g', hidden: false },
+			{ id: 'sugar', amount: 200, unit: 'g', hidden: true }
 		]);
+		original.sizes.push(createRecipeSize('Large', original.sizes[0].ingredients));
 
 		const duplicate = createDuplicateRecipe(original, 'cake-copy', 'Vanilla Cake - copy');
 
 		expect(duplicate.id).toBe('cake-copy');
 		expect(duplicate.name).toBe('Vanilla Cake - copy');
-		expect(duplicate.ingredients).toEqual(original.ingredients);
-		expect(duplicate.ingredients).not.toBe(original.ingredients);
-		expect(duplicate.ingredients[0].portion).not.toBe(original.ingredients[0].portion);
+		expect(duplicate.sizes).toHaveLength(2);
+		expect(duplicate.sizes[0].ingredients).toEqual(original.sizes[0].ingredients);
+		expect(duplicate.sizes[0].ingredients).not.toBe(original.sizes[0].ingredients);
+		expect(duplicate.sizes[0].ingredients[0].portion).not.toBe(
+			original.sizes[0].ingredients[0].portion
+		);
 	});
 });
 

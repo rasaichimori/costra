@@ -71,8 +71,9 @@ test.describe('dashboard workflows', () => {
 		await page.getByRole('button', { name: 'Duplicate recipe' }).click();
 
 		await expect(page.getByRole('button', { name: 'Vanilla Cake - copy' })).toBeVisible();
-		await expect(page.getByRole('textbox', { name: 'Edit ingredient name' })).toBeVisible();
-		await expect(page.getByRole('button', { name: 'Save name' })).toBeVisible();
+		const header = page.locator('.recipe-cost-calculator .header');
+		await expect(header.getByRole('textbox', { name: 'Edit ingredient name' })).toBeVisible();
+		await expect(header.getByRole('button', { name: 'Save name' })).toBeVisible();
 
 		const recipeButtons = page.locator('.recipes-list').first().getByRole('button');
 		const labels = await recipeButtons.allTextContents();

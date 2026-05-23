@@ -3,7 +3,7 @@
 	import { onMount } from 'svelte';
 	import UnitSelectPopup from './UnitSelectPopup.svelte';
 	import type { UnitOption } from '$lib/utils/unit';
-	import type { IngredientDoc, RecipeDoc, UnitConversion } from '$lib/data/schema';
+	import type { IngredientDoc, RecipeLikeDoc, UnitConversion } from '$lib/data/schema';
 	import {
 		buildUnitGroups,
 		buildUnitLabels,
@@ -16,7 +16,7 @@
 
 	interface Props {
 		ingredientDoc: IngredientDoc;
-		recipes: Record<string, RecipeDoc>;
+		recipes: Record<string, RecipeLikeDoc>;
 		unitConversions: UnitConversion[];
 		customUnitLabels: Record<string, string>;
 		onUnitChange?: (newUnit: string) => void;
