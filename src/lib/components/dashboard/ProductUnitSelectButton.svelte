@@ -10,6 +10,10 @@
 		findMissingConversions,
 		getPortionUnitsForIngredient
 	} from '$lib/utils/unitSelectUtils';
+	import {
+		isPlaceholderProductUnit,
+		portionUnitsExcludingPlaceholder
+	} from '$lib/utils/ingredientUtils';
 	import AddBatchUnitConversionModal from '$lib/components/modals/AddBatchUnitConversionModal.svelte';
 
 	interface Props {
@@ -17,6 +21,8 @@
 		recipes: Record<string, RecipeDoc>;
 		unitConversions: UnitConversion[];
 		customUnitLabels: Record<string, string>;
+		/** Skip conversion from the auto-assigned placeholder product unit. */
+		allowFirstUnitPick?: boolean;
 		onUnitChange?: (newUnit: string) => void;
 	}
 
@@ -25,6 +31,7 @@
 		recipes,
 		unitConversions = $bindable(),
 		customUnitLabels = $bindable(),
+		allowFirstUnitPick = false,
 		onUnitChange
 	}: Props = $props();
 
@@ -49,9 +56,18 @@
 		const portionUnits = getPortionUnitsForIngredient(ingredientId, recipes);
 
 		// Always include the old product unit in the check, as it might be used as a portion unit
-		// in compounds or other recipes, and we need conversions from old unit to new unit
-		const allPortionUnits = [...portionUnits];
-		if (oldUnitId !== newUnitId && !allPortionUnits.includes(oldUnitId)) {
+		// in compounds or other recipes, and we need conversions from old unit to new unit.
+		// Skip the auto placeholder — the user has not committed to that unit yet.
+		const skipPlaceholderOldUnit = allowFirstUnitPick && isPlaceholderProductUnit(oldUnitId);
+		const allPortionUnits = portionUnitsExcludingPlaceholder(
+			[...portionUnits],
+			skipPlaceholderOldUnit
+		);
+		if (
+			oldUnitId !== newUnitId &&
+			!allPortionUnits.includes(oldUnitId) &&
+			!skipPlaceholderOldUnit
+		) {
 			allPortionUnits.push(oldUnitId);
 		}
 

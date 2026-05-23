@@ -6,12 +6,15 @@
 	import type { IngredientDoc, UnitConversion } from '$lib/data/schema';
 	import AddUnitConversionModal from '../modals/AddUnitConversionModal.svelte';
 	import { buildUnitGroups, buildUnitLabels } from '$lib/utils/unitSelectUtils';
+	import { isFirstIngredientUnitPick } from '$lib/utils/ingredientUtils';
 
 	interface Props {
 		recipePortion: Portion;
 		ingredientDoc: IngredientDoc;
 		unitConversions: UnitConversion[];
 		customUnitLabels: Record<string, string>;
+		/** Allow changing recipe/product units away from the auto placeholder without a conversion. */
+		allowFirstUnitPick?: boolean;
 		updateRecipePortionUnit: (unitId: string) => void;
 	}
 
@@ -20,6 +23,7 @@
 		ingredientDoc,
 		unitConversions = $bindable(),
 		customUnitLabels = $bindable(),
+		allowFirstUnitPick = false,
 		updateRecipePortionUnit
 	}: Props = $props();
 
@@ -35,10 +39,29 @@
 		customUnitLabels[unitOption.id] = unitOption.label;
 	};
 
+	const applyUnitSelection = (newUnitId: string) => {
+		updateRecipePortionUnit(newUnitId);
+		if (unitPopupId) {
+			closeOverlay(unitPopupId);
+		}
+	};
+
 	const handleUnitSelection = (unitOption: UnitOption) => {
 		const newUnitId = unitOption.id;
-		const targetUnitId = ingredientDoc.product.unit;
+		const targetUnitId = ingredientDoc.product.unit as string;
 		const ingredientId = ingredientDoc.id;
+
+		if (
+			isFirstIngredientUnitPick({
+				allowFirstUnitPick,
+				productUnit: targetUnitId,
+				portionUnit: recipePortion.unit
+			})
+		) {
+			ingredientDoc.product.unit = newUnitId;
+			applyUnitSelection(newUnitId);
+			return;
+		}
 
 		// Check if conversion is needed
 		if (
@@ -54,20 +77,15 @@
 				unitLabels,
 				onSave: (conversion: UnitConversion) => {
 					unitConversions = [...unitConversions, conversion];
-					updateRecipePortionUnit(newUnitId);
+					applyUnitSelection(newUnitId);
 					closeOverlay(conversionModalId);
-					closeOverlay(unitPopupId);
 				},
 				onclose: () => {
 					closeOverlay(conversionModalId);
 				}
 			});
 		} else {
-			// No conversion needed, update immediately and close popup
-			updateRecipePortionUnit(newUnitId);
-			if (unitPopupId) {
-				closeOverlay(unitPopupId);
-			}
+			applyUnitSelection(newUnitId);
 		}
 	};
 

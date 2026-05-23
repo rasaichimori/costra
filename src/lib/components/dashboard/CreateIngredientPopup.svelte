@@ -6,6 +6,7 @@
 	import { getCurrencyContext } from '$lib/contexts/currency.svelte';
 	import { randomLightColorHex } from '$lib/utils/color';
 	import ProductUnitSelectButton from './ProductUnitSelectButton.svelte';
+	import { NEW_INGREDIENT_PLACEHOLDER_UNIT } from '$lib/utils/ingredientUtils';
 	import { m } from '$lib/paraglide/messages.js';
 
 	interface Props {
@@ -65,7 +66,7 @@
 	let category = $state(initialCategory);
 	let cost = $state(10);
 	let amount = $state(1);
-	let unit = $state<string>('cup');
+	let unit = $state<string>(NEW_INGREDIENT_PLACEHOLDER_UNIT);
 
 	// Create a temporary ingredient doc for ProductUnitSelectButton
 	let tempIngredientDoc = $state<IngredientDoc>({
@@ -161,6 +162,7 @@
 					{recipes}
 					bind:unitConversions
 					bind:customUnitLabels
+					allowFirstUnitPick={true}
 					onUnitChange={(newUnit) => {
 						unit = newUnit;
 						tempIngredientDoc.product.unit = newUnit;

@@ -18,6 +18,7 @@
 	import { getCurrencyContext } from '$lib/contexts/currency.svelte';
 	import { randomLightColorHex } from '$lib/utils/color';
 	import ProductUnitSelectButton from './ProductUnitSelectButton.svelte';
+	import { NEW_INGREDIENT_PLACEHOLDER_UNIT } from '$lib/utils/ingredientUtils';
 	import { m } from '$lib/paraglide/messages.js';
 
 	let {
@@ -162,7 +163,7 @@
 			product: {
 				cost: 10,
 				amount: 1,
-				unit: 'cup'
+				unit: NEW_INGREDIENT_PLACEHOLDER_UNIT
 			},
 			color: randomLightColorHex()
 		};
@@ -281,6 +282,7 @@
 									recipes={allRecipes}
 									bind:unitConversions
 									bind:customUnitLabels
+									allowFirstUnitPick={newlyCreatedIngredients.has(ingredientId)}
 								/>
 							</td>
 							<td class="actions-cell">
