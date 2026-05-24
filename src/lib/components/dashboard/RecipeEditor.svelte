@@ -343,8 +343,6 @@
 		gap: 8px;
 		padding: 12px;
 		background: var(--card);
-		border: 1px solid var(--border);
-		border-radius: 0 10px 10px 10px;
 	}
 
 	.ingredient-list {

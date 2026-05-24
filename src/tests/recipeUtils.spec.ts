@@ -8,7 +8,9 @@ import {
 	getActiveSize,
 	getNextRecipeSizeNumber,
 	insertRecordAfter,
-	normalizeRecipeDoc
+	normalizeRecipeDoc,
+	reorderRecipeSizes,
+	recipeSizeToCostInput
 } from '$lib/utils/recipeUtils';
 import { describe, expect, it } from 'vitest';
 
@@ -79,6 +81,33 @@ describe('normalizeRecipeDoc', () => {
 		expect(normalized.sizes[0].name).toBe(DEFAULT_SIZE_NAME);
 		expect(normalized.sizes[0].ingredients).toEqual(legacy.ingredients);
 		expect(normalized.activeSizeId).toBe(normalized.sizes[0].id);
+	});
+});
+
+describe('recipeSizeToCostInput', () => {
+	it('builds cost input from a specific size', () => {
+		const recipe = createRecipe('cake', 'Cake', [{ id: 'flour', amount: 100, unit: 'g' }]);
+		const large = createRecipeSize('Large', recipe.sizes[0].ingredients);
+		recipe.sizes.push(large);
+
+		expect(recipeSizeToCostInput(recipe.id, large)).toEqual({
+			id: 'cake',
+			ingredients: large.ingredients
+		});
+	});
+});
+
+describe('reorderRecipeSizes', () => {
+	it('moves a size from one index to another', () => {
+		const small = createRecipeSize('Small');
+		const medium = createRecipeSize('Medium');
+		const large = createRecipeSize('Large');
+
+		expect(reorderRecipeSizes([small, medium, large], 2, 0).map((size) => size.name)).toEqual([
+			'Large',
+			'Small',
+			'Medium'
+		]);
 	});
 });
 

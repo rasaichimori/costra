@@ -97,13 +97,30 @@ export const normalizeRecipes = (
 export const getActiveSize = (recipe: RecipeDoc): RecipeSize =>
 	recipe.sizes.find((size) => size.id === recipe.activeSizeId) ?? recipe.sizes[0];
 
+export const recipeSizeToCostInput = (
+	recipeId: string,
+	size: RecipeSize
+): RecipeWithIngredients => ({
+	id: recipeId,
+	ingredients: size.ingredients
+});
+
+export const reorderRecipeSizes = (
+	sizes: RecipeSize[],
+	fromIndex: number,
+	toIndex: number
+): RecipeSize[] => {
+	const next = [...sizes];
+	const [moved] = next.splice(fromIndex, 1);
+	next.splice(toIndex, 0, moved);
+	return next;
+};
+
 export const getActiveIngredients = (recipe: RecipeDoc): RecipeIngredientEntry[] =>
 	getActiveSize(recipe).ingredients;
 
-export const recipeToCostInput = (recipe: RecipeDoc): RecipeWithIngredients => ({
-	id: recipe.id,
-	ingredients: getActiveIngredients(recipe)
-});
+export const recipeToCostInput = (recipe: RecipeDoc): RecipeWithIngredients =>
+	recipeSizeToCostInput(recipe.id, getActiveSize(recipe));
 
 export const getNextRecipeSizeNumber = (recipe: RecipeDoc): number => {
 	const pattern = /^Size (\d+)$/;

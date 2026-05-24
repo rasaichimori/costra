@@ -3,6 +3,7 @@
 		CompoundIngredientDoc,
 		IngredientDoc,
 		RecipeDoc,
+		RecipeSize,
 		UnitConversion
 	} from '$lib/data/schema';
 	import {
@@ -10,7 +11,7 @@
 		getAllCosts,
 		getTotalRecipeCost
 	} from '$lib/utils/costCalculatorUtils';
-	import { createRecipeSize, recipeToCostInput } from '$lib/utils/recipeUtils';
+	import { createRecipeSize, recipeSizeToCostInput } from '$lib/utils/recipeUtils';
 	import RecipeListItem from './RecipeListItem.svelte';
 	import SidebarAddButton from './SidebarAddButton.svelte';
 	import { m } from '$lib/paraglide/messages.js';
@@ -33,7 +34,7 @@
 		setIsEditingName
 	}: Props = $props();
 
-	let newlyCreatedRecipes = $state<Set<string>>(new Set());
+	const allCosts = $derived(getAllCosts(costs, compounds, unitConversions));
 
 	const addRecipe = () => {
 		const newId = crypto.randomUUID();
@@ -66,24 +67,28 @@
 		};
 		recipes[newId] = newRecipe;
 
-		newlyCreatedRecipes.add(newId);
 		selectedRecipeId = newId;
 		setIsEditingName(true);
 	};
 
-	const getRecipeCost = (recipe: RecipeDoc) => {
-		const allCosts = getAllCosts(costs, compounds, unitConversions);
-		const recipeCosts = calculateRecipeCosts(recipeToCostInput(recipe), allCosts, unitConversions);
+	const getSizeCost = (recipeId: string, size: RecipeSize) => {
+		const recipeCosts = calculateRecipeCosts(
+			recipeSizeToCostInput(recipeId, size),
+			allCosts,
+			unitConversions
+		);
 		return getTotalRecipeCost(recipeCosts);
 	};
 </script>
 
 <div class="recipes-list">
 	{#each Object.entries(recipes) as [id, recipe] (id)}
+		{@const firstSize = recipe.sizes[0]}
 		<RecipeListItem
 			label={recipe.name}
 			selected={id === selectedRecipeId}
-			cost={getRecipeCost(recipe)}
+			cost={getSizeCost(recipe.id, firstSize)}
+			unit={firstSize.name}
 			onclick={() => {
 				selectedRecipeId = id;
 				setIsEditingName(false);
