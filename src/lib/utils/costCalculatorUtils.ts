@@ -2,6 +2,7 @@ import type {
 	CompoundIngredientDoc,
 	IngredientDoc,
 	RecipeDoc,
+	RecipeIngredientEntry,
 	RecipeWithIngredients,
 	UnitConversion
 } from '$lib/data/schema';
@@ -86,6 +87,32 @@ export const calculateRecipeCosts = (
 	});
 
 	return recipeCosts;
+};
+
+/** Cost of one unit of the recipe portion unit, or null when conversion is unavailable. */
+export const getIngredientPerUnitCost = (
+	ingredient: RecipeIngredientEntry,
+	ingredientDoc: IngredientDoc,
+	unitConversions: UnitConversion[]
+): number | null => {
+	if (isUnsetUnit(ingredient.portion.unit as string)) {
+		return null;
+	}
+
+	const ingredientPrice = ingredientDoc.product.cost;
+	try {
+		const conversionFactor = getConversionFactor(
+			ingredient.portion.unit,
+			ingredientDoc.product.unit,
+			ingredient.id,
+			unitConversions
+		);
+		const productUnitPortion = conversionFactor;
+		const ratioUsed = productUnitPortion / ingredientDoc.product.amount;
+		return ingredientPrice * ratioUsed;
+	} catch {
+		return null;
+	}
 };
 
 /**

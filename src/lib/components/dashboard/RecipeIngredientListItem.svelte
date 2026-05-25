@@ -12,6 +12,8 @@
 	import DragHandle from '../common/icons/DragHandle.svelte';
 	import { startDrag } from '$lib/utils/dragControls';
 	import { m } from '$lib/paraglide/messages.js';
+	import { getIngredientPerUnitCost } from '$lib/utils/costCalculatorUtils';
+	import { buildUnitLabels } from '$lib/utils/unitSelectUtils';
 
 	interface Props {
 		ingredient: RecipeIngredientEntry;
@@ -47,6 +49,13 @@
 
 	const currencyContext = getCurrencyContext();
 	const isDragging = $derived(ingredient.id === draggingId);
+	const unitLabels = $derived(buildUnitLabels(customUnitLabels, m.unitUnsetLabel()));
+	const perUnitCost = $derived(
+		ingredientDoc ? getIngredientPerUnitCost(ingredient, ingredientDoc, unitConversions) : null
+	);
+	const portionUnitLabel = $derived(
+		unitLabels[ingredient.portion.unit as string] || ingredient.portion.unit
+	);
 </script>
 
 <div
@@ -121,6 +130,11 @@
 	<div class="ingredient-cost">
 		{currencyContext.currency}{lineCost?.toFixed(0) || '0'}
 	</div>
+	{#if perUnitCost !== null}
+		<span class="ingredient-cost-per-unit" aria-hidden="true">
+			{currencyContext.currency}{perUnitCost.toFixed(0)}/{portionUnitLabel}
+		</span>
+	{/if}
 	<div class="color-input-group">
 		{#if ingredientDoc}
 			<input
@@ -161,6 +175,8 @@
 
 <style>
 	.ingredient-cost-item {
+		container-type: inline-size;
+		container-name: ingredient-item;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
@@ -215,11 +231,28 @@
 	}
 
 	.ingredient-cost {
+		display: flex;
+		align-items: baseline;
+		gap: 4px;
 		font-weight: 600;
 		color: var(--foreground);
 		min-width: 40px;
 		font-size: 12px;
 		font-variant-numeric: tabular-nums;
+		white-space: nowrap;
+	}
+	.ingredient-cost-per-unit {
+		display: none;
+		font-weight: 400;
+		font-size: 10px;
+		color: var(--muted-foreground);
+		white-space: nowrap;
+	}
+
+	@container ingredient-item (min-width: 500px) {
+		.ingredient-cost-per-unit {
+			display: inline;
+		}
 	}
 
 	.amount-input-group,

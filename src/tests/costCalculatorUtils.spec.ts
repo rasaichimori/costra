@@ -11,6 +11,7 @@ import {
 	getAvailableIngredients,
 	getCompoundConvertedYield,
 	getCompoundPerUnitCost,
+	getIngredientPerUnitCost,
 	getRecipesUsingIngredient,
 	getTotalRecipeCost,
 	removeIngredientFromAllRecipes
@@ -450,6 +451,56 @@ describe('getCompoundConvertedYield', () => {
 		compound.viewedUnit = UNSET_UNIT;
 
 		expect(getCompoundConvertedYield(compound, [])).toBeNull();
+	});
+});
+
+describe('getIngredientPerUnitCost', () => {
+	it('returns cost for one unit when portion and product units match', () => {
+		const flour = createIngredient('flour', 'Flour', 100, 1000, 'g');
+		const ingredient = {
+			id: 'flour',
+			portion: { amount: 500, unit: 'g' },
+			hidden: false
+		};
+
+		expect(getIngredientPerUnitCost(ingredient, flour, [])).toBeCloseTo(0.1, 5);
+	});
+
+	it('converts portion unit before calculating per-unit cost', () => {
+		const flour = createIngredient('flour', 'Flour', 100, 1000, 'g');
+		const conversions: UnitConversion[] = [
+			{ ingredientId: 'flour', inputUnit: 'g', outputUnit: 'cup', conversionFactor: 125 }
+		];
+		const ingredient = {
+			id: 'flour',
+			portion: { amount: 2, unit: 'cup' },
+			hidden: false
+		};
+
+		// 1 cup = 125g at 100 yen per 1000g => 12.5 yen per cup
+		expect(getIngredientPerUnitCost(ingredient, flour, conversions)).toBeCloseTo(12.5, 5);
+	});
+
+	it('returns null when portion unit is unset', () => {
+		const flour = createIngredient('flour', 'Flour', 100, 1000, 'g');
+		const ingredient = {
+			id: 'flour',
+			portion: { amount: 100, unit: UNSET_UNIT },
+			hidden: false
+		};
+
+		expect(getIngredientPerUnitCost(ingredient, flour, [])).toBeNull();
+	});
+
+	it('returns null when conversion is missing', () => {
+		const flour = createIngredient('flour', 'Flour', 100, 1000, 'g');
+		const ingredient = {
+			id: 'flour',
+			portion: { amount: 1, unit: 'cup' },
+			hidden: false
+		};
+
+		expect(getIngredientPerUnitCost(ingredient, flour, [])).toBeNull();
 	});
 });
 

@@ -53,6 +53,7 @@
 		text-transform: none;
 		line-height: 1;
 		letter-spacing: -0.01em;
+		white-space: nowrap;
 	}
 
 	.btn:disabled {
