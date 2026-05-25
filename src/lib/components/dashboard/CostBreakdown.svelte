@@ -12,7 +12,9 @@
 
 	import { Chart as ChartJS } from 'chart.js/auto';
 
-	const createLabelPlugin = (ingredientList: RecipeIngredientEntry[]): Plugin<'doughnut'> => ({
+	const createLabelPlugin = (
+		getIngredientList: () => RecipeIngredientEntry[]
+	): Plugin<'doughnut'> => ({
 		id: 'labels',
 		afterDatasetsDraw(chart) {
 			const meta = chart.getDatasetMeta(0);
@@ -20,6 +22,7 @@
 			const total = (chart.data.datasets[0].data as number[]).reduce((a, b) => a + b, 0);
 			const ctx = chart.ctx;
 			const minPercentForName = 5;
+			const ingredientList = getIngredientList();
 
 			const getContrast = (hex: string) => {
 				if (!hex) return '#000000';
@@ -124,7 +127,7 @@
 			]
 		};
 
-		const labelPlugin = createLabelPlugin(ingredients);
+		const labelPlugin = createLabelPlugin(() => ingredients);
 
 		const options: ChartOptions<'doughnut'> = {
 			responsive: true,
@@ -213,7 +216,7 @@
 		chart.data.labels = labels;
 		chart.data.datasets[0].data = data;
 		chart.data.datasets[0].backgroundColor = bgColors;
-		chart.update();
+		chart.update('active');
 	});
 
 	$effect(() => {

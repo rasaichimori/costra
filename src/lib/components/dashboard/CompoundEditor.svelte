@@ -12,16 +12,14 @@
 		RecipeLikeDoc,
 		UnitConversion
 	} from '$lib/data/schema';
-	import DragHandle from '../common/icons/DragHandle.svelte';
 	import TextInput from '../common/TextInput.svelte';
 	import ModernButton from '../common/ModernButton.svelte';
 	import CostBreakdown from './CostBreakdown.svelte';
 	import EditableTextField from '../common/EditableTextField.svelte';
-	import AddRecipeIngredientsButton from './AddRecipeIngredientsButton.svelte';
 	import UnitChevronDropdownButton from './UnitChevronDropdownButton.svelte';
 	import RecipeUnitSelectButton from './RecipeUnitSelectButton.svelte';
+	import RecipeIngredientsSection from './RecipeIngredientsSection.svelte';
 	import { getCurrencyContext } from '$lib/contexts/currency.svelte';
-	import { startDrag } from '$lib/utils/dragControls';
 	import { buildUnitLabels } from '$lib/utils/unitSelectUtils';
 	import { isUnsetUnit } from '$lib/utils/ingredientUtils';
 	import { m } from '$lib/paraglide/messages.js';
@@ -60,13 +58,6 @@
 		compoundsToIngredients({ [recipe.id]: recipe }, costs, unitConversions)[recipe.id]
 	);
 	const currencyContext = getCurrencyContext();
-
-	let draggingId = $state<string | null>(null);
-
-	const swap = (from: number, to: number) => {
-		const moved = recipe.ingredients.splice(from, 1)[0];
-		recipe.ingredients.splice(to, 0, moved);
-	};
 </script>
 
 <div class="recipe-cost-calculator">
@@ -174,130 +165,15 @@
 	</div>
 	<div class="recipe-section">
 		<div class="recipe-breakdown">
-			<h3>{m.ingredientBreakdownTitle()}</h3>
-			{#if recipe.ingredients.length > 0}
-				<div class="ingredient-list">
-					{#each recipe.ingredients as ingredient, idx (ingredient.id)}
-						<div
-							class="ingredient-cost-item"
-							class:hidden={ingredient.hidden}
-							class:dragging={ingredient.id === draggingId}
-							data-id={ingredient.id}
-						>
-							<span
-								class="drag-handle"
-								role="button"
-								tabindex="-1"
-								aria-label={m.dragToReorderAriaLabel()}
-								data-tooltip={m.dragToReorderTitle()}
-								onpointerdown={(e) => {
-									draggingId = ingredient.id;
-									startDrag(
-										e,
-										(moveEvent) => {
-											moveEvent.preventDefault();
-											const targetEl = document.elementFromPoint(
-												moveEvent.clientX,
-												moveEvent.clientY
-											) as HTMLElement;
-											const targetId = targetEl.dataset.id;
-											if (targetId && targetId !== ingredient.id) {
-												swap(
-													idx,
-													recipe.ingredients.findIndex((i) => i.id === targetId)
-												);
-											}
-										},
-										() => (draggingId = null)
-									);
-								}}
-							>
-								<DragHandle />
-							</span>
-							<div class="ingredient-details">
-								<span class="ingredient-name">{costs[ingredient.id]?.name ?? ingredient.id}</span>
-								<div class="amount-input-group">
-									<TextInput
-										value={ingredient.portion.amount}
-										onchange={(value) => {
-											ingredient.portion.amount = value;
-										}}
-										oninput={(value) => {
-											ingredient.portion.amount = value;
-										}}
-										size="small"
-										variant="inline"
-										min={0}
-										step={1}
-										spinner={true}
-									/>
-								</div>
-								<div class="unit-input-group">
-									{#if costs[ingredient.id]}
-										<RecipeUnitSelectButton
-											recipePortion={ingredient.portion}
-											ingredientDoc={costs[ingredient.id]}
-											bind:unitConversions
-											bind:customUnitLabels
-											updateRecipePortionUnit={(unitId: string) => {
-												ingredient.portion.unit = unitId;
-											}}
-										/>
-									{:else}
-										<span class="error-text">{m.missingIngredientShort({ id: ingredient.id })}</span
-										>
-									{/if}
-								</div>
-							</div>
-							<div class="ingredient-cost">
-								{currencyContext.currency}{recipeCosts[ingredient.id]?.toFixed(0) || '0'}
-							</div>
-							<div class="color-input-group">
-								{#if costs[ingredient.id]}
-									<input
-										type="color"
-										class="color-picker"
-										bind:value={costs[ingredient.id].color}
-									/>
-								{/if}
-							</div>
-							<!-- Hide/Show Button -->
-							<ModernButton
-								variant="icon"
-								size="small"
-								ariaLabel={ingredient.hidden ? m.showIngredient() : m.hideIngredient()}
-								title={ingredient.hidden ? m.showIngredient() : m.hideIngredient()}
-								onclick={() => {
-									ingredient.hidden = !ingredient.hidden;
-								}}
-							>
-								<i class={`fa-solid ${ingredient.hidden ? 'fa-eye-slash' : 'fa-eye'}`}></i>
-							</ModernButton>
-							<!-- Delete Button -->
-							<ModernButton
-								variant="icon"
-								size="small"
-								ariaLabel={m.deleteIngredientAriaLabel()}
-								title={m.deleteIngredientTitle()}
-								onclick={() => {
-									recipe.ingredients = recipe.ingredients.filter((i) => i.id !== ingredient.id);
-								}}
-							>
-								<i class="fa-solid fa-trash"></i>
-							</ModernButton>
-						</div>
-					{/each}
-				</div>
-			{:else}
-				<div class="no-ingredients-message">{m.noIngredientsAdded()}</div>
-			{/if}
-			<AddRecipeIngredientsButton
-				{availableIngredients}
+			<RecipeIngredientsSection
 				bind:ingredients={recipe.ingredients}
+				ingredientDocs={costs}
+				{recipeCosts}
 				{costs}
-				recipes={{}}
-				{unitConversions}
-				{customUnitLabels}
+				bind:unitConversions
+				bind:customUnitLabels
+				{availableIngredients}
+				missingIngredientMessage={(id) => m.missingIngredientShort({ id })}
 			/>
 		</div>
 		<CostBreakdown
@@ -317,11 +193,6 @@
 		border-radius: 8px;
 		backdrop-filter: blur(10px);
 		flex: 1;
-	}
-
-	.recipe-cost-calculator h3 {
-		color: var(--foreground);
-		font-weight: 500;
 	}
 
 	.header {
@@ -405,110 +276,6 @@
 		border-top: 1px solid var(--border);
 		text-align: left;
 	}
-	.ingredient-list {
-		display: flex;
-		flex-direction: column;
-		gap: 8px;
-	}
-
-	.ingredient-cost-item {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		padding: 6px 12px;
-		background: var(--muted);
-		border: 1px solid var(--border);
-		border-radius: 6px;
-		font-size: 12px;
-		transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-	}
-
-	.ingredient-cost-item:hover {
-		background: var(--secondary);
-		border-color: var(--border);
-	}
-
-	.drag-handle {
-		cursor: grab;
-		margin-right: 8px;
-		color: var(--muted-foreground);
-		display: flex;
-		align-items: center;
-		transition: color 0.15s ease;
-	}
-
-	.drag-handle:hover {
-		color: var(--secondary-foreground);
-	}
-
-	.drag-handle:active {
-		cursor: grabbing;
-		color: var(--primary);
-	}
-
-	.ingredient-cost-item.dragging {
-		opacity: 0.6;
-		transform: scale(0.98);
-		box-shadow: var(--shadow-medium);
-	}
-
-	.ingredient-details {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-	}
-	.ingredient-name {
-		font-weight: 500;
-		color: var(--foreground);
-		text-transform: capitalize;
-		min-width: 80px;
-		width: 120px;
-		font-size: 12px;
-		overflow: hidden;
-		white-space: nowrap;
-		text-overflow: ellipsis;
-	}
-
-	.ingredient-cost {
-		font-weight: 600;
-		color: var(--foreground);
-		min-width: 40px;
-		font-size: 12px;
-	}
-
-	.amount-input-group,
-	.unit-input-group {
-		display: flex;
-		align-items: center;
-		gap: 4px;
-		width: 80px;
-	}
-
-	.color-input-group {
-		display: flex;
-		align-items: center;
-	}
-
-	.color-picker {
-		border: none;
-		background: transparent;
-		width: 20px;
-		height: 20px;
-		padding: 0;
-	}
-
-	.no-ingredients-message {
-		color: var(--secondary-foreground);
-		font-style: italic;
-		padding: 12px;
-		text-align: center;
-	}
-
-	/* Hidden row greyed out */
-	.ingredient-cost-item.hidden {
-		opacity: 0.4;
-	}
-
 	/* Mobile responsive styles */
 	@media (max-width: 768px) {
 		.recipe-cost-calculator {
@@ -542,57 +309,12 @@
 		.recipe-section {
 			gap: 20px;
 		}
-
-		.ingredient-list {
-			overflow-x: auto;
-			-webkit-overflow-scrolling: touch;
-			margin: 0 -14px;
-			padding: 0 14px;
-		}
-
-		.ingredient-cost-item {
-			min-width: max-content;
-			gap: 6px;
-			padding: 6px 10px;
-		}
-
-		.ingredient-details {
-			gap: 6px;
-		}
-
-		.ingredient-name {
-			min-width: 60px;
-			width: 80px;
-			font-size: 11px;
-		}
-
-		.amount-input-group {
-			width: 50px;
-		}
-
-		.unit-input-group {
-			width: auto;
-		}
-
-		.ingredient-cost {
-			min-width: 35px;
-			font-size: 11px;
-		}
-
-		.color-picker {
-			width: 18px;
-			height: 18px;
-		}
 	}
 
 	@media (max-width: 480px) {
 		.recipe-cost-calculator {
 			padding: 10px;
 			border-radius: 6px;
-		}
-
-		.recipe-cost-calculator h3 {
-			font-size: 14px;
 		}
 
 		.title {
@@ -619,41 +341,6 @@
 		.recipe-breakdown {
 			margin-top: 12px;
 			padding-top: 12px;
-		}
-
-		.ingredient-list {
-			margin: 0 -10px;
-			padding: 0 10px;
-		}
-
-		.ingredient-cost-item {
-			padding: 5px 8px;
-			font-size: 10px;
-			border-radius: 6px;
-		}
-
-		.drag-handle {
-			margin-right: 4px;
-		}
-
-		.ingredient-name {
-			min-width: 50px;
-			width: 70px;
-			font-size: 10px;
-		}
-
-		.amount-input-group {
-			width: 45px;
-		}
-
-		.ingredient-cost {
-			font-size: 10px;
-			min-width: 30px;
-		}
-
-		.color-picker {
-			width: 16px;
-			height: 16px;
 		}
 	}
 </style>
