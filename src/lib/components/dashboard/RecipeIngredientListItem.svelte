@@ -12,7 +12,7 @@
 	import DragHandle from '../common/icons/DragHandle.svelte';
 	import { startDrag } from '$lib/utils/dragControls';
 	import { m } from '$lib/paraglide/messages.js';
-	import { getIngredientPerUnitCost } from '$lib/utils/costCalculatorUtils';
+	import { formatPerUnitCost, getIngredientPerUnitCost } from '$lib/utils/costCalculatorUtils';
 	import { buildUnitLabels } from '$lib/utils/unitSelectUtils';
 
 	interface Props {
@@ -132,7 +132,10 @@
 	</div>
 	{#if perUnitCost !== null}
 		<span class="ingredient-cost-per-unit" aria-hidden="true">
-			{currencyContext.currency}{perUnitCost.toFixed(0)}/{portionUnitLabel}
+			{currencyContext.currency}{formatPerUnitCost(
+				perUnitCost,
+				ingredient.portion.unit as string
+			)}/{portionUnitLabel}
 		</span>
 	{/if}
 	<div class="color-input-group">

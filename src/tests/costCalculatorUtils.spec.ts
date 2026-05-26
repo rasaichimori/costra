@@ -11,6 +11,7 @@ import {
 	getAvailableIngredients,
 	getCompoundConvertedYield,
 	getCompoundPerUnitCost,
+	formatPerUnitCost,
 	getIngredientPerUnitCost,
 	getRecipesUsingIngredient,
 	getTotalRecipeCost,
@@ -501,6 +502,19 @@ describe('getIngredientPerUnitCost', () => {
 		};
 
 		expect(getIngredientPerUnitCost(ingredient, flour, [])).toBeNull();
+	});
+});
+
+describe('formatPerUnitCost', () => {
+	it('shows up to 2 decimal places for grams', () => {
+		expect(formatPerUnitCost(0.1, 'g')).toBe('0.1');
+		expect(formatPerUnitCost(0.125, 'g')).toBe('0.13');
+		expect(formatPerUnitCost(1.5, 'g')).toBe('1.5');
+	});
+
+	it('rounds to whole numbers for non-gram units', () => {
+		expect(formatPerUnitCost(12.7, 'cup')).toBe('13');
+		expect(formatPerUnitCost(12.4, 'kg')).toBe('12');
 	});
 });
 

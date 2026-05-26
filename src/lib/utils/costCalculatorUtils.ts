@@ -115,6 +115,14 @@ export const getIngredientPerUnitCost = (
 	}
 };
 
+/** Format per-unit cost for display; grams allow up to 2 decimal places. */
+export const formatPerUnitCost = (cost: number, unitId: string): string => {
+	if (unitId === 'g') {
+		return String(parseFloat(cost.toFixed(2)));
+	}
+	return cost.toFixed(0);
+};
+
 /**
  * Get total cost for a recipe
  */
