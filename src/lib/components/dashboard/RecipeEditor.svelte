@@ -17,7 +17,7 @@
 	import RecipeSizeTabs from './RecipeSizeTabs.svelte';
 	import RecipeIngredientsSection from './RecipeIngredientsSection.svelte';
 	import { getCurrencyContext } from '$lib/contexts/currency.svelte';
-	import { getActiveSize, recipeToCostInput } from '$lib/utils/recipeUtils';
+	import { getActiveSize, recipeSizeToCostInput, recipeToCostInput } from '$lib/utils/recipeUtils';
 	import { m } from '$lib/paraglide/messages.js';
 
 	interface Props {
@@ -51,6 +51,16 @@
 
 	const recipeCosts = $derived(calculateRecipeCosts(costRecipe, allCosts, unitConversions));
 	const totalCost = $derived(getTotalRecipeCost(recipeCosts));
+	const sizeCosts = $derived(
+		Object.fromEntries(
+			recipe.sizes.map((size) => [
+				size.id,
+				getTotalRecipeCost(
+					calculateRecipeCosts(recipeSizeToCostInput(recipe.id, size), allCosts, unitConversions)
+				)
+			])
+		)
+	);
 	const availableIngredients = $derived(getAvailableIngredients(costRecipe, costs));
 	const availableCompounds = $derived(
 		Object.values(compounds).filter((c) => !activeSize.ingredients.some((i) => i.id === c.id))
@@ -101,7 +111,7 @@
 	<div class="recipe-section">
 		<div class="recipe-breakdown">
 			{#key recipe.id}
-				<RecipeSizeTabs bind:recipe bind:editingSizeId />
+				<RecipeSizeTabs bind:recipe bind:editingSizeId {sizeCosts} />
 			{/key}
 			<div class="breakdown-content">
 				<RecipeIngredientsSection

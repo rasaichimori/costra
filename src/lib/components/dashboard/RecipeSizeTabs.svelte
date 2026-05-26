@@ -8,14 +8,22 @@
 		getNextRecipeSizeNumber,
 		reorderRecipeSizes
 	} from '$lib/utils/recipeUtils';
+	import { getCurrencyContext } from '$lib/contexts/currency.svelte';
 	import { m } from '$lib/paraglide/messages.js';
 
 	interface Props {
 		recipe: RecipeDoc;
 		editingSizeId?: string;
+		sizeCosts: Record<string, number>;
 	}
 
-	let { recipe = $bindable(), editingSizeId = $bindable<string | undefined>() }: Props = $props();
+	let {
+		recipe = $bindable(),
+		editingSizeId = $bindable<string | undefined>(),
+		sizeCosts
+	}: Props = $props();
+
+	const currencyContext = getCurrencyContext();
 
 	const DRAG_THRESHOLD_PX = 5;
 
@@ -215,6 +223,9 @@
 							onSave={finishEditingSizeName}
 							onCancel={finishEditingSizeName}
 						/>
+						<span class="tab-cost">
+							{currencyContext.currency}{(sizeCosts[size.id] ?? 0).toFixed(0)}
+						</span>
 					</div>
 					{#if hasMultipleSizes}
 						<ModernButton
@@ -228,7 +239,12 @@
 						</ModernButton>
 					{/if}
 				{:else}
-					<span class="tab-label">{size.name}</span>
+					<div class="tab-content">
+						<span class="tab-label">{size.name}</span>
+						<span class="tab-cost">
+							{currencyContext.currency}{(sizeCosts[size.id] ?? 0).toFixed(0)}
+						</span>
+					</div>
 				{/if}
 			</div>
 		{/each}
@@ -354,8 +370,28 @@
 	}
 
 	.active-tab-content {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 2px;
 		min-width: 0;
 		flex: 1;
+	}
+
+	.tab-content {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 2px;
+		min-width: 0;
+	}
+
+	.tab-cost {
+		font-size: 10px;
+		font-weight: 400;
+		line-height: 1;
+		color: var(--secondary-foreground, #888);
+		padding: 0 4px;
 	}
 
 	.active-tab-content :global(.editable-text-field) {
