@@ -169,6 +169,10 @@
 	};
 
 	const inputValue = $derived(isNumeric ? displayValue : (value as string));
+
+	export const blur = () => {
+		inputRef?.blur();
+	};
 </script>
 
 <div class="input-container input-{variant} input-{size}" {style}>

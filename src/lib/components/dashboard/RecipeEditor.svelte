@@ -49,6 +49,11 @@
 	}: Props = $props();
 
 	let editingSizeId = $state<string | undefined>(undefined);
+	let sellingPriceInput = $state<{ blur: () => void } | undefined>(undefined);
+
+	const blurSellingPrice = () => {
+		sellingPriceInput?.blur();
+	};
 
 	const activeSize = $derived(getActiveSize(recipe));
 	const costRecipe = $derived(recipeToCostInput(recipe));
@@ -75,8 +80,8 @@
 		calculateFoodCostPercent(activeSize.sellingPrice ?? 0, totalCost)
 	);
 
-	const setActiveSizeSellingPrice = (sellingPrice: number) => {
-		const sizeIndex = recipe.sizes.findIndex((size) => size.id === recipe.activeSizeId);
+	const setSizeSellingPrice = (sizeId: string, sellingPrice: number) => {
+		const sizeIndex = recipe.sizes.findIndex((size) => size.id === sizeId);
 		if (sizeIndex === -1) return;
 		recipe.sizes[sizeIndex].sellingPrice = sellingPrice;
 	};
@@ -119,17 +124,20 @@
 						<span>{m.sellingPriceLabel()}</span>
 						<div class="price-input-group">
 							<span class="currency" aria-hidden="true">{currencyContext.currency}</span>
-							<TextInput
-								value={activeSize.sellingPrice ?? 0}
-								oninput={setActiveSizeSellingPrice}
-								onchange={setActiveSizeSellingPrice}
-								size="small"
-								variant="inline"
-								min={0}
-								step={1}
-								spinner={true}
-								ariaLabel={m.sellingPriceLabel()}
-							/>
+							{#key activeSize.id}
+								<TextInput
+									bind:this={sellingPriceInput}
+									value={activeSize.sellingPrice ?? 0}
+									oninput={(price) => setSizeSellingPrice(activeSize.id, price)}
+									onchange={(price) => setSizeSellingPrice(activeSize.id, price)}
+									size="small"
+									variant="inline"
+									min={0}
+									step={1}
+									spinner={true}
+									ariaLabel={m.sellingPriceLabel()}
+								/>
+							{/key}
 						</div>
 					</div>
 					<div class="food-cost-row">
@@ -155,7 +163,12 @@
 	<div class="recipe-section">
 		<div class="recipe-breakdown">
 			{#key recipe.id}
-				<RecipeSizeTabs bind:recipe bind:editingSizeId {sizeCosts} />
+				<RecipeSizeTabs
+					bind:recipe
+					bind:editingSizeId
+					{sizeCosts}
+					onActiveSizeChange={blurSellingPrice}
+				/>
 			{/key}
 			<div class="breakdown-content">
 				<RecipeIngredientsSection

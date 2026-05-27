@@ -15,12 +15,14 @@
 		recipe: RecipeDoc;
 		editingSizeId?: string;
 		sizeCosts: Record<string, number>;
+		onActiveSizeChange?: () => void;
 	}
 
 	let {
 		recipe = $bindable(),
 		editingSizeId = $bindable<string | undefined>(),
-		sizeCosts
+		sizeCosts,
+		onActiveSizeChange
 	}: Props = $props();
 
 	const currencyContext = getCurrencyContext();
@@ -148,6 +150,9 @@
 	};
 
 	const selectSize = (sizeId: string) => {
+		if (sizeId === recipe.activeSizeId) return;
+
+		onActiveSizeChange?.();
 		recipe.activeSizeId = sizeId;
 		editingSizeId = undefined;
 		isEditingActiveSize = false;
@@ -159,6 +164,7 @@
 			m.defaultRecipeSizeName({ number: nextNumber }),
 			activeSize.ingredients
 		);
+		onActiveSizeChange?.();
 		recipe.sizes = [...recipe.sizes, newSize];
 		recipe.activeSizeId = newSize.id;
 		editingSizeId = newSize.id;
@@ -172,6 +178,7 @@
 		recipe.sizes = remainingSizes;
 
 		if (recipe.activeSizeId === sizeId) {
+			onActiveSizeChange?.();
 			recipe.activeSizeId = remainingSizes[0].id;
 		}
 
