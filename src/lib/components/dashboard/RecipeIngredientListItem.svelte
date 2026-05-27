@@ -56,6 +56,29 @@
 	const portionUnitLabel = $derived(
 		unitLabels[ingredient.portion.unit as string] || ingredient.portion.unit
 	);
+
+	const PER_UNIT_COST_MIN_WIDTH = 500;
+
+	let showPerUnitCost = $state(false);
+
+	const observeIngredientRowWidth = (
+		node: HTMLElement,
+		onWideChange: (isWide: boolean) => void
+	) => {
+		const updateWidth = (width: number) => {
+			onWideChange(width >= PER_UNIT_COST_MIN_WIDTH);
+		};
+		const observer = new ResizeObserver(([entry]) => {
+			updateWidth(entry.contentRect.width);
+		});
+		observer.observe(node);
+		updateWidth(node.getBoundingClientRect().width);
+		return {
+			destroy() {
+				observer.disconnect();
+			}
+		};
+	};
 </script>
 
 <div
@@ -65,6 +88,9 @@
 	class:compound={isCompound}
 	class:hidden={ingredient.hidden}
 	class:dragging={isDragging}
+	use:observeIngredientRowWidth={(isWide) => {
+		showPerUnitCost = isWide;
+	}}
 >
 	<span
 		class="drag-handle"
@@ -130,7 +156,7 @@
 	<div class="ingredient-cost">
 		{currencyContext.currency}{lineCost?.toFixed(0) || '0'}
 	</div>
-	{#if perUnitCost !== null}
+	{#if showPerUnitCost && perUnitCost !== null}
 		<span class="ingredient-cost-per-unit" aria-hidden="true">
 			{currencyContext.currency}{formatPerUnitCost(
 				perUnitCost,
@@ -178,7 +204,6 @@
 
 <style>
 	.ingredient-cost-item {
-		container-name: ingredient-item;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
@@ -244,17 +269,10 @@
 		white-space: nowrap;
 	}
 	.ingredient-cost-per-unit {
-		display: none;
 		font-weight: 400;
 		font-size: 10px;
 		color: var(--muted-foreground);
 		white-space: nowrap;
-	}
-
-	@container ingredient-item (min-width: 500px) {
-		.ingredient-cost-per-unit {
-			display: inline;
-		}
 	}
 
 	.amount-input-group,
