@@ -7,6 +7,7 @@ import type {
 import {
 	buildUnitGroups,
 	buildUnitLabels,
+	getCompactUnitLabel,
 	findAllMissingConversionsFromImport,
 	findMissingConversions,
 	getPortionUnitsForIngredient,
@@ -63,6 +64,30 @@ const createCompound = (
 		portion: { amount: i.amount, unit: i.unit },
 		hidden: false
 	}))
+});
+
+describe('getCompactUnitLabel', () => {
+	it('uses unit id for standard volume and mass units', () => {
+		const unitLabels = buildUnitLabels({});
+
+		expect(getCompactUnitLabel('g', unitLabels)).toBe('g');
+		expect(getCompactUnitLabel('kg', unitLabels)).toBe('kg');
+		expect(getCompactUnitLabel('cup', unitLabels)).toBe('cup');
+		expect(getCompactUnitLabel('tbs', unitLabels)).toBe('tbs');
+		expect(getCompactUnitLabel('ml', unitLabels)).toBe('ml');
+		expect(getCompactUnitLabel('litre', unitLabels)).toBe('litre');
+	});
+
+	it('uses full label for custom units', () => {
+		const unitLabels = buildUnitLabels({ bunch: 'Bunch', pack: 'Pack' });
+		expect(getCompactUnitLabel('bunch', unitLabels)).toBe('Bunch');
+		expect(getCompactUnitLabel('pack', unitLabels)).toBe('Pack');
+	});
+
+	it('falls back to unit id for unknown units', () => {
+		const unitLabels = buildUnitLabels({});
+		expect(getCompactUnitLabel('unknown', unitLabels)).toBe('unknown');
+	});
 });
 
 describe('buildUnitLabels', () => {

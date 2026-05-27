@@ -5,7 +5,11 @@
 	import { hasConversion, type UnitOption, type Portion } from '$lib/utils/unit';
 	import type { IngredientDoc, RecipeLikeDoc, UnitConversion } from '$lib/data/schema';
 	import AddUnitConversionModal from '../modals/AddUnitConversionModal.svelte';
-	import { buildUnitGroups, buildUnitLabels } from '$lib/utils/unitSelectUtils';
+	import {
+		buildUnitGroups,
+		buildUnitLabels,
+		getCompactUnitLabel
+	} from '$lib/utils/unitSelectUtils';
 	import {
 		isInitialUnitSelection,
 		isUnsetUnit,
@@ -151,7 +155,7 @@
 	class:unset-unit={isUnsetUnit(portionUnit)}
 	onclick={(e) => openUnitPopup(e.currentTarget as HTMLButtonElement)}
 >
-	{unitLabels[portionUnit] || portionUnit}
+	{getCompactUnitLabel(portionUnit, unitLabels)}
 </button>
 
 <style>

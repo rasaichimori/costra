@@ -19,6 +19,18 @@ import {
 import { isUnsetUnit } from '$lib/utils/ingredientUtils';
 import { getRecipeLikeIngredients, iterateRecipeIngredients } from '$lib/utils/recipeUtils';
 
+/** Whether a unit id is a built-in volume or mass unit */
+const isStandardUnit = (unitId: string): boolean =>
+	(volumeUnits as readonly string[]).includes(unitId) ||
+	(massUnits as readonly string[]).includes(unitId);
+
+/**
+ * Compact label for tight UI (recipe row per-unit cost, unit select buttons).
+ * Standard units use their id (e.g. g, cup, tbs); custom units use full labels.
+ */
+export const getCompactUnitLabel = (unitId: string, unitLabels: Record<string, string>): string =>
+	isStandardUnit(unitId) ? unitId : (unitLabels[unitId] ?? unitId);
+
 /**
  * Build a combined labels object from standard units and custom units
  */

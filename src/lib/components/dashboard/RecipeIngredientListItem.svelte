@@ -13,7 +13,7 @@
 	import { startDrag } from '$lib/utils/dragControls';
 	import { m } from '$lib/paraglide/messages.js';
 	import { formatPerUnitCost, getIngredientPerUnitCost } from '$lib/utils/costCalculatorUtils';
-	import { buildUnitLabels } from '$lib/utils/unitSelectUtils';
+	import { buildUnitLabels, getCompactUnitLabel } from '$lib/utils/unitSelectUtils';
 
 	interface Props {
 		ingredient: RecipeIngredientEntry;
@@ -54,7 +54,7 @@
 		ingredientDoc ? getIngredientPerUnitCost(ingredient, ingredientDoc, unitConversions) : null
 	);
 	const portionUnitLabel = $derived(
-		unitLabels[ingredient.portion.unit as string] || ingredient.portion.unit
+		getCompactUnitLabel(ingredient.portion.unit as string, unitLabels)
 	);
 
 	const PER_UNIT_COST_MIN_WIDTH = 500;

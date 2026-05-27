@@ -7,6 +7,7 @@
 	import {
 		buildUnitGroups,
 		buildUnitLabels,
+		getCompactUnitLabel,
 		findMissingConversions,
 		getPortionUnitsForIngredient
 	} from '$lib/utils/unitSelectUtils';
@@ -152,7 +153,7 @@
 	class:unset-unit={isUnsetUnit(productUnit)}
 	onclick={(e) => openUnitPopup(e.currentTarget as HTMLButtonElement)}
 >
-	{unitLabels[productUnit] || productUnit}
+	{getCompactUnitLabel(productUnit, unitLabels)}
 </button>
 
 <style>

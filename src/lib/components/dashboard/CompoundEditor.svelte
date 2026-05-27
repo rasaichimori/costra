@@ -20,7 +20,7 @@
 	import RecipeUnitSelectButton from './RecipeUnitSelectButton.svelte';
 	import RecipeIngredientsSection from './RecipeIngredientsSection.svelte';
 	import { getCurrencyContext } from '$lib/contexts/currency.svelte';
-	import { buildUnitLabels } from '$lib/utils/unitSelectUtils';
+	import { buildUnitLabels, getCompactUnitLabel } from '$lib/utils/unitSelectUtils';
 	import { isUnsetUnit } from '$lib/utils/ingredientUtils';
 	import { m } from '$lib/paraglide/messages.js';
 
@@ -87,9 +87,10 @@
 					</div>
 				</div>
 				<div class="cost-amount">
-					{currencyContext.currency}{perUnitCost.toFixed(0)} / {unitLabels[
-						recipe.viewedUnit as string
-					] || recipe.viewedUnit}
+					{currencyContext.currency}{perUnitCost.toFixed(0)} / {getCompactUnitLabel(
+						recipe.viewedUnit as string,
+						unitLabels
+					)}
 					<UnitChevronDropdownButton
 						bind:customUnitLabels
 						bind:unitConversions
