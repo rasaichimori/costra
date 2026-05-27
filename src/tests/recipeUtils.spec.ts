@@ -3,6 +3,7 @@ import {
 	createDuplicateCompound,
 	createDuplicateRecipe,
 	createRecipeSize,
+	calculateFoodCostPercent,
 	DEFAULT_SIZE_NAME,
 	duplicateUnitConversionsForIngredient,
 	getActiveSize,
@@ -81,6 +82,53 @@ describe('normalizeRecipeDoc', () => {
 		expect(normalized.sizes[0].name).toBe(DEFAULT_SIZE_NAME);
 		expect(normalized.sizes[0].ingredients).toEqual(legacy.ingredients);
 		expect(normalized.activeSizeId).toBe(normalized.sizes[0].id);
+		expect(normalized.sizes[0].sellingPrice).toBe(0);
+	});
+
+	it('defaults missing sellingPrice on sizes to zero', () => {
+		const normalized = normalizeRecipeDoc({
+			id: 'cake',
+			name: 'Cake',
+			sizes: [
+				{
+					id: 'size-1',
+					name: DEFAULT_SIZE_NAME,
+					ingredients: [{ id: 'flour', portion: { amount: 100, unit: 'g' }, hidden: false }]
+				}
+			],
+			activeSizeId: 'size-1'
+		} as RecipeDoc);
+
+		expect(normalized.sizes[0].sellingPrice).toBe(0);
+	});
+
+	it('migrates legacy recipe-level sellingPrice onto sizes', () => {
+		const normalized = normalizeRecipeDoc({
+			id: 'cake',
+			name: 'Cake',
+			sellingPrice: 1200,
+			sizes: [
+				{
+					id: 'size-1',
+					name: DEFAULT_SIZE_NAME,
+					ingredients: [{ id: 'flour', portion: { amount: 100, unit: 'g' }, hidden: false }]
+				}
+			],
+			activeSizeId: 'size-1'
+		} as RecipeDoc & { sellingPrice: number });
+
+		expect(normalized.sizes[0].sellingPrice).toBe(1200);
+	});
+});
+
+describe('calculateFoodCostPercent', () => {
+	it('returns food cost percentage from selling price and total cost', () => {
+		expect(calculateFoodCostPercent(18, 6.23)).toBeCloseTo(34.6, 1);
+	});
+
+	it('returns null when selling price is zero or negative', () => {
+		expect(calculateFoodCostPercent(0, 10)).toBeNull();
+		expect(calculateFoodCostPercent(-5, 10)).toBeNull();
 	});
 });
 
@@ -150,6 +198,17 @@ describe('createDuplicateRecipe', () => {
 		expect(duplicate.sizes[0].ingredients[0].portion).not.toBe(
 			original.sizes[0].ingredients[0].portion
 		);
+	});
+
+	it('copies sellingPrice for each size', () => {
+		const original = createRecipe('cake', 'Vanilla Cake');
+		original.sizes[0].sellingPrice = 1500;
+		original.sizes.push(createRecipeSize('Large', original.sizes[0].ingredients, crypto.randomUUID(), 2200));
+
+		const duplicate = createDuplicateRecipe(original, 'cake-copy', 'Vanilla Cake - copy');
+
+		expect(duplicate.sizes[0].sellingPrice).toBe(1500);
+		expect(duplicate.sizes[1].sellingPrice).toBe(2200);
 	});
 });
 

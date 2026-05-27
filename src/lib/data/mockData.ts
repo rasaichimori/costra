@@ -93,102 +93,118 @@ export const mockData = {
 		chocolateCake: {
 			id: 'chocolateCake',
 			name: 'Chocolate Cake',
-			ingredients: [
+			sizes: [
 				{
-					id: 'cakeMix',
-					portion: {
-						amount: 1,
-						unit: 'batch'
-					},
-					hidden: false
-				},
-				{
-					id: 'eggs',
-					portion: {
-						amount: 2,
-						unit: 'pack'
-					},
-					hidden: false
-				},
-				{
-					id: 'butter',
-					portion: {
-						amount: 100,
-						unit: 'g'
-					},
-					hidden: false
-				},
-				{
-					id: 'milk',
-					portion: {
-						amount: 200,
-						unit: 'ml'
-					},
-					hidden: false
-				},
-				{
-					id: 'vanilla',
-					portion: {
-						amount: 1,
-						unit: 'tsp'
-					},
-					hidden: false
+					id: 'chocolateCake-regular',
+					name: 'Regular',
+					sellingPrice: 0,
+					ingredients: [
+						{
+							id: 'cakeMix',
+							portion: {
+								amount: 1,
+								unit: 'batch'
+							},
+							hidden: false
+						},
+						{
+							id: 'eggs',
+							portion: {
+								amount: 2,
+								unit: 'pack'
+							},
+							hidden: false
+						},
+						{
+							id: 'butter',
+							portion: {
+								amount: 100,
+								unit: 'g'
+							},
+							hidden: false
+						},
+						{
+							id: 'milk',
+							portion: {
+								amount: 200,
+								unit: 'ml'
+							},
+							hidden: false
+						},
+						{
+							id: 'vanilla',
+							portion: {
+								amount: 1,
+								unit: 'tsp'
+							},
+							hidden: false
+						}
+					]
 				}
-			]
+			],
+			activeSizeId: 'chocolateCake-regular'
 		},
 		vanillaCake: {
 			id: 'vanillaCake',
 			name: 'Vanilla Cake',
-			ingredients: [
+			sizes: [
 				{
-					id: 'flour',
-					portion: {
-						amount: 250,
-						unit: 'g'
-					},
-					hidden: false
-				},
-				{
-					id: 'sugar',
-					portion: {
-						amount: 200,
-						unit: 'g'
-					},
-					hidden: false
-				},
-				{
-					id: 'eggs',
-					portion: {
-						amount: 3,
-						unit: 'pack'
-					},
-					hidden: false
-				},
-				{
-					id: 'butter',
-					portion: {
-						amount: 150,
-						unit: 'g'
-					},
-					hidden: false
-				},
-				{
-					id: 'milk',
-					portion: {
-						amount: 150,
-						unit: 'ml'
-					},
-					hidden: false
-				},
-				{
-					id: 'vanilla',
-					portion: {
-						amount: 2,
-						unit: 'tsp'
-					},
-					hidden: false
+					id: 'vanillaCake-regular',
+					name: 'Regular',
+					sellingPrice: 0,
+					ingredients: [
+						{
+							id: 'flour',
+							portion: {
+								amount: 250,
+								unit: 'g'
+							},
+							hidden: false
+						},
+						{
+							id: 'sugar',
+							portion: {
+								amount: 200,
+								unit: 'g'
+							},
+							hidden: false
+						},
+						{
+							id: 'eggs',
+							portion: {
+								amount: 3,
+								unit: 'pack'
+							},
+							hidden: false
+						},
+						{
+							id: 'butter',
+							portion: {
+								amount: 150,
+								unit: 'g'
+							},
+							hidden: false
+						},
+						{
+							id: 'milk',
+							portion: {
+								amount: 150,
+								unit: 'ml'
+							},
+							hidden: false
+						},
+						{
+							id: 'vanilla',
+							portion: {
+								amount: 2,
+								unit: 'tsp'
+							},
+							hidden: false
+						}
+					]
 				}
-			]
+			],
+			activeSizeId: 'vanillaCake-regular'
 		}
 	},
 	compoundIngredients: {

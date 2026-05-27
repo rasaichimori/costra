@@ -102,6 +102,7 @@
 	"addIngredients": "材料を追加",
 	"totalCostLabel": "合計コスト:",
 	"yieldLabel": "出来上がり:",
+	"sellingPriceLabel": "販売価格:",
 	"deleteCompound": "材料を削除",
 	"deleteCompoundAriaLabel": "材料を削除",
 	"deleteCompoundTitle": "材料を削除",

@@ -30,6 +30,7 @@ export interface RecipeSize {
 	id: string;
 	name: string;
 	ingredients: RecipeIngredientEntry[];
+	sellingPrice: number;
 }
 
 export interface RecipeDoc {

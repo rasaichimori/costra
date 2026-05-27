@@ -17,8 +17,14 @@
 	import RecipeSizeTabs from './RecipeSizeTabs.svelte';
 	import RecipeIngredientsSection from './RecipeIngredientsSection.svelte';
 	import { getCurrencyContext } from '$lib/contexts/currency.svelte';
-	import { getActiveSize, recipeSizeToCostInput, recipeToCostInput } from '$lib/utils/recipeUtils';
+	import {
+		getActiveSize,
+		recipeSizeToCostInput,
+		recipeToCostInput,
+		calculateFoodCostPercent
+	} from '$lib/utils/recipeUtils';
 	import { m } from '$lib/paraglide/messages.js';
+	import TextInput from '../common/TextInput.svelte';
 
 	interface Props {
 		recipe: RecipeDoc;
@@ -65,36 +71,74 @@
 	const availableCompounds = $derived(
 		Object.values(compounds).filter((c) => !activeSize.ingredients.some((i) => i.id === c.id))
 	);
+	const foodCostPercent = $derived(
+		calculateFoodCostPercent(activeSize.sellingPrice ?? 0, totalCost)
+	);
+
+	const setActiveSizeSellingPrice = (sellingPrice: number) => {
+		const sizeIndex = recipe.sizes.findIndex((size) => size.id === recipe.activeSizeId);
+		if (sizeIndex === -1) return;
+		recipe.sizes[sizeIndex].sellingPrice = sellingPrice;
+	};
 	const currencyContext = getCurrencyContext();
 </script>
 
 <div class="recipe-cost-calculator">
 	<div class="header">
-		<div class="title">
-			<div class="title-label">
-				<div class="title-name-row">
-					<EditableTextField
-						bind:value={recipe.name}
-						bind:isEditing={isEditingName}
-						onSave={() => {
-							isEditingName = false;
-						}}
-					/>
-					{#if onDuplicate && !isEditingName}
-						<ModernButton
-							variant="icon"
-							size="small"
-							ariaLabel={m.duplicateRecipeAriaLabel()}
-							title={m.duplicateRecipeTitle()}
-							onclick={() => onDuplicate?.()}
-						>
-							<i class="fa-solid fa-copy"></i>
-						</ModernButton>
-					{/if}
+		<div class="header-left">
+			<div class="title">
+				<div class="title-label">
+					<div class="title-name-row">
+						<EditableTextField
+							bind:value={recipe.name}
+							bind:isEditing={isEditingName}
+							onSave={() => {
+								isEditingName = false;
+							}}
+						/>
+						{#if onDuplicate && !isEditingName}
+							<ModernButton
+								variant="icon"
+								size="small"
+								ariaLabel={m.duplicateRecipeAriaLabel()}
+								title={m.duplicateRecipeTitle()}
+								onclick={() => onDuplicate?.()}
+							>
+								<i class="fa-solid fa-copy"></i>
+							</ModernButton>
+						{/if}
+					</div>
+				</div>
+				<div class="cost-total">
+					{currencyContext.currency}{totalCost.toFixed(0)}
 				</div>
 			</div>
-			<div class="cost-amount">
-				{currencyContext.currency}{totalCost.toFixed(0)}
+			<div class="recipe-yield">
+				<div class="yield-row">
+					<div class="yield-row-item">
+						<span>{m.sellingPriceLabel()}</span>
+						<div class="price-input-group">
+							<span class="currency" aria-hidden="true">{currencyContext.currency}</span>
+							<TextInput
+								value={activeSize.sellingPrice ?? 0}
+								oninput={setActiveSizeSellingPrice}
+								onchange={setActiveSizeSellingPrice}
+								size="small"
+								variant="inline"
+								min={0}
+								step={1}
+								spinner={true}
+								ariaLabel={m.sellingPriceLabel()}
+							/>
+						</div>
+					</div>
+					<div class="food-cost-row">
+						<span class="label-spacer" aria-hidden="true"></span>
+						<div class="food-cost-percent">
+							{foodCostPercent !== null ? `${foodCostPercent.toFixed(1)}%` : '—'}
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 		<ModernButton
@@ -153,6 +197,12 @@
 		justify-content: space-between;
 	}
 
+	.header-left {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px 32px;
+	}
+
 	.title-label {
 		color: var(--secondary-foreground);
 		font-size: 16px;
@@ -177,8 +227,73 @@
 		color: var(--foreground);
 		letter-spacing: -0.03em;
 	}
+	.recipe-yield {
+		display: flex;
+		flex-direction: column-reverse;
+	}
 
-	.cost-amount {
+	.yield-row {
+		display: flex;
+		align-items: flex-end;
+		flex-direction: column;
+		gap: 8px;
+
+		span {
+			font-weight: 500;
+			color: var(--foreground);
+			text-transform: capitalize;
+			font-size: 12px;
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+		}
+	}
+
+	.yield-row-item {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	.food-cost-row {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	.label-spacer {
+		min-width: 60px;
+		flex: none;
+	}
+
+	.price-input-group {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+	}
+
+	.price-input-group :global(.input-container) {
+		width: 72px;
+		flex: none;
+	}
+
+	.currency {
+		font-weight: 600;
+		color: var(--foreground);
+		font-size: 12px;
+		flex: none;
+	}
+
+	.food-cost-percent {
+		font-weight: 600;
+		color: var(--foreground);
+		min-width: 40px;
+		font-size: 12px;
+		font-variant-numeric: tabular-nums;
+		white-space: nowrap;
+	}
+
+	.cost-total {
 		background: linear-gradient(135deg, var(--foreground) 0%, var(--secondary-foreground) 100%);
 		-webkit-background-clip: text;
 		-webkit-text-fill-color: transparent;
@@ -249,6 +364,10 @@
 
 		.title-label {
 			font-size: 12px;
+		}
+
+		.yield-row {
+			gap: 6px;
 		}
 
 		.recipe-section {

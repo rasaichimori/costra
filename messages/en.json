@@ -102,6 +102,7 @@
 	"addIngredients": "Add Ingredients",
 	"totalCostLabel": "Total Cost:",
 	"yieldLabel": "yield:",
+	"sellingPriceLabel": "Selling Price:",
 	"deleteCompound": "Delete Ingredient",
 	"deleteCompoundAriaLabel": "Delete ingredient",
 	"deleteCompoundTitle": "Delete ingredient",

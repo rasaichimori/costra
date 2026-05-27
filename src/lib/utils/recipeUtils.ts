@@ -54,28 +54,58 @@ export const cloneRecipeIngredients = (
 export const createRecipeSize = (
 	name: string,
 	ingredients: RecipeIngredientEntry[] = [],
-	id = crypto.randomUUID()
+	id = crypto.randomUUID(),
+	sellingPrice = 0
 ): RecipeSize => ({
 	id,
 	name,
-	ingredients: cloneRecipeIngredients(ingredients)
+	ingredients: cloneRecipeIngredients(ingredients),
+	sellingPrice
+});
+
+export const normalizeRecipeSize = (size: RecipeSize, fallbackSellingPrice = 0): RecipeSize => ({
+	...size,
+	sellingPrice: size.sellingPrice ?? fallbackSellingPrice
 });
 
 export const isLegacyRecipeDoc = (recipe: RecipeDoc | LegacyRecipeDoc): recipe is LegacyRecipeDoc =>
 	'ingredients' in recipe && !('sizes' in recipe);
 
+export const calculateFoodCostPercent = (
+	sellingPrice: number,
+	totalCost: number
+): number | null => {
+	if (!isFinite(sellingPrice) || sellingPrice <= 0) {
+		return null;
+	}
+
+	return (totalCost / sellingPrice) * 100;
+};
+
 export const normalizeRecipeDoc = (recipe: RecipeDoc | LegacyRecipeDoc): RecipeDoc => {
+	const legacyRecipeSellingPrice =
+		!isLegacyRecipeDoc(recipe) && 'sellingPrice' in recipe
+			? typeof (recipe as RecipeDoc & { sellingPrice?: unknown }).sellingPrice === 'number'
+				? ((recipe as RecipeDoc & { sellingPrice?: number }).sellingPrice ?? 0)
+				: 0
+			: 0;
+
 	if (!isLegacyRecipeDoc(recipe)) {
 		if (recipe.sizes.length === 0) {
-			const size = createRecipeSize(DEFAULT_SIZE_NAME);
-			return { ...recipe, sizes: [size], activeSizeId: size.id };
+			const size = createRecipeSize(DEFAULT_SIZE_NAME, [], crypto.randomUUID(), legacyRecipeSellingPrice);
+			return { id: recipe.id, name: recipe.name, sizes: [size], activeSizeId: size.id };
 		}
 
 		const activeSizeId = recipe.sizes.some((size) => size.id === recipe.activeSizeId)
 			? recipe.activeSizeId
 			: recipe.sizes[0].id;
 
-		return { ...recipe, activeSizeId };
+		return {
+			id: recipe.id,
+			name: recipe.name,
+			activeSizeId,
+			sizes: recipe.sizes.map((size) => normalizeRecipeSize(size, legacyRecipeSellingPrice))
+		};
 	}
 
 	const size = createRecipeSize(DEFAULT_SIZE_NAME, recipe.ingredients);
@@ -149,7 +179,9 @@ export const createDuplicateRecipe = (
 ): RecipeDoc => {
 	const sizes =
 		recipe.sizes.length > 0
-			? recipe.sizes.map((size) => createRecipeSize(size.name, size.ingredients))
+			? recipe.sizes.map((size) =>
+					createRecipeSize(size.name, size.ingredients, crypto.randomUUID(), size.sellingPrice ?? 0)
+				)
 			: [createRecipeSize(DEFAULT_SIZE_NAME)];
 
 	return {

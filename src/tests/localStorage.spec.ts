@@ -46,7 +46,8 @@ const sampleData: AppData = {
 				{
 					id: 'size-1',
 					name: 'Regular',
-					ingredients: [{ id: 'flour', portion: { amount: 100, unit: 'g' }, hidden: false }]
+					ingredients: [{ id: 'flour', portion: { amount: 100, unit: 'g' }, hidden: false }],
+					sellingPrice: 0
 				}
 			],
 			activeSizeId: 'size-1'

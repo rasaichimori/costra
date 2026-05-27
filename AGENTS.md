@@ -173,6 +173,20 @@ Then run `npm run check` so Paraglide recompiles and TypeScript catches typos in
 
 ---
 
+# Schema & seed data
+
+Types live in `src/lib/data/schema.ts`. When you **add, remove, or rename fields** on persisted documents (`IngredientDoc`, `RecipeDoc`, `RecipeSize`, `CompoundIngredientDoc`, etc.):
+
+1. **Update normalization/migration** in the relevant utils (e.g. `recipeUtils.ts` `normalizeRecipeDoc`) so older imports and localStorage still load.
+2. **Update starting seed data** so new installs and “load example data” match the current shape:
+   - `src/lib/data/mockData.ts` — dashboard example data, E2E seeds, settings “reset to example”
+   - `src/lib/data/current-data.json` — full reference export / prefilled dataset
+3. **Update tests** that build fixtures inline (`src/tests/*.spec.ts`, `e2e/helpers.ts` if it bypasses `mockData`).
+
+A schema change is **not complete** until seed JSON/TS fixtures match `schema.ts` and normalization handles legacy shapes where applicable.
+
+---
+
 ## Checklist (copy before marking done)
 
 - [ ] New/changed behavior has tests at the appropriate layer(s)
@@ -183,3 +197,4 @@ Then run `npm run check` so Paraglide recompiles and TypeScript catches typos in
 - [ ] `npm run test:unit -- --run` passes
 - [ ] `npm run test:e2e` passes (when touching UI flows, import/export, dashboard, or settings)
 - [ ] `npm run check` and `npm run lint` pass
+- [ ] Schema changes: `mockData.ts` and `current-data.json` updated; normalization handles legacy data if needed

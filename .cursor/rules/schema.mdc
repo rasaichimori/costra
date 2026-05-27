@@ -1,0 +1,18 @@
+---
+description: Keep schema.ts, seed data, and normalization in sync when changing persisted document shapes
+alwaysApply: true
+---
+
+# Schema & seed data (required)
+
+Read the **Schema & seed data** section in `AGENTS.md` for full guidance. Non-negotiables:
+
+1. **Schema source of truth** — `src/lib/data/schema.ts`
+2. **When changing persisted fields**, also update:
+   - `src/lib/data/mockData.ts`
+   - `src/lib/data/current-data.json`
+   - Normalization/migration utils (e.g. `normalizeRecipeDoc` in `recipeUtils.ts`)
+   - Inline test fixtures when they encode document shape
+3. **Legacy imports/localStorage** — add defaults or migration in normalize functions; do not rely on seed files alone for backward compatibility.
+
+A schema change is **not complete** until seed data matches the new format and legacy data still loads.
