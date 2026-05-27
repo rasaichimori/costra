@@ -268,7 +268,7 @@
 		min-width: 100%;
 		max-width: 100%;
 		overflow-x: auto;
-		overflow-y: visible;
+		overflow-y: hidden;
 		-webkit-overflow-scrolling: touch;
 		scrollbar-width: none;
 		-ms-overflow-style: none;
@@ -297,7 +297,7 @@
 
 	.size-tab {
 		display: flex;
-		align-items: center;
+		align-items: flex-start;
 		gap: 2px;
 		flex-shrink: 0;
 		padding: 6px 12px 7px;

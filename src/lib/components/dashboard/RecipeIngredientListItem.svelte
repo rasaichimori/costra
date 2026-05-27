@@ -178,7 +178,6 @@
 
 <style>
 	.ingredient-cost-item {
-		container-type: inline-size;
 		container-name: ingredient-item;
 		display: flex;
 		justify-content: space-between;
