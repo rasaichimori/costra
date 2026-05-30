@@ -7,9 +7,8 @@
 		color,
 		conversions,
 		customUnitLabels,
-		getInputAmount,
-		onInputAmountChange,
-		onOutputAmountChange,
+		onLeftAmountChange,
+		onRightAmountChange,
 		onInputUnitChange,
 		onOutputUnitChange,
 		onDelete
@@ -18,9 +17,8 @@
 		color: string;
 		conversions: UnitConversion[];
 		customUnitLabels: Record<string, string>;
-		getInputAmount: (index: number) => number;
-		onInputAmountChange: (index: number, amount: number) => void;
-		onOutputAmountChange: (index: number, amount: number) => void;
+		onLeftAmountChange: (index: number, amount: number) => void;
+		onRightAmountChange: (index: number, amount: number) => void;
 		onInputUnitChange: (index: number, unit: string) => void;
 		onOutputUnitChange: (index: number, unit: string) => void;
 		onDelete: (index: number) => void;
@@ -38,10 +36,9 @@
 			<ConversionRow
 				{conversion}
 				{ingredientName}
-				inputAmount={getInputAmount(index)}
 				{customUnitLabels}
-				onInputAmountChange={(amount) => onInputAmountChange(index, amount)}
-				onOutputAmountChange={(amount) => onOutputAmountChange(index, amount)}
+				onLeftAmountChange={(amount) => onLeftAmountChange(index, amount)}
+				onRightAmountChange={(amount) => onRightAmountChange(index, amount)}
 				onInputUnitChange={(unit) => onInputUnitChange(index, unit)}
 				onOutputUnitChange={(unit) => onOutputUnitChange(index, unit)}
 				onDelete={() => onDelete(index)}

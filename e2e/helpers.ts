@@ -25,3 +25,8 @@ export const gotoSettings = async (page: Page) => {
 	await setupDashboardWithExampleData(page);
 	await page.goto('/settings');
 };
+
+export const gotoConversions = async (page: Page) => {
+	await setupDashboardWithExampleData(page);
+	await page.goto('/conversions');
+};

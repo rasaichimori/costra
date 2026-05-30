@@ -135,21 +135,38 @@ class DataState {
 		}
 
 		this.saveTimeout = setTimeout(() => {
-			const currentState = {
-				costs: this.costs,
-				compoundIngredients: this.compoundIngredients,
-				recipes: this.recipes,
-				customUnitLabels: this.customUnitLabels,
-				unitConversions: this.unitConversions
-			};
-
-			// Save to history for undo/redo
-			historyManager.saveState(currentState);
-
-			// Persist to localStorage
-			saveAppData(currentState);
-			this.historyVersion++;
+			this.persistCurrentState();
 		}, 300);
+	}
+
+	/**
+	 * Persist immediately (e.g. explicit Save on the conversions tab)
+	 */
+	saveStateNow() {
+		if (this.isRestoring || !this.isInitialized) {
+			return;
+		}
+
+		if (this.saveTimeout) {
+			clearTimeout(this.saveTimeout);
+			this.saveTimeout = null;
+		}
+
+		this.persistCurrentState();
+	}
+
+	private persistCurrentState() {
+		const currentState = {
+			costs: this.costs,
+			compoundIngredients: this.compoundIngredients,
+			recipes: this.recipes,
+			customUnitLabels: this.customUnitLabels,
+			unitConversions: this.unitConversions
+		};
+
+		historyManager.saveState(currentState);
+		saveAppData(currentState);
+		this.historyVersion++;
 	}
 
 	canUndo() {

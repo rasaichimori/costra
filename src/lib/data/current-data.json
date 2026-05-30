@@ -1,2069 +1,2265 @@
 {
 	"costs": {
-		"93a2205a-cad5-4f58-aa21-13ab65023a67": {
-			"id": "93a2205a-cad5-4f58-aa21-13ab65023a67",
-			"name": "Granola",
-			"category": "dry",
-			"product": {
-				"cost": 1988,
-				"amount": 1000,
-				"unit": "g"
-			},
-			"color": "#DB8585"
+	  "93a2205a-cad5-4f58-aa21-13ab65023a67": {
+		"id": "93a2205a-cad5-4f58-aa21-13ab65023a67",
+		"name": "Granola",
+		"category": "dry",
+		"product": {
+		  "cost": 1988,
+		  "amount": 1000,
+		  "unit": "g"
 		},
-		"8e26ac84-81c0-4009-8151-872768d7ac75": {
-			"id": "8e26ac84-81c0-4009-8151-872768d7ac75",
-			"name": "coconut Flakes",
-			"category": "dry",
-			"product": {
-				"cost": 2020,
-				"amount": 1000,
-				"unit": "g"
-			},
-			"color": "#aaedad"
+		"color": "#DB8585"
+	  },
+	  "8e26ac84-81c0-4009-8151-872768d7ac75": {
+		"id": "8e26ac84-81c0-4009-8151-872768d7ac75",
+		"name": "coconut Flakes",
+		"category": "dry",
+		"product": {
+		  "cost": 2020,
+		  "amount": 1000,
+		  "unit": "g"
 		},
-		"a360a3de-24cd-454c-b6c3-3b57346e9482": {
-			"id": "a360a3de-24cd-454c-b6c3-3b57346e9482",
-			"name": "Hemp Seeds",
-			"category": "dry",
-			"product": {
-				"cost": 2868,
-				"amount": 907,
-				"unit": "g"
-			},
-			"color": "#9acbea"
+		"color": "#aaedad"
+	  },
+	  "a360a3de-24cd-454c-b6c3-3b57346e9482": {
+		"id": "a360a3de-24cd-454c-b6c3-3b57346e9482",
+		"name": "Hemp Seeds",
+		"category": "dry",
+		"product": {
+		  "cost": 2868,
+		  "amount": 907,
+		  "unit": "g"
 		},
-		"c830954d-f619-428f-b5dd-c5a28167e905": {
-			"id": "c830954d-f619-428f-b5dd-c5a28167e905",
-			"name": "Sunflower Seeds",
-			"category": "dry",
-			"product": {
-				"cost": 2299,
-				"amount": 1000,
-				"unit": "g"
-			},
-			"color": "#a1b4eb"
+		"color": "#9acbea"
+	  },
+	  "c830954d-f619-428f-b5dd-c5a28167e905": {
+		"id": "c830954d-f619-428f-b5dd-c5a28167e905",
+		"name": "Sunflower Seeds",
+		"category": "dry",
+		"product": {
+		  "cost": 2299,
+		  "amount": 1000,
+		  "unit": "g"
 		},
-		"ad2eb70d-8f66-4ff1-88f9-f2d109d12ea7": {
-			"id": "ad2eb70d-8f66-4ff1-88f9-f2d109d12ea7",
-			"name": "Sliced Almonds",
-			"category": "dry",
-			"product": {
-				"cost": 2480,
-				"amount": 1000,
-				"unit": "g"
-			},
-			"color": "#c89ae0"
+		"color": "#a1b4eb"
+	  },
+	  "ad2eb70d-8f66-4ff1-88f9-f2d109d12ea7": {
+		"id": "ad2eb70d-8f66-4ff1-88f9-f2d109d12ea7",
+		"name": "Sliced Almonds",
+		"category": "dry",
+		"product": {
+		  "cost": 2480,
+		  "amount": 1000,
+		  "unit": "g"
 		},
-		"8c03a758-6c2b-4dcc-b379-0b0d4104c521": {
-			"id": "8c03a758-6c2b-4dcc-b379-0b0d4104c521",
-			"name": "Pumpkin Seeds",
-			"category": "dry",
-			"product": {
-				"cost": 2099,
-				"amount": 1000,
-				"unit": "g"
-			},
-			"color": "#72e478"
+		"color": "#c89ae0"
+	  },
+	  "8c03a758-6c2b-4dcc-b379-0b0d4104c521": {
+		"id": "8c03a758-6c2b-4dcc-b379-0b0d4104c521",
+		"name": "Pumpkin Seeds",
+		"category": "dry",
+		"product": {
+		  "cost": 2099,
+		  "amount": 1000,
+		  "unit": "g"
 		},
-		"801b62d2-9a37-4f00-8a8f-7d57419a9726": {
-			"id": "801b62d2-9a37-4f00-8a8f-7d57419a9726",
-			"name": "Goji Berry",
-			"category": "dry",
-			"product": {
-				"cost": 2880,
-				"amount": 1000,
-				"unit": "g"
-			},
-			"color": "#d38f9c"
+		"color": "#72e478"
+	  },
+	  "801b62d2-9a37-4f00-8a8f-7d57419a9726": {
+		"id": "801b62d2-9a37-4f00-8a8f-7d57419a9726",
+		"name": "Goji Berry",
+		"category": "dry",
+		"product": {
+		  "cost": 2880,
+		  "amount": 1000,
+		  "unit": "g"
 		},
-		"c7098cb7-5c93-464c-b542-42d1f3ecc174": {
-			"id": "c7098cb7-5c93-464c-b542-42d1f3ecc174",
-			"name": "Chia Seeds",
-			"category": "dry",
-			"product": {
-				"cost": 3580,
-				"amount": 1000,
-				"unit": "g"
-			},
-			"color": "#81d5db"
+		"color": "#d38f9c"
+	  },
+	  "c7098cb7-5c93-464c-b542-42d1f3ecc174": {
+		"id": "c7098cb7-5c93-464c-b542-42d1f3ecc174",
+		"name": "Chia Seeds",
+		"category": "dry",
+		"product": {
+		  "cost": 3580,
+		  "amount": 1000,
+		  "unit": "g"
 		},
-		"cce7e91c-b618-4ff0-9094-95676535ec92": {
-			"id": "cce7e91c-b618-4ff0-9094-95676535ec92",
-			"name": "Cacao Nibs",
-			"category": "dry",
-			"product": {
-				"cost": 5480,
-				"amount": 1000,
-				"unit": "g"
-			},
-			"color": "#a993d9"
+		"color": "#81d5db"
+	  },
+	  "cce7e91c-b618-4ff0-9094-95676535ec92": {
+		"id": "cce7e91c-b618-4ff0-9094-95676535ec92",
+		"name": "Cacao Nibs",
+		"category": "dry",
+		"product": {
+		  "cost": 5480,
+		  "amount": 1000,
+		  "unit": "g"
 		},
-		"951699b2-dced-40c2-892d-4f179cb74036": {
-			"id": "951699b2-dced-40c2-892d-4f179cb74036",
-			"name": "Pistachio",
-			"category": "dry",
-			"product": {
-				"cost": 2938,
-				"amount": 1000,
-				"unit": "g"
-			},
-			"color": "#e0b69d"
+		"color": "#a993d9"
+	  },
+	  "f6007718-8207-4f41-abb8-f74cdeffb3ce": {
+		"id": "f6007718-8207-4f41-abb8-f74cdeffb3ce",
+		"name": "Honey",
+		"category": "wet",
+		"product": {
+		  "cost": 2780,
+		  "amount": 2040,
+		  "unit": "g"
 		},
-		"b7b80f21-a45c-4a81-83ed-a01fb735fe93": {
-			"id": "b7b80f21-a45c-4a81-83ed-a01fb735fe93",
-			"name": "White Chocolate",
-			"category": "dry",
-			"product": {
-				"cost": 2000,
-				"amount": 1000,
-				"unit": "g"
-			},
-			"color": "#b798e9"
+		"color": "#d0ddad"
+	  },
+	  "5e039c48-bbd5-45fe-afc0-a3652c780630": {
+		"id": "5e039c48-bbd5-45fe-afc0-a3652c780630",
+		"name": "Agave",
+		"category": "wet",
+		"product": {
+		  "cost": 2780,
+		  "amount": 2040,
+		  "unit": "g"
 		},
-		"f6007718-8207-4f41-abb8-f74cdeffb3ce": {
-			"id": "f6007718-8207-4f41-abb8-f74cdeffb3ce",
-			"name": "Honey",
-			"category": "wet",
-			"product": {
-				"cost": 2780,
-				"amount": 2040,
-				"unit": "g"
-			},
-			"color": "#d0ddad"
+		"color": "#ad9090"
+	  },
+	  "bcf35d8b-0986-4ca1-97d7-f0e881e53680": {
+		"id": "bcf35d8b-0986-4ca1-97d7-f0e881e53680",
+		"name": "Peanut Butter",
+		"category": "wet",
+		"product": {
+		  "cost": 3169,
+		  "amount": 2720,
+		  "unit": "g"
 		},
-		"5e039c48-bbd5-45fe-afc0-a3652c780630": {
-			"id": "5e039c48-bbd5-45fe-afc0-a3652c780630",
-			"name": "Agave",
-			"category": "wet",
-			"product": {
-				"cost": 2780,
-				"amount": 2040,
-				"unit": "g"
-			},
-			"color": "#ad9090"
+		"color": "#85d99a"
+	  },
+	  "eedf952a-f257-4bb2-a149-2b6abe0bf616": {
+		"id": "eedf952a-f257-4bb2-a149-2b6abe0bf616",
+		"name": "Nutella",
+		"category": "wet",
+		"product": {
+		  "cost": 1498,
+		  "amount": 1000,
+		  "unit": "g"
 		},
-		"bcf35d8b-0986-4ca1-97d7-f0e881e53680": {
-			"id": "bcf35d8b-0986-4ca1-97d7-f0e881e53680",
-			"name": "Peanut Butter",
-			"category": "wet",
-			"product": {
-				"cost": 3169,
-				"amount": 2720,
-				"unit": "g"
-			},
-			"color": "#85d99a"
+		"color": "#94bee1"
+	  },
+	  "854596b6-11eb-41d7-97be-c572d8c3b35c": {
+		"id": "854596b6-11eb-41d7-97be-c572d8c3b35c",
+		"name": "Greek Yogurt",
+		"category": "wet",
+		"product": {
+		  "cost": 888,
+		  "amount": 1000,
+		  "unit": "g"
 		},
-		"0735edac-f87b-40de-a3cb-675ce2b140db": {
-			"id": "0735edac-f87b-40de-a3cb-675ce2b140db",
-			"name": "Mixed Nuts Butter",
-			"category": "wet",
-			"product": {
-				"cost": 1988,
-				"amount": 765,
-				"unit": "g"
-			},
-			"color": "#7fd9b4"
+		"color": "#ec94db"
+	  },
+	  "13fc1284-a87a-4d7c-8cfd-c13c4cc30030": {
+		"id": "13fc1284-a87a-4d7c-8cfd-c13c4cc30030",
+		"name": "Strawberry",
+		"category": "fruits",
+		"product": {
+		  "cost": 2000,
+		  "amount": 24,
+		  "unit": "strawberry"
 		},
-		"eedf952a-f257-4bb2-a149-2b6abe0bf616": {
-			"id": "eedf952a-f257-4bb2-a149-2b6abe0bf616",
-			"name": "Nutella",
-			"category": "wet",
-			"product": {
-				"cost": 1498,
-				"amount": 1000,
-				"unit": "g"
-			},
-			"color": "#94bee1"
+		"color": "#7284df"
+	  },
+	  "166f05a4-b792-42bd-8911-58aa0d4455c3": {
+		"id": "166f05a4-b792-42bd-8911-58aa0d4455c3",
+		"name": "Banana",
+		"category": "fruits",
+		"product": {
+		  "cost": 315,
+		  "amount": 6,
+		  "unit": "banana"
 		},
-		"854596b6-11eb-41d7-97be-c572d8c3b35c": {
-			"id": "854596b6-11eb-41d7-97be-c572d8c3b35c",
-			"name": "Greek Yogurt",
-			"category": "wet",
-			"product": {
-				"cost": 888,
-				"amount": 1000,
-				"unit": "g"
-			},
-			"color": "#ec94db"
+		"color": "#cbafe8"
+	  },
+	  "b20a98b5-cddf-4cde-ac3d-118a2ece2c53": {
+		"id": "b20a98b5-cddf-4cde-ac3d-118a2ece2c53",
+		"name": "Pineapple",
+		"category": "fruits",
+		"product": {
+		  "cost": 500,
+		  "amount": 905,
+		  "unit": "g"
 		},
-		"0b481ce6-4b7c-4317-ade2-f61693e4e09b": {
-			"id": "0b481ce6-4b7c-4317-ade2-f61693e4e09b",
-			"name": "Spinach",
-			"category": "vegetable",
-			"product": {
-				"cost": 250,
-				"amount": 360,
-				"unit": "g"
-			},
-			"color": "#aec4e4"
+		"color": "#b0d3e7"
+	  },
+	  "4f0e07a4-6f4f-4e6c-823b-ac03f487570b": {
+		"id": "4f0e07a4-6f4f-4e6c-823b-ac03f487570b",
+		"name": "Kiwi",
+		"category": "fruits",
+		"product": {
+		  "cost": 1400,
+		  "amount": 15,
+		  "unit": "kiwi"
 		},
-		"44dd3a74-bead-471d-8a56-b5f12ea412cc": {
-			"id": "44dd3a74-bead-471d-8a56-b5f12ea412cc",
-			"name": "Avocado",
-			"category": "vegetable",
-			"product": {
-				"cost": 899,
-				"amount": 1075,
-				"unit": "g"
-			},
-			"color": "#ddaccc"
+		"color": "#8590e0"
+	  },
+	  "800c155e-5439-4742-80dd-75163036773f": {
+		"id": "800c155e-5439-4742-80dd-75163036773f",
+		"name": "Blueberry",
+		"category": "fruits",
+		"product": {
+		  "cost": 1400,
+		  "amount": 510,
+		  "unit": "g"
 		},
-		"13fc1284-a87a-4d7c-8cfd-c13c4cc30030": {
-			"id": "13fc1284-a87a-4d7c-8cfd-c13c4cc30030",
-			"name": "Strawberry",
-			"category": "fruits",
-			"product": {
-				"cost": 2000,
-				"amount": 24,
-				"unit": "strawberry"
-			},
-			"color": "#7284df"
+		"color": "#dea0a7"
+	  },
+	  "06abe694-884a-4730-b8b3-27ca0dbf6a7b": {
+		"id": "06abe694-884a-4730-b8b3-27ca0dbf6a7b",
+		"name": "Frozen Mango",
+		"category": "frozen",
+		"product": {
+		  "cost": 1228,
+		  "amount": 1500,
+		  "unit": "g"
 		},
-		"166f05a4-b792-42bd-8911-58aa0d4455c3": {
-			"id": "166f05a4-b792-42bd-8911-58aa0d4455c3",
-			"name": "Banana",
-			"category": "fruits",
-			"product": {
-				"cost": 315,
-				"amount": 6,
-				"unit": "banana"
-			},
-			"color": "#cbafe8"
+		"color": "#ffdf6b"
+	  },
+	  "b83b0488-0716-42f1-a83f-36060e1b61f1": {
+		"id": "b83b0488-0716-42f1-a83f-36060e1b61f1",
+		"name": "Frozen Blueberry",
+		"category": "frozen",
+		"product": {
+		  "cost": 948,
+		  "amount": 1000,
+		  "unit": "g"
 		},
-		"76b433d9-1846-4009-808c-b57277b80664": {
-			"id": "76b433d9-1846-4009-808c-b57277b80664",
-			"name": "Raspberry",
-			"category": "fruits",
-			"product": {
-				"cost": 998,
-				"amount": 180,
-				"unit": "g"
-			},
-			"color": "#d6b09f"
+		"color": "#a8c7e8"
+	  },
+	  "647bbc34-c948-4f92-9304-c24dac0bb84a": {
+		"id": "647bbc34-c948-4f92-9304-c24dac0bb84a",
+		"name": "Frozen Strawberry",
+		"category": "frozen",
+		"product": {
+		  "cost": 2598,
+		  "amount": 2270,
+		  "unit": "g"
 		},
-		"b20a98b5-cddf-4cde-ac3d-118a2ece2c53": {
-			"id": "b20a98b5-cddf-4cde-ac3d-118a2ece2c53",
-			"name": "Pineapple",
-			"category": "fruits",
-			"product": {
-				"cost": 500,
-				"amount": 905,
-				"unit": "g"
-			},
-			"color": "#b0d3e7"
+		"color": "#bdd988"
+	  },
+	  "e42fc8f1-3d4b-454a-836d-aefa21562047": {
+		"id": "e42fc8f1-3d4b-454a-836d-aefa21562047",
+		"name": "Acai Paste",
+		"category": "frozen",
+		"product": {
+		  "cost": 22000,
+		  "amount": 60,
+		  "unit": "pack"
 		},
-		"4f0e07a4-6f4f-4e6c-823b-ac03f487570b": {
-			"id": "4f0e07a4-6f4f-4e6c-823b-ac03f487570b",
-			"name": "Kiwi",
-			"category": "fruits",
-			"product": {
-				"cost": 1400,
-				"amount": 15,
-				"unit": "kiwi"
-			},
-			"color": "#8590e0"
+		"color": "#513691"
+	  },
+	  "ba391b3d-44d8-4ab4-b3ea-f80501dffc53": {
+		"id": "ba391b3d-44d8-4ab4-b3ea-f80501dffc53",
+		"name": "Cinnamon",
+		"category": "powder",
+		"product": {
+		  "cost": 494,
+		  "amount": 25,
+		  "unit": "g"
 		},
-		"800c155e-5439-4742-80dd-75163036773f": {
-			"id": "800c155e-5439-4742-80dd-75163036773f",
-			"name": "Blueberry",
-			"category": "fruits",
-			"product": {
-				"cost": 1400,
-				"amount": 510,
-				"unit": "g"
-			},
-			"color": "#dea0a7"
+		"color": "#dbcaa4"
+	  },
+	  "473c8f78-832f-401f-849a-32352476bfb9": {
+		"id": "473c8f78-832f-401f-849a-32352476bfb9",
+		"name": "Cacao",
+		"category": "powder",
+		"product": {
+		  "cost": 2980,
+		  "amount": 1000,
+		  "unit": "g"
 		},
-		"06abe694-884a-4730-b8b3-27ca0dbf6a7b": {
-			"id": "06abe694-884a-4730-b8b3-27ca0dbf6a7b",
-			"name": "Frozen Mango",
-			"category": "frozen",
-			"product": {
-				"cost": 1550,
-				"amount": 1500,
-				"unit": "g"
-			},
-			"color": "#ffdf6b"
+		"color": "#d7b08b"
+	  },
+	  "c8611d01-3ad2-401a-9216-52f8c546177e": {
+		"id": "c8611d01-3ad2-401a-9216-52f8c546177e",
+		"name": "Himalayian Pink Salt",
+		"category": "powder",
+		"product": {
+		  "cost": 950,
+		  "amount": 220,
+		  "unit": "g"
 		},
-		"b83b0488-0716-42f1-a83f-36060e1b61f1": {
-			"id": "b83b0488-0716-42f1-a83f-36060e1b61f1",
-			"name": "Frozen Blueberry",
-			"category": "frozen",
-			"product": {
-				"cost": 1400,
-				"amount": 2270,
-				"unit": "g"
-			},
-			"color": "#a8c7e8"
+		"color": "#ad8dd6"
+	  },
+	  "ddcf0a3e-7969-4c19-8cd1-ff1ffb89b22d": {
+		"id": "ddcf0a3e-7969-4c19-8cd1-ff1ffb89b22d",
+		"name": "Apple Juice",
+		"category": "liquid",
+		"product": {
+		  "cost": 2598,
+		  "amount": 7560,
+		  "unit": "ml"
 		},
-		"647bbc34-c948-4f92-9304-c24dac0bb84a": {
-			"id": "647bbc34-c948-4f92-9304-c24dac0bb84a",
-			"name": "Frozen Strawberry",
-			"category": "frozen",
-			"product": {
-				"cost": 1400,
-				"amount": 2270,
-				"unit": "g"
-			},
-			"color": "#bdd988"
+		"color": "#eac09a"
+	  },
+	  "22de7026-c267-45b9-abc1-1989d8c80a0e": {
+		"id": "22de7026-c267-45b9-abc1-1989d8c80a0e",
+		"name": "Coconut Milk",
+		"category": "liquid",
+		"product": {
+		  "cost": 1498,
+		  "amount": 6,
+		  "unit": "can"
 		},
-		"e42fc8f1-3d4b-454a-836d-aefa21562047": {
-			"id": "e42fc8f1-3d4b-454a-836d-aefa21562047",
-			"name": "Acai Paste",
-			"category": "frozen",
-			"product": {
-				"cost": 22000,
-				"amount": 60,
-				"unit": "pack"
-			},
-			"color": "#513691"
+		"color": "#dfeda6"
+	  },
+	  "749a05c7-3852-4858-bd5e-ec3569f95ace": {
+		"id": "749a05c7-3852-4858-bd5e-ec3569f95ace",
+		"name": "Oat Milk",
+		"category": "liquid",
+		"product": {
+		  "cost": 2498,
+		  "amount": 6000,
+		  "unit": "ml"
 		},
-		"7b4fbcb2-364d-4b1e-9c71-b4f9eeaf079f": {
-			"id": "7b4fbcb2-364d-4b1e-9c71-b4f9eeaf079f",
-			"name": "Lakanto",
-			"category": "powder",
-			"product": {
-				"cost": 745,
-				"amount": 8.29,
-				"unit": "oz"
-			},
-			"color": "#b79ade"
+		"color": "#91bee2"
+	  },
+	  "5128567b-f0be-4b90-bafc-bebc286ff9fc": {
+		"id": "5128567b-f0be-4b90-bafc-bebc286ff9fc",
+		"name": "Coconut Cream",
+		"category": "liquid",
+		"product": {
+		  "cost": 1080,
+		  "amount": 1000,
+		  "unit": "ml"
 		},
-		"ba391b3d-44d8-4ab4-b3ea-f80501dffc53": {
-			"id": "ba391b3d-44d8-4ab4-b3ea-f80501dffc53",
-			"name": "Cinnamon",
-			"category": "powder",
-			"product": {
-				"cost": 494,
-				"amount": 25,
-				"unit": "g"
-			},
-			"color": "#dbcaa4"
+		"color": "#dc99e8"
+	  },
+	  "c0040a6a-3e29-42c0-ae65-27a46298fcd0": {
+		"id": "c0040a6a-3e29-42c0-ae65-27a46298fcd0",
+		"name": "Coconut Oil",
+		"category": "liquid",
+		"product": {
+		  "cost": 2480,
+		  "amount": 2182,
+		  "unit": "g"
 		},
-		"473c8f78-832f-401f-849a-32352476bfb9": {
-			"id": "473c8f78-832f-401f-849a-32352476bfb9",
-			"name": "Cacao",
-			"category": "powder",
-			"product": {
-				"cost": 2980,
-				"amount": 1,
-				"unit": "g"
-			},
-			"color": "#d7b08b"
+		"color": "#e4b0e1"
+	  },
+	  "346ca52c-bff3-4622-a1c8-1eeb567bfd89": {
+		"id": "346ca52c-bff3-4622-a1c8-1eeb567bfd89",
+		"name": "katifi",
+		"category": "dry",
+		"product": {
+		  "cost": 1418,
+		  "amount": 500,
+		  "unit": "g"
 		},
-		"c8611d01-3ad2-401a-9216-52f8c546177e": {
-			"id": "c8611d01-3ad2-401a-9216-52f8c546177e",
-			"name": "Himalayian Pink Salt",
-			"category": "powder",
-			"product": {
-				"cost": 950,
-				"amount": 220,
-				"unit": "g"
-			},
-			"color": "#ad8dd6"
+		"color": "#e27ea1"
+	  },
+	  "3d611b0d-28a1-4ccc-8ce3-49268ed0f692": {
+		"id": "3d611b0d-28a1-4ccc-8ce3-49268ed0f692",
+		"name": "Pistachio Cream",
+		"category": "cream",
+		"product": {
+		  "cost": 1100,
+		  "amount": 240,
+		  "unit": "g"
 		},
-		"ddcf0a3e-7969-4c19-8cd1-ff1ffb89b22d": {
-			"id": "ddcf0a3e-7969-4c19-8cd1-ff1ffb89b22d",
-			"name": "Apple Juice",
-			"category": "liquid",
-			"product": {
-				"cost": 2598,
-				"amount": 7560,
-				"unit": "ml"
-			},
-			"color": "#eac09a"
+		"color": "#76e26e"
+	  },
+	  "7edf22d7-32a0-40de-b12e-2981b0c54535": {
+		"id": "7edf22d7-32a0-40de-b12e-2981b0c54535",
+		"name": "Van Houten Cocoa",
+		"category": "powder",
+		"product": {
+		  "cost": 18360,
+		  "amount": 5000,
+		  "unit": "g"
 		},
-		"22de7026-c267-45b9-abc1-1989d8c80a0e": {
-			"id": "22de7026-c267-45b9-abc1-1989d8c80a0e",
-			"name": "Coconut Milk",
-			"category": "liquid",
-			"product": {
-				"cost": 1498,
-				"amount": 6,
-				"unit": "can"
-			},
-			"color": "#dfeda6"
+		"color": "#a7ddbe"
+	  },
+	  "788191ba-ae1d-4b05-ba9e-7437c8912318": {
+		"id": "788191ba-ae1d-4b05-ba9e-7437c8912318",
+		"name": "whole milk",
+		"category": "liquid",
+		"product": {
+		  "cost": 224,
+		  "amount": 1000,
+		  "unit": "ml"
 		},
-		"749a05c7-3852-4858-bd5e-ec3569f95ace": {
-			"id": "749a05c7-3852-4858-bd5e-ec3569f95ace",
-			"name": "Oat Milk",
-			"category": "liquid",
-			"product": {
-				"cost": 2498,
-				"amount": 6000,
-				"unit": "ml"
-			},
-			"color": "#91bee2"
+		"color": "#a1e2bd"
+	  },
+	  "d78c8b15-3637-491a-bd78-5e293488f053": {
+		"id": "d78c8b15-3637-491a-bd78-5e293488f053",
+		"name": "Chicory",
+		"category": "powder",
+		"product": {
+		  "cost": 2980,
+		  "amount": 1000,
+		  "unit": "g"
 		},
-		"0d780462-cbaa-4ddf-b93c-8310adb0b116": {
-			"id": "0d780462-cbaa-4ddf-b93c-8310adb0b116",
-			"name": "Almond Milk",
-			"category": "liquid",
-			"product": {
-				"cost": 3388,
-				"amount": 11352,
-				"unit": "ml"
-			},
-			"color": "#82cab6"
+		"color": "#84d5e1"
+	  },
+	  "cd61c573-b4a6-4de1-8e9f-d9cda06b2a07": {
+		"id": "cd61c573-b4a6-4de1-8e9f-d9cda06b2a07",
+		"name": "Butter",
+		"category": "wet",
+		"product": {
+		  "cost": 500,
+		  "amount": 200,
+		  "unit": "g"
 		},
-		"5128567b-f0be-4b90-bafc-bebc286ff9fc": {
-			"id": "5128567b-f0be-4b90-bafc-bebc286ff9fc",
-			"name": "Coconut Cream",
-			"category": "liquid",
-			"product": {
-				"cost": 1080,
-				"amount": 1000,
-				"unit": "ml"
-			},
-			"color": "#dc99e8"
+		"color": "#9be5b7"
+	  },
+	  "e84964bc-8d50-4288-a388-f276e269db83": {
+		"id": "e84964bc-8d50-4288-a388-f276e269db83",
+		"name": "Protein Powder",
+		"category": "dry",
+		"product": {
+		  "cost": 2998,
+		  "amount": 1050,
+		  "unit": "g"
 		},
-		"c0040a6a-3e29-42c0-ae65-27a46298fcd0": {
-			"id": "c0040a6a-3e29-42c0-ae65-27a46298fcd0",
-			"name": "Coconut Oil",
-			"category": "liquid",
-			"product": {
-				"cost": 2480,
-				"amount": 2182,
-				"unit": "g"
-			},
-			"color": "#e4b0e1"
+		"color": "#e1af93"
+	  },
+	  "b2a86fe4-6ddb-4806-bf54-540471f85942": {
+		"id": "b2a86fe4-6ddb-4806-bf54-540471f85942",
+		"name": "gyFrozen Strawberry",
+		"category": "frozen",
+		"product": {
+		  "cost": 318,
+		  "amount": 500,
+		  "unit": "g"
 		},
-		"346ca52c-bff3-4622-a1c8-1eeb567bfd89": {
-			"id": "346ca52c-bff3-4622-a1c8-1eeb567bfd89",
-			"name": "katifi",
-			"category": "dry",
-			"product": {
-				"cost": 1418,
-				"amount": 500,
-				"unit": "g"
-			},
-			"color": "#e27ea1"
+		"color": "#d98e93"
+	  },
+	  "51ae85ab-ac4a-4454-946f-1c6221ede70b": {
+		"id": "51ae85ab-ac4a-4454-946f-1c6221ede70b",
+		"name": "Gy Frozen Blueberry",
+		"category": "frozen",
+		"product": {
+		  "cost": 498,
+		  "amount": 500,
+		  "unit": "g"
 		},
-		"3d611b0d-28a1-4ccc-8ce3-49268ed0f692": {
-			"id": "3d611b0d-28a1-4ccc-8ce3-49268ed0f692",
-			"name": "Pistachio Cream",
-			"category": "cream",
-			"product": {
-				"cost": 1100,
-				"amount": 240,
-				"unit": "g"
-			},
-			"color": "#76e26e"
+		"color": "#d9c88a"
+	  },
+	  "7e5708f3-bd4b-485c-8c98-07e626857b5f": {
+		"id": "7e5708f3-bd4b-485c-8c98-07e626857b5f",
+		"name": "Gy Frozen Mango",
+		"category": "frozen",
+		"product": {
+		  "cost": 462,
+		  "amount": 500,
+		  "unit": "g"
 		},
-		"7edf22d7-32a0-40de-b12e-2981b0c54535": {
-			"id": "7edf22d7-32a0-40de-b12e-2981b0c54535",
-			"name": "Van Houten Cocoa",
-			"category": "powder",
-			"product": {
-				"cost": 18360,
-				"amount": 5000,
-				"unit": "g"
-			},
-			"color": "#a7ddbe"
+		"color": "#9de580"
+	  },
+	  "e350ba82-052f-49c4-9918-de513c78ac89": {
+		"id": "e350ba82-052f-49c4-9918-de513c78ac89",
+		"name": "Gy Peanut Butter",
+		"category": "wet",
+		"product": {
+		  "cost": 278,
+		  "amount": 340,
+		  "unit": "g"
 		},
-		"788191ba-ae1d-4b05-ba9e-7437c8912318": {
-			"id": "788191ba-ae1d-4b05-ba9e-7437c8912318",
-			"name": "whole milk",
-			"category": "liquid",
-			"product": {
-				"cost": 224,
-				"amount": 1000,
-				"unit": "ml"
-			},
-			"color": "#a1e2bd"
+		"color": "#8dd8a1"
+	  },
+	  "49bf4732-33b5-496f-ad58-fd338d5a04e8": {
+		"id": "49bf4732-33b5-496f-ad58-fd338d5a04e8",
+		"name": "Gy Nutella",
+		"category": "wet",
+		"product": {
+		  "cost": 570,
+		  "amount": 400,
+		  "unit": "g"
 		},
-		"d78c8b15-3637-491a-bd78-5e293488f053": {
-			"id": "d78c8b15-3637-491a-bd78-5e293488f053",
-			"name": "Chicory",
-			"category": "powder",
-			"product": {
-				"cost": 2980,
-				"amount": 1000,
-				"unit": "g"
-			},
-			"color": "#84d5e1"
+		"color": "#eccdaa"
+	  },
+	  "f715f15c-8518-481a-aca6-651e644d1ecb": {
+		"id": "f715f15c-8518-481a-aca6-651e644d1ecb",
+		"name": "Gy Coconut Milk",
+		"category": "liquid",
+		"product": {
+		  "cost": 429,
+		  "amount": 1,
+		  "unit": "litre"
 		},
-		"fae39cef-df30-4b5e-84b7-ebc6fde4314c": {
-			"id": "fae39cef-df30-4b5e-84b7-ebc6fde4314c",
-			"name": "Whipped Cream",
-			"category": "cream",
-			"product": {
-				"cost": 928,
-				"amount": 500,
-				"unit": "g"
-			},
-			"color": "#eab5a3"
+		"color": "#c69ee4"
+	  },
+	  "aa166cf5-d6c9-407a-8582-aab9ff4996ae": {
+		"id": "aa166cf5-d6c9-407a-8582-aab9ff4996ae",
+		"name": "Gy Coconut Cream",
+		"category": "liquid",
+		"product": {
+		  "cost": 321,
+		  "amount": 400,
+		  "unit": "ml"
 		},
-		"cd61c573-b4a6-4de1-8e9f-d9cda06b2a07": {
-			"id": "cd61c573-b4a6-4de1-8e9f-d9cda06b2a07",
-			"name": "Butter",
-			"category": "wet",
-			"product": {
-				"cost": 500,
-				"amount": 200,
-				"unit": "g"
-			},
-			"color": "#9be5b7"
+		"color": "#c59be7"
+	  },
+	  "fb2c0710-13cd-4ecc-a984-9c4fef95194e": {
+		"id": "fb2c0710-13cd-4ecc-a984-9c4fef95194e",
+		"name": "Gy Honey",
+		"category": "liquid",
+		"product": {
+		  "cost": 451,
+		  "amount": 1,
+		  "unit": "kg"
 		},
-		"23bb1047-74b6-4bb8-871e-ff0b1eeff36f": {
-			"id": "23bb1047-74b6-4bb8-871e-ff0b1eeff36f",
-			"name": "Flour",
-			"category": "powder",
-			"product": {
-				"cost": 429,
-				"amount": 1000,
-				"unit": "g"
-			},
-			"color": "#b8e1a0"
+		"color": "#b9db8f"
+	  },
+	  "aa11bd9f-c1f0-408c-8ef2-a428b367fe8f": {
+		"id": "aa11bd9f-c1f0-408c-8ef2-a428b367fe8f",
+		"name": "Yogurt",
+		"category": "wet",
+		"product": {
+		  "cost": 300,
+		  "amount": 400,
+		  "unit": "g"
 		},
-		"798f2c58-2d02-4fbd-a2c8-96f234585d6c": {
-			"id": "798f2c58-2d02-4fbd-a2c8-96f234585d6c",
-			"name": "eggs",
-			"category": "wet",
-			"product": {
-				"cost": 200,
-				"amount": 12,
-				"unit": "pack"
-			},
-			"color": "#d7c18a"
-		},
-		"bb6d4d72-fe84-4c67-834b-0a841bda759d": {
-			"id": "bb6d4d72-fe84-4c67-834b-0a841bda759d",
-			"name": "Sugar",
-			"category": "powder",
-			"product": {
-				"cost": 600,
-				"amount": 1000,
-				"unit": "g"
-			},
-			"color": "#81e6d9"
-		},
-		"5c1eded1-aaf3-4db8-b5c2-292ccb5a2893": {
-			"id": "5c1eded1-aaf3-4db8-b5c2-292ccb5a2893",
-			"name": "Baking Powder",
-			"category": "powder",
-			"product": {
-				"cost": 400,
-				"amount": 70,
-				"unit": "g"
-			},
-			"color": "#ea99ea"
-		}
+		"color": "#c5d782"
+	  }
 	},
 	"recipes": {
-		"d90838e0-0835-4515-9048-af7898a85953": {
-			"id": "d90838e0-0835-4515-9048-af7898a85953",
-			"name": "Early Bird",
-			"sizes": [
-				{
-					"id": "15315e3a-f99d-45ba-adeb-58981ff8bb3f",
-					"name": "Mini",
-					"ingredients": [
-						{
-							"id": "d90838e0-0835-4515-9048-af7898a85953",
-							"portion": {
-								"amount": 0.13,
-								"unit": "pint"
-							},
-							"hidden": false
-						},
-						{
-							"id": "b7b26e24-f164-4bee-8800-18590dda80fe",
-							"portion": {
-								"amount": 0.13,
-								"unit": "pint"
-							},
-							"hidden": false
-						},
-						{
-							"id": "13fc1284-a87a-4d7c-8cfd-c13c4cc30030",
-							"portion": {
-								"amount": 0.35,
-								"unit": "strawberry"
-							},
-							"hidden": false
-						},
-						{
-							"id": "166f05a4-b792-42bd-8911-58aa0d4455c3",
-							"portion": {
-								"amount": 0.25,
-								"unit": "banana"
-							},
-							"hidden": false
-						},
-						{
-							"id": "4f0e07a4-6f4f-4e6c-823b-ac03f487570b",
-							"portion": {
-								"amount": 0.15,
-								"unit": "kiwi"
-							},
-							"hidden": false
-						},
-						{
-							"id": "93a2205a-cad5-4f58-aa21-13ab65023a67",
-							"portion": {
-								"amount": 13,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "8e26ac84-81c0-4009-8151-872768d7ac75",
-							"portion": {
-								"amount": 8,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "a360a3de-24cd-454c-b6c3-3b57346e9482",
-							"portion": {
-								"amount": 8,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "c830954d-f619-428f-b5dd-c5a28167e905",
-							"portion": {
-								"amount": 8,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "f6007718-8207-4f41-abb8-f74cdeffb3ce",
-							"portion": {
-								"amount": 8,
-								"unit": "g"
-							},
-							"hidden": false
-						}
-					],
-					"sellingPrice": 0
+	  "d90838e0-0835-4515-9048-af7898a85953": {
+		"id": "d90838e0-0835-4515-9048-af7898a85953",
+		"name": "Early Bird",
+		"activeSizeId": "590d1b41-cec2-4364-b607-5ce1d94c4b56",
+		"sizes": [
+		  {
+			"id": "15315e3a-f99d-45ba-adeb-58981ff8bb3f",
+			"name": "Mini",
+			"ingredients": [
+			  {
+				"id": "d90838e0-0835-4515-9048-af7898a85953",
+				"portion": {
+				  "amount": 0.13,
+				  "unit": "pint"
 				},
-				{
-					"id": "19354cb7-3e07-4848-aadf-d61206b5f86a",
-					"name": "Regular",
-					"ingredients": [
-						{
-							"id": "d90838e0-0835-4515-9048-af7898a85953",
-							"portion": {
-								"amount": 0.2,
-								"unit": "pint"
-							},
-							"hidden": false
-						},
-						{
-							"id": "b7b26e24-f164-4bee-8800-18590dda80fe",
-							"portion": {
-								"amount": 0.2,
-								"unit": "pint"
-							},
-							"hidden": false
-						},
-						{
-							"id": "13fc1284-a87a-4d7c-8cfd-c13c4cc30030",
-							"portion": {
-								"amount": 0.5,
-								"unit": "strawberry"
-							},
-							"hidden": false
-						},
-						{
-							"id": "166f05a4-b792-42bd-8911-58aa0d4455c3",
-							"portion": {
-								"amount": 0.5,
-								"unit": "banana"
-							},
-							"hidden": false
-						},
-						{
-							"id": "4f0e07a4-6f4f-4e6c-823b-ac03f487570b",
-							"portion": {
-								"amount": 0.25,
-								"unit": "kiwi"
-							},
-							"hidden": false
-						},
-						{
-							"id": "93a2205a-cad5-4f58-aa21-13ab65023a67",
-							"portion": {
-								"amount": 20,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "8e26ac84-81c0-4009-8151-872768d7ac75",
-							"portion": {
-								"amount": 10,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "a360a3de-24cd-454c-b6c3-3b57346e9482",
-							"portion": {
-								"amount": 3,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "c830954d-f619-428f-b5dd-c5a28167e905",
-							"portion": {
-								"amount": 10,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "f6007718-8207-4f41-abb8-f74cdeffb3ce",
-							"portion": {
-								"amount": 10,
-								"unit": "g"
-							},
-							"hidden": false
-						}
-					],
-					"sellingPrice": 0
+				"hidden": false
+			  },
+			  {
+				"id": "b7b26e24-f164-4bee-8800-18590dda80fe",
+				"portion": {
+				  "amount": 0.13,
+				  "unit": "pint"
 				},
-				{
-					"id": "333a3eab-7276-44cc-8695-3ab661eba701",
-					"name": "Large",
-					"ingredients": [
-						{
-							"id": "d90838e0-0835-4515-9048-af7898a85953",
-							"portion": {
-								"amount": 130,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "b7b26e24-f164-4bee-8800-18590dda80fe",
-							"portion": {
-								"amount": 130,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "13fc1284-a87a-4d7c-8cfd-c13c4cc30030",
-							"portion": {
-								"amount": 0.6,
-								"unit": "strawberry"
-							},
-							"hidden": false
-						},
-						{
-							"id": "166f05a4-b792-42bd-8911-58aa0d4455c3",
-							"portion": {
-								"amount": 0.5,
-								"unit": "banana"
-							},
-							"hidden": false
-						},
-						{
-							"id": "4f0e07a4-6f4f-4e6c-823b-ac03f487570b",
-							"portion": {
-								"amount": 0.25,
-								"unit": "kiwi"
-							},
-							"hidden": false
-						},
-						{
-							"id": "93a2205a-cad5-4f58-aa21-13ab65023a67",
-							"portion": {
-								"amount": 40,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "8e26ac84-81c0-4009-8151-872768d7ac75",
-							"portion": {
-								"amount": 5,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "a360a3de-24cd-454c-b6c3-3b57346e9482",
-							"portion": {
-								"amount": 3,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "c830954d-f619-428f-b5dd-c5a28167e905",
-							"portion": {
-								"amount": 12,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "f6007718-8207-4f41-abb8-f74cdeffb3ce",
-							"portion": {
-								"amount": 20,
-								"unit": "g"
-							},
-							"hidden": false
-						}
-					],
-					"sellingPrice": 0
+				"hidden": false
+			  },
+			  {
+				"id": "13fc1284-a87a-4d7c-8cfd-c13c4cc30030",
+				"portion": {
+				  "amount": 0.35,
+				  "unit": "strawberry"
 				},
-				{
-					"id": "590d1b41-cec2-4364-b607-5ce1d94c4b56",
-					"name": "Extra Large",
-					"ingredients": [
-						{
-							"id": "d90838e0-0835-4515-9048-af7898a85953",
-							"portion": {
-								"amount": 0.35,
-								"unit": "pint"
-							},
-							"hidden": false
-						},
-						{
-							"id": "b7b26e24-f164-4bee-8800-18590dda80fe",
-							"portion": {
-								"amount": 0.35,
-								"unit": "pint"
-							},
-							"hidden": false
-						},
-						{
-							"id": "13fc1284-a87a-4d7c-8cfd-c13c4cc30030",
-							"portion": {
-								"amount": 0.6,
-								"unit": "strawberry"
-							},
-							"hidden": false
-						},
-						{
-							"id": "166f05a4-b792-42bd-8911-58aa0d4455c3",
-							"portion": {
-								"amount": 0.5,
-								"unit": "banana"
-							},
-							"hidden": false
-						},
-						{
-							"id": "4f0e07a4-6f4f-4e6c-823b-ac03f487570b",
-							"portion": {
-								"amount": 0.25,
-								"unit": "kiwi"
-							},
-							"hidden": false
-						},
-						{
-							"id": "93a2205a-cad5-4f58-aa21-13ab65023a67",
-							"portion": {
-								"amount": 20,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "8e26ac84-81c0-4009-8151-872768d7ac75",
-							"portion": {
-								"amount": 10,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "a360a3de-24cd-454c-b6c3-3b57346e9482",
-							"portion": {
-								"amount": 10,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "c830954d-f619-428f-b5dd-c5a28167e905",
-							"portion": {
-								"amount": 10,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "f6007718-8207-4f41-abb8-f74cdeffb3ce",
-							"portion": {
-								"amount": 10,
-								"unit": "g"
-							},
-							"hidden": false
-						}
-					],
-					"sellingPrice": 0
-				}
+				"hidden": false
+			  },
+			  {
+				"id": "166f05a4-b792-42bd-8911-58aa0d4455c3",
+				"portion": {
+				  "amount": 0.25,
+				  "unit": "banana"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "4f0e07a4-6f4f-4e6c-823b-ac03f487570b",
+				"portion": {
+				  "amount": 0.15,
+				  "unit": "kiwi"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "93a2205a-cad5-4f58-aa21-13ab65023a67",
+				"portion": {
+				  "amount": 13,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "8e26ac84-81c0-4009-8151-872768d7ac75",
+				"portion": {
+				  "amount": 8,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "a360a3de-24cd-454c-b6c3-3b57346e9482",
+				"portion": {
+				  "amount": 8,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "c830954d-f619-428f-b5dd-c5a28167e905",
+				"portion": {
+				  "amount": 8,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "f6007718-8207-4f41-abb8-f74cdeffb3ce",
+				"portion": {
+				  "amount": 8,
+				  "unit": "g"
+				},
+				"hidden": false
+			  }
 			],
-			"activeSizeId": "590d1b41-cec2-4364-b607-5ce1d94c4b56"
-		},
-		"b7b26e24-f164-4bee-8800-18590dda80fe": {
-			"id": "b7b26e24-f164-4bee-8800-18590dda80fe",
-			"name": "Golden Hour",
-			"sizes": [
-				{
-					"id": "12c3d38d-2155-47e9-9083-6b3b0d7d56f1",
-					"name": "Mini",
-					"ingredients": [
-						{
-							"id": "b7b26e24-f164-4bee-8800-18590dda80fe",
-							"portion": {
-								"amount": 0.13,
-								"unit": "pint"
-							},
-							"hidden": false
-						},
-						{
-							"id": "51cde09f-7b77-43cd-ae20-4fd425aaf101",
-							"portion": {
-								"amount": 0.13,
-								"unit": "pint"
-							},
-							"hidden": false
-						},
-						{
-							"id": "13fc1284-a87a-4d7c-8cfd-c13c4cc30030",
-							"portion": {
-								"amount": 0.5,
-								"unit": "strawberry"
-							},
-							"hidden": false
-						},
-						{
-							"id": "b20a98b5-cddf-4cde-ac3d-118a2ece2c53",
-							"portion": {
-								"amount": 20,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "166f05a4-b792-42bd-8911-58aa0d4455c3",
-							"portion": {
-								"amount": 0.5,
-								"unit": "banana"
-							},
-							"hidden": false
-						},
-						{
-							"id": "93a2205a-cad5-4f58-aa21-13ab65023a67",
-							"portion": {
-								"amount": 20,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "8e26ac84-81c0-4009-8151-872768d7ac75",
-							"portion": {
-								"amount": 10,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "c830954d-f619-428f-b5dd-c5a28167e905",
-							"portion": {
-								"amount": 10,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "801b62d2-9a37-4f00-8a8f-7d57419a9726",
-							"portion": {
-								"amount": 8,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "f6007718-8207-4f41-abb8-f74cdeffb3ce",
-							"portion": {
-								"amount": 20,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "ad2eb70d-8f66-4ff1-88f9-f2d109d12ea7",
-							"portion": {
-								"amount": 10,
-								"unit": "g"
-							},
-							"hidden": false
-						}
-					],
-					"sellingPrice": 0
+			"sellingPrice": 900
+		  },
+		  {
+			"id": "19354cb7-3e07-4848-aadf-d61206b5f86a",
+			"name": "Regular",
+			"ingredients": [
+			  {
+				"id": "d90838e0-0835-4515-9048-af7898a85953",
+				"portion": {
+				  "amount": 0.2,
+				  "unit": "pint"
 				},
-				{
-					"id": "18398361-05c9-4b35-8e9e-fbcaf0972243",
-					"name": "Regular",
-					"ingredients": [
-						{
-							"id": "b7b26e24-f164-4bee-8800-18590dda80fe",
-							"portion": {
-								"amount": 0.2,
-								"unit": "pint"
-							},
-							"hidden": false
-						},
-						{
-							"id": "51cde09f-7b77-43cd-ae20-4fd425aaf101",
-							"portion": {
-								"amount": 0.2,
-								"unit": "pint"
-							},
-							"hidden": false
-						},
-						{
-							"id": "13fc1284-a87a-4d7c-8cfd-c13c4cc30030",
-							"portion": {
-								"amount": 0.5,
-								"unit": "strawberry"
-							},
-							"hidden": false
-						},
-						{
-							"id": "b20a98b5-cddf-4cde-ac3d-118a2ece2c53",
-							"portion": {
-								"amount": 20,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "166f05a4-b792-42bd-8911-58aa0d4455c3",
-							"portion": {
-								"amount": 0.5,
-								"unit": "banana"
-							},
-							"hidden": false
-						},
-						{
-							"id": "93a2205a-cad5-4f58-aa21-13ab65023a67",
-							"portion": {
-								"amount": 20,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "8e26ac84-81c0-4009-8151-872768d7ac75",
-							"portion": {
-								"amount": 10,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "c830954d-f619-428f-b5dd-c5a28167e905",
-							"portion": {
-								"amount": 10,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "801b62d2-9a37-4f00-8a8f-7d57419a9726",
-							"portion": {
-								"amount": 8,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "f6007718-8207-4f41-abb8-f74cdeffb3ce",
-							"portion": {
-								"amount": 20,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "ad2eb70d-8f66-4ff1-88f9-f2d109d12ea7",
-							"portion": {
-								"amount": 10,
-								"unit": "g"
-							},
-							"hidden": false
-						}
-					],
-					"sellingPrice": 0
+				"hidden": false
+			  },
+			  {
+				"id": "b7b26e24-f164-4bee-8800-18590dda80fe",
+				"portion": {
+				  "amount": 0.2,
+				  "unit": "pint"
 				},
-				{
-					"id": "16c7286e-dec9-4567-9a79-afa207b7fb19",
-					"name": "Large",
-					"ingredients": [
-						{
-							"id": "b7b26e24-f164-4bee-8800-18590dda80fe",
-							"portion": {
-								"amount": 134,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "51cde09f-7b77-43cd-ae20-4fd425aaf101",
-							"portion": {
-								"amount": 106,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "13fc1284-a87a-4d7c-8cfd-c13c4cc30030",
-							"portion": {
-								"amount": 0.5,
-								"unit": "strawberry"
-							},
-							"hidden": false
-						},
-						{
-							"id": "b20a98b5-cddf-4cde-ac3d-118a2ece2c53",
-							"portion": {
-								"amount": 20,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "166f05a4-b792-42bd-8911-58aa0d4455c3",
-							"portion": {
-								"amount": 0.5,
-								"unit": "banana"
-							},
-							"hidden": false
-						},
-						{
-							"id": "93a2205a-cad5-4f58-aa21-13ab65023a67",
-							"portion": {
-								"amount": 20,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "8e26ac84-81c0-4009-8151-872768d7ac75",
-							"portion": {
-								"amount": 10,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "c830954d-f619-428f-b5dd-c5a28167e905",
-							"portion": {
-								"amount": 10,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "801b62d2-9a37-4f00-8a8f-7d57419a9726",
-							"portion": {
-								"amount": 8,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "f6007718-8207-4f41-abb8-f74cdeffb3ce",
-							"portion": {
-								"amount": 20,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "ad2eb70d-8f66-4ff1-88f9-f2d109d12ea7",
-							"portion": {
-								"amount": 10,
-								"unit": "g"
-							},
-							"hidden": false
-						}
-					],
-					"sellingPrice": 0
+				"hidden": false
+			  },
+			  {
+				"id": "13fc1284-a87a-4d7c-8cfd-c13c4cc30030",
+				"portion": {
+				  "amount": 0.5,
+				  "unit": "strawberry"
 				},
-				{
-					"id": "68e51781-2691-4dfb-8288-d150c75313ac",
-					"name": "Extra Large",
-					"ingredients": [
-						{
-							"id": "b7b26e24-f164-4bee-8800-18590dda80fe",
-							"portion": {
-								"amount": 0.35,
-								"unit": "pint"
-							},
-							"hidden": false
-						},
-						{
-							"id": "51cde09f-7b77-43cd-ae20-4fd425aaf101",
-							"portion": {
-								"amount": 0.35,
-								"unit": "pint"
-							},
-							"hidden": false
-						},
-						{
-							"id": "13fc1284-a87a-4d7c-8cfd-c13c4cc30030",
-							"portion": {
-								"amount": 0.5,
-								"unit": "strawberry"
-							},
-							"hidden": false
-						},
-						{
-							"id": "b20a98b5-cddf-4cde-ac3d-118a2ece2c53",
-							"portion": {
-								"amount": 20,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "166f05a4-b792-42bd-8911-58aa0d4455c3",
-							"portion": {
-								"amount": 0.5,
-								"unit": "banana"
-							},
-							"hidden": false
-						},
-						{
-							"id": "93a2205a-cad5-4f58-aa21-13ab65023a67",
-							"portion": {
-								"amount": 20,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "8e26ac84-81c0-4009-8151-872768d7ac75",
-							"portion": {
-								"amount": 10,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "c830954d-f619-428f-b5dd-c5a28167e905",
-							"portion": {
-								"amount": 10,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "801b62d2-9a37-4f00-8a8f-7d57419a9726",
-							"portion": {
-								"amount": 8,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "f6007718-8207-4f41-abb8-f74cdeffb3ce",
-							"portion": {
-								"amount": 20,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "ad2eb70d-8f66-4ff1-88f9-f2d109d12ea7",
-							"portion": {
-								"amount": 10,
-								"unit": "g"
-							},
-							"hidden": false
-						}
-					],
-					"sellingPrice": 0
-				}
+				"hidden": false
+			  },
+			  {
+				"id": "166f05a4-b792-42bd-8911-58aa0d4455c3",
+				"portion": {
+				  "amount": 0.5,
+				  "unit": "banana"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "4f0e07a4-6f4f-4e6c-823b-ac03f487570b",
+				"portion": {
+				  "amount": 0.25,
+				  "unit": "kiwi"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "93a2205a-cad5-4f58-aa21-13ab65023a67",
+				"portion": {
+				  "amount": 20,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "8e26ac84-81c0-4009-8151-872768d7ac75",
+				"portion": {
+				  "amount": 10,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "a360a3de-24cd-454c-b6c3-3b57346e9482",
+				"portion": {
+				  "amount": 3,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "c830954d-f619-428f-b5dd-c5a28167e905",
+				"portion": {
+				  "amount": 10,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "f6007718-8207-4f41-abb8-f74cdeffb3ce",
+				"portion": {
+				  "amount": 10,
+				  "unit": "g"
+				},
+				"hidden": false
+			  }
 			],
-			"activeSizeId": "12c3d38d-2155-47e9-9083-6b3b0d7d56f1"
-		},
-		"51cde09f-7b77-43cd-ae20-4fd425aaf101": {
-			"id": "51cde09f-7b77-43cd-ae20-4fd425aaf101",
-			"name": "Blossom",
-			"sizes": [
-				{
-					"id": "7fe43e1b-21f7-4213-a7f6-fccade7af791",
-					"name": "Mini",
-					"ingredients": [
-						{
-							"id": "d90838e0-0835-4515-9048-af7898a85953",
-							"portion": {
-								"amount": 0.13,
-								"unit": "pint"
-							},
-							"hidden": false
-						},
-						{
-							"id": "51cde09f-7b77-43cd-ae20-4fd425aaf101",
-							"portion": {
-								"amount": 0.13,
-								"unit": "pint"
-							},
-							"hidden": false
-						},
-						{
-							"id": "166f05a4-b792-42bd-8911-58aa0d4455c3",
-							"portion": {
-								"amount": 0.5,
-								"unit": "banana"
-							},
-							"hidden": false
-						},
-						{
-							"id": "800c155e-5439-4742-80dd-75163036773f",
-							"portion": {
-								"amount": 20,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "4f0e07a4-6f4f-4e6c-823b-ac03f487570b",
-							"portion": {
-								"amount": 0.25,
-								"unit": "kiwi"
-							},
-							"hidden": false
-						},
-						{
-							"id": "93a2205a-cad5-4f58-aa21-13ab65023a67",
-							"portion": {
-								"amount": 15,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "8c03a758-6c2b-4dcc-b379-0b0d4104c521",
-							"portion": {
-								"amount": 8,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "a360a3de-24cd-454c-b6c3-3b57346e9482",
-							"portion": {
-								"amount": 8,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "801b62d2-9a37-4f00-8a8f-7d57419a9726",
-							"portion": {
-								"amount": 8,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "f6007718-8207-4f41-abb8-f74cdeffb3ce",
-							"portion": {
-								"amount": 8,
-								"unit": "g"
-							},
-							"hidden": false
-						}
-					],
-					"sellingPrice": 0
+			"sellingPrice": 1300
+		  },
+		  {
+			"id": "333a3eab-7276-44cc-8695-3ab661eba701",
+			"name": "Large",
+			"ingredients": [
+			  {
+				"id": "d90838e0-0835-4515-9048-af7898a85953",
+				"portion": {
+				  "amount": 130,
+				  "unit": "g"
 				},
-				{
-					"id": "7b7a4f40-7385-4c63-8214-cd1de119a087",
-					"name": "Regular",
-					"ingredients": [
-						{
-							"id": "d90838e0-0835-4515-9048-af7898a85953",
-							"portion": {
-								"amount": 0.2,
-								"unit": "pint"
-							},
-							"hidden": false
-						},
-						{
-							"id": "51cde09f-7b77-43cd-ae20-4fd425aaf101",
-							"portion": {
-								"amount": 0.2,
-								"unit": "pint"
-							},
-							"hidden": false
-						},
-						{
-							"id": "166f05a4-b792-42bd-8911-58aa0d4455c3",
-							"portion": {
-								"amount": 0.5,
-								"unit": "banana"
-							},
-							"hidden": false
-						},
-						{
-							"id": "800c155e-5439-4742-80dd-75163036773f",
-							"portion": {
-								"amount": 20,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "4f0e07a4-6f4f-4e6c-823b-ac03f487570b",
-							"portion": {
-								"amount": 0.25,
-								"unit": "kiwi"
-							},
-							"hidden": false
-						},
-						{
-							"id": "93a2205a-cad5-4f58-aa21-13ab65023a67",
-							"portion": {
-								"amount": 20,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "a360a3de-24cd-454c-b6c3-3b57346e9482",
-							"portion": {
-								"amount": 10,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "cce7e91c-b618-4ff0-9094-95676535ec92",
-							"portion": {
-								"amount": 15,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "801b62d2-9a37-4f00-8a8f-7d57419a9726",
-							"portion": {
-								"amount": 8,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "f6007718-8207-4f41-abb8-f74cdeffb3ce",
-							"portion": {
-								"amount": 20,
-								"unit": "g"
-							},
-							"hidden": false
-						}
-					],
-					"sellingPrice": 0
+				"hidden": false
+			  },
+			  {
+				"id": "b7b26e24-f164-4bee-8800-18590dda80fe",
+				"portion": {
+				  "amount": 130,
+				  "unit": "g"
 				},
-				{
-					"id": "a667653b-ae5f-4023-8353-6c40a223ad64",
-					"name": "Extra Large",
-					"ingredients": [
-						{
-							"id": "d90838e0-0835-4515-9048-af7898a85953",
-							"portion": {
-								"amount": 0.2,
-								"unit": "pint"
-							},
-							"hidden": false
-						},
-						{
-							"id": "51cde09f-7b77-43cd-ae20-4fd425aaf101",
-							"portion": {
-								"amount": 0.2,
-								"unit": "pint"
-							},
-							"hidden": false
-						},
-						{
-							"id": "166f05a4-b792-42bd-8911-58aa0d4455c3",
-							"portion": {
-								"amount": 0.5,
-								"unit": "banana"
-							},
-							"hidden": false
-						},
-						{
-							"id": "800c155e-5439-4742-80dd-75163036773f",
-							"portion": {
-								"amount": 20,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "4f0e07a4-6f4f-4e6c-823b-ac03f487570b",
-							"portion": {
-								"amount": 0.25,
-								"unit": "kiwi"
-							},
-							"hidden": false
-						},
-						{
-							"id": "93a2205a-cad5-4f58-aa21-13ab65023a67",
-							"portion": {
-								"amount": 20,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "a360a3de-24cd-454c-b6c3-3b57346e9482",
-							"portion": {
-								"amount": 10,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "cce7e91c-b618-4ff0-9094-95676535ec92",
-							"portion": {
-								"amount": 15,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "801b62d2-9a37-4f00-8a8f-7d57419a9726",
-							"portion": {
-								"amount": 8,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "f6007718-8207-4f41-abb8-f74cdeffb3ce",
-							"portion": {
-								"amount": 20,
-								"unit": "g"
-							},
-							"hidden": false
-						}
-					],
-					"sellingPrice": 0
+				"hidden": false
+			  },
+			  {
+				"id": "13fc1284-a87a-4d7c-8cfd-c13c4cc30030",
+				"portion": {
+				  "amount": 0.6,
+				  "unit": "strawberry"
 				},
-				{
-					"id": "b722e66a-3a84-4246-9366-6ecc55605e94",
-					"name": "Large",
-					"ingredients": [
-						{
-							"id": "d90838e0-0835-4515-9048-af7898a85953",
-							"portion": {
-								"amount": 0.2,
-								"unit": "pint"
-							},
-							"hidden": false
-						},
-						{
-							"id": "51cde09f-7b77-43cd-ae20-4fd425aaf101",
-							"portion": {
-								"amount": 0.2,
-								"unit": "pint"
-							},
-							"hidden": false
-						},
-						{
-							"id": "166f05a4-b792-42bd-8911-58aa0d4455c3",
-							"portion": {
-								"amount": 0.5,
-								"unit": "banana"
-							},
-							"hidden": false
-						},
-						{
-							"id": "800c155e-5439-4742-80dd-75163036773f",
-							"portion": {
-								"amount": 20,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "4f0e07a4-6f4f-4e6c-823b-ac03f487570b",
-							"portion": {
-								"amount": 0.25,
-								"unit": "kiwi"
-							},
-							"hidden": false
-						},
-						{
-							"id": "93a2205a-cad5-4f58-aa21-13ab65023a67",
-							"portion": {
-								"amount": 20,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "a360a3de-24cd-454c-b6c3-3b57346e9482",
-							"portion": {
-								"amount": 10,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "cce7e91c-b618-4ff0-9094-95676535ec92",
-							"portion": {
-								"amount": 15,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "801b62d2-9a37-4f00-8a8f-7d57419a9726",
-							"portion": {
-								"amount": 8,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "f6007718-8207-4f41-abb8-f74cdeffb3ce",
-							"portion": {
-								"amount": 20,
-								"unit": "g"
-							},
-							"hidden": false
-						}
-					],
-					"sellingPrice": 0
-				}
+				"hidden": false
+			  },
+			  {
+				"id": "166f05a4-b792-42bd-8911-58aa0d4455c3",
+				"portion": {
+				  "amount": 0.5,
+				  "unit": "banana"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "4f0e07a4-6f4f-4e6c-823b-ac03f487570b",
+				"portion": {
+				  "amount": 0.25,
+				  "unit": "kiwi"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "93a2205a-cad5-4f58-aa21-13ab65023a67",
+				"portion": {
+				  "amount": 40,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "8e26ac84-81c0-4009-8151-872768d7ac75",
+				"portion": {
+				  "amount": 5,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "a360a3de-24cd-454c-b6c3-3b57346e9482",
+				"portion": {
+				  "amount": 3,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "c830954d-f619-428f-b5dd-c5a28167e905",
+				"portion": {
+				  "amount": 12,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "f6007718-8207-4f41-abb8-f74cdeffb3ce",
+				"portion": {
+				  "amount": 20,
+				  "unit": "g"
+				},
+				"hidden": false
+			  }
 			],
-			"activeSizeId": "a667653b-ae5f-4023-8353-6c40a223ad64"
-		},
-		"12b00d61-86f1-4fa7-be5b-d9f86a6230c2": {
-			"id": "12b00d61-86f1-4fa7-be5b-d9f86a6230c2",
-			"name": "Chikory Latte",
-			"sizes": [
-				{
-					"id": "9a93aadd-ef81-4aeb-9e80-3f5109951eb7",
-					"name": "Regular",
-					"ingredients": [
-						{
-							"id": "d78c8b15-3637-491a-bd78-5e293488f053",
-							"portion": {
-								"amount": 10,
-								"unit": "g"
-							},
-							"hidden": false
-						},
-						{
-							"id": "788191ba-ae1d-4b05-ba9e-7437c8912318",
-							"portion": {
-								"amount": 300,
-								"unit": "ml"
-							},
-							"hidden": false
-						},
-						{
-							"id": "5e039c48-bbd5-45fe-afc0-a3652c780630",
-							"portion": {
-								"amount": 2,
-								"unit": "tsp"
-							},
-							"hidden": false
-						}
-					],
-					"sellingPrice": 0
-				}
+			"sellingPrice": 1500
+		  },
+		  {
+			"id": "590d1b41-cec2-4364-b607-5ce1d94c4b56",
+			"name": "Extra Large",
+			"ingredients": [
+			  {
+				"id": "d90838e0-0835-4515-9048-af7898a85953",
+				"portion": {
+				  "amount": 0.35,
+				  "unit": "pint"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "b7b26e24-f164-4bee-8800-18590dda80fe",
+				"portion": {
+				  "amount": 0.35,
+				  "unit": "pint"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "13fc1284-a87a-4d7c-8cfd-c13c4cc30030",
+				"portion": {
+				  "amount": 0.6,
+				  "unit": "strawberry"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "166f05a4-b792-42bd-8911-58aa0d4455c3",
+				"portion": {
+				  "amount": 0.5,
+				  "unit": "banana"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "4f0e07a4-6f4f-4e6c-823b-ac03f487570b",
+				"portion": {
+				  "amount": 0.25,
+				  "unit": "kiwi"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "93a2205a-cad5-4f58-aa21-13ab65023a67",
+				"portion": {
+				  "amount": 20,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "8e26ac84-81c0-4009-8151-872768d7ac75",
+				"portion": {
+				  "amount": 10,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "a360a3de-24cd-454c-b6c3-3b57346e9482",
+				"portion": {
+				  "amount": 10,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "c830954d-f619-428f-b5dd-c5a28167e905",
+				"portion": {
+				  "amount": 10,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "f6007718-8207-4f41-abb8-f74cdeffb3ce",
+				"portion": {
+				  "amount": 10,
+				  "unit": "g"
+				},
+				"hidden": false
+			  }
 			],
-			"activeSizeId": "9a93aadd-ef81-4aeb-9e80-3f5109951eb7"
-		}
+			"sellingPrice": 1700
+		  }
+		]
+	  },
+	  "b7b26e24-f164-4bee-8800-18590dda80fe": {
+		"id": "b7b26e24-f164-4bee-8800-18590dda80fe",
+		"name": "Golden Hour",
+		"activeSizeId": "12c3d38d-2155-47e9-9083-6b3b0d7d56f1",
+		"sizes": [
+		  {
+			"id": "12c3d38d-2155-47e9-9083-6b3b0d7d56f1",
+			"name": "Mini",
+			"ingredients": [
+			  {
+				"id": "b7b26e24-f164-4bee-8800-18590dda80fe",
+				"portion": {
+				  "amount": 0.13,
+				  "unit": "pint"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "51cde09f-7b77-43cd-ae20-4fd425aaf101",
+				"portion": {
+				  "amount": 0.13,
+				  "unit": "pint"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "13fc1284-a87a-4d7c-8cfd-c13c4cc30030",
+				"portion": {
+				  "amount": 0.5,
+				  "unit": "strawberry"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "b20a98b5-cddf-4cde-ac3d-118a2ece2c53",
+				"portion": {
+				  "amount": 20,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "166f05a4-b792-42bd-8911-58aa0d4455c3",
+				"portion": {
+				  "amount": 0.5,
+				  "unit": "banana"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "93a2205a-cad5-4f58-aa21-13ab65023a67",
+				"portion": {
+				  "amount": 20,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "8e26ac84-81c0-4009-8151-872768d7ac75",
+				"portion": {
+				  "amount": 10,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "c830954d-f619-428f-b5dd-c5a28167e905",
+				"portion": {
+				  "amount": 10,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "801b62d2-9a37-4f00-8a8f-7d57419a9726",
+				"portion": {
+				  "amount": 8,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "f6007718-8207-4f41-abb8-f74cdeffb3ce",
+				"portion": {
+				  "amount": 20,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "ad2eb70d-8f66-4ff1-88f9-f2d109d12ea7",
+				"portion": {
+				  "amount": 10,
+				  "unit": "g"
+				},
+				"hidden": false
+			  }
+			],
+			"sellingPrice": 900
+		  },
+		  {
+			"id": "18398361-05c9-4b35-8e9e-fbcaf0972243",
+			"name": "Regular",
+			"ingredients": [
+			  {
+				"id": "b7b26e24-f164-4bee-8800-18590dda80fe",
+				"portion": {
+				  "amount": 0.2,
+				  "unit": "pint"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "51cde09f-7b77-43cd-ae20-4fd425aaf101",
+				"portion": {
+				  "amount": 0.2,
+				  "unit": "pint"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "13fc1284-a87a-4d7c-8cfd-c13c4cc30030",
+				"portion": {
+				  "amount": 0.5,
+				  "unit": "strawberry"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "b20a98b5-cddf-4cde-ac3d-118a2ece2c53",
+				"portion": {
+				  "amount": 20,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "166f05a4-b792-42bd-8911-58aa0d4455c3",
+				"portion": {
+				  "amount": 0.5,
+				  "unit": "banana"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "93a2205a-cad5-4f58-aa21-13ab65023a67",
+				"portion": {
+				  "amount": 20,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "8e26ac84-81c0-4009-8151-872768d7ac75",
+				"portion": {
+				  "amount": 10,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "c830954d-f619-428f-b5dd-c5a28167e905",
+				"portion": {
+				  "amount": 10,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "801b62d2-9a37-4f00-8a8f-7d57419a9726",
+				"portion": {
+				  "amount": 8,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "f6007718-8207-4f41-abb8-f74cdeffb3ce",
+				"portion": {
+				  "amount": 20,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "ad2eb70d-8f66-4ff1-88f9-f2d109d12ea7",
+				"portion": {
+				  "amount": 10,
+				  "unit": "g"
+				},
+				"hidden": false
+			  }
+			],
+			"sellingPrice": 1300
+		  },
+		  {
+			"id": "16c7286e-dec9-4567-9a79-afa207b7fb19",
+			"name": "Large",
+			"ingredients": [
+			  {
+				"id": "b7b26e24-f164-4bee-8800-18590dda80fe",
+				"portion": {
+				  "amount": 134,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "51cde09f-7b77-43cd-ae20-4fd425aaf101",
+				"portion": {
+				  "amount": 106,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "13fc1284-a87a-4d7c-8cfd-c13c4cc30030",
+				"portion": {
+				  "amount": 0.5,
+				  "unit": "strawberry"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "b20a98b5-cddf-4cde-ac3d-118a2ece2c53",
+				"portion": {
+				  "amount": 20,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "166f05a4-b792-42bd-8911-58aa0d4455c3",
+				"portion": {
+				  "amount": 0.5,
+				  "unit": "banana"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "93a2205a-cad5-4f58-aa21-13ab65023a67",
+				"portion": {
+				  "amount": 20,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "8e26ac84-81c0-4009-8151-872768d7ac75",
+				"portion": {
+				  "amount": 10,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "c830954d-f619-428f-b5dd-c5a28167e905",
+				"portion": {
+				  "amount": 10,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "801b62d2-9a37-4f00-8a8f-7d57419a9726",
+				"portion": {
+				  "amount": 8,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "f6007718-8207-4f41-abb8-f74cdeffb3ce",
+				"portion": {
+				  "amount": 20,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "ad2eb70d-8f66-4ff1-88f9-f2d109d12ea7",
+				"portion": {
+				  "amount": 10,
+				  "unit": "g"
+				},
+				"hidden": false
+			  }
+			],
+			"sellingPrice": 1500
+		  },
+		  {
+			"id": "68e51781-2691-4dfb-8288-d150c75313ac",
+			"name": "Extra Large",
+			"ingredients": [
+			  {
+				"id": "b7b26e24-f164-4bee-8800-18590dda80fe",
+				"portion": {
+				  "amount": 0.35,
+				  "unit": "pint"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "51cde09f-7b77-43cd-ae20-4fd425aaf101",
+				"portion": {
+				  "amount": 0.35,
+				  "unit": "pint"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "13fc1284-a87a-4d7c-8cfd-c13c4cc30030",
+				"portion": {
+				  "amount": 0.5,
+				  "unit": "strawberry"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "b20a98b5-cddf-4cde-ac3d-118a2ece2c53",
+				"portion": {
+				  "amount": 20,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "166f05a4-b792-42bd-8911-58aa0d4455c3",
+				"portion": {
+				  "amount": 0.5,
+				  "unit": "banana"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "93a2205a-cad5-4f58-aa21-13ab65023a67",
+				"portion": {
+				  "amount": 20,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "8e26ac84-81c0-4009-8151-872768d7ac75",
+				"portion": {
+				  "amount": 10,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "c830954d-f619-428f-b5dd-c5a28167e905",
+				"portion": {
+				  "amount": 10,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "801b62d2-9a37-4f00-8a8f-7d57419a9726",
+				"portion": {
+				  "amount": 8,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "f6007718-8207-4f41-abb8-f74cdeffb3ce",
+				"portion": {
+				  "amount": 20,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "ad2eb70d-8f66-4ff1-88f9-f2d109d12ea7",
+				"portion": {
+				  "amount": 10,
+				  "unit": "g"
+				},
+				"hidden": false
+			  }
+			],
+			"sellingPrice": 1700
+		  }
+		]
+	  },
+	  "51cde09f-7b77-43cd-ae20-4fd425aaf101": {
+		"id": "51cde09f-7b77-43cd-ae20-4fd425aaf101",
+		"name": "Blossom",
+		"activeSizeId": "7fe43e1b-21f7-4213-a7f6-fccade7af791",
+		"sizes": [
+		  {
+			"id": "7fe43e1b-21f7-4213-a7f6-fccade7af791",
+			"name": "Mini",
+			"ingredients": [
+			  {
+				"id": "d90838e0-0835-4515-9048-af7898a85953",
+				"portion": {
+				  "amount": 0.13,
+				  "unit": "pint"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "51cde09f-7b77-43cd-ae20-4fd425aaf101",
+				"portion": {
+				  "amount": 0.13,
+				  "unit": "pint"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "166f05a4-b792-42bd-8911-58aa0d4455c3",
+				"portion": {
+				  "amount": 0.5,
+				  "unit": "banana"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "800c155e-5439-4742-80dd-75163036773f",
+				"portion": {
+				  "amount": 20,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "4f0e07a4-6f4f-4e6c-823b-ac03f487570b",
+				"portion": {
+				  "amount": 0.25,
+				  "unit": "kiwi"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "93a2205a-cad5-4f58-aa21-13ab65023a67",
+				"portion": {
+				  "amount": 15,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "8c03a758-6c2b-4dcc-b379-0b0d4104c521",
+				"portion": {
+				  "amount": 8,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "a360a3de-24cd-454c-b6c3-3b57346e9482",
+				"portion": {
+				  "amount": 8,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "801b62d2-9a37-4f00-8a8f-7d57419a9726",
+				"portion": {
+				  "amount": 8,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "f6007718-8207-4f41-abb8-f74cdeffb3ce",
+				"portion": {
+				  "amount": 8,
+				  "unit": "g"
+				},
+				"hidden": false
+			  }
+			],
+			"sellingPrice": 900
+		  },
+		  {
+			"id": "7b7a4f40-7385-4c63-8214-cd1de119a087",
+			"name": "Regular",
+			"ingredients": [
+			  {
+				"id": "d90838e0-0835-4515-9048-af7898a85953",
+				"portion": {
+				  "amount": 0.2,
+				  "unit": "pint"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "51cde09f-7b77-43cd-ae20-4fd425aaf101",
+				"portion": {
+				  "amount": 0.2,
+				  "unit": "pint"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "166f05a4-b792-42bd-8911-58aa0d4455c3",
+				"portion": {
+				  "amount": 0.5,
+				  "unit": "banana"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "800c155e-5439-4742-80dd-75163036773f",
+				"portion": {
+				  "amount": 20,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "4f0e07a4-6f4f-4e6c-823b-ac03f487570b",
+				"portion": {
+				  "amount": 0.25,
+				  "unit": "kiwi"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "93a2205a-cad5-4f58-aa21-13ab65023a67",
+				"portion": {
+				  "amount": 20,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "a360a3de-24cd-454c-b6c3-3b57346e9482",
+				"portion": {
+				  "amount": 10,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "cce7e91c-b618-4ff0-9094-95676535ec92",
+				"portion": {
+				  "amount": 15,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "801b62d2-9a37-4f00-8a8f-7d57419a9726",
+				"portion": {
+				  "amount": 8,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "f6007718-8207-4f41-abb8-f74cdeffb3ce",
+				"portion": {
+				  "amount": 20,
+				  "unit": "g"
+				},
+				"hidden": false
+			  }
+			],
+			"sellingPrice": 1300
+		  },
+		  {
+			"id": "b722e66a-3a84-4246-9366-6ecc55605e94",
+			"name": "Large",
+			"ingredients": [
+			  {
+				"id": "d90838e0-0835-4515-9048-af7898a85953",
+				"portion": {
+				  "amount": 0.2,
+				  "unit": "pint"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "51cde09f-7b77-43cd-ae20-4fd425aaf101",
+				"portion": {
+				  "amount": 0.2,
+				  "unit": "pint"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "166f05a4-b792-42bd-8911-58aa0d4455c3",
+				"portion": {
+				  "amount": 0.5,
+				  "unit": "banana"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "800c155e-5439-4742-80dd-75163036773f",
+				"portion": {
+				  "amount": 20,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "4f0e07a4-6f4f-4e6c-823b-ac03f487570b",
+				"portion": {
+				  "amount": 0.25,
+				  "unit": "kiwi"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "93a2205a-cad5-4f58-aa21-13ab65023a67",
+				"portion": {
+				  "amount": 20,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "a360a3de-24cd-454c-b6c3-3b57346e9482",
+				"portion": {
+				  "amount": 10,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "cce7e91c-b618-4ff0-9094-95676535ec92",
+				"portion": {
+				  "amount": 15,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "801b62d2-9a37-4f00-8a8f-7d57419a9726",
+				"portion": {
+				  "amount": 8,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "f6007718-8207-4f41-abb8-f74cdeffb3ce",
+				"portion": {
+				  "amount": 20,
+				  "unit": "g"
+				},
+				"hidden": false
+			  }
+			],
+			"sellingPrice": 1500
+		  },
+		  {
+			"id": "a667653b-ae5f-4023-8353-6c40a223ad64",
+			"name": "Extra Large",
+			"ingredients": [
+			  {
+				"id": "d90838e0-0835-4515-9048-af7898a85953",
+				"portion": {
+				  "amount": 0.2,
+				  "unit": "pint"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "51cde09f-7b77-43cd-ae20-4fd425aaf101",
+				"portion": {
+				  "amount": 0.2,
+				  "unit": "pint"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "166f05a4-b792-42bd-8911-58aa0d4455c3",
+				"portion": {
+				  "amount": 0.5,
+				  "unit": "banana"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "800c155e-5439-4742-80dd-75163036773f",
+				"portion": {
+				  "amount": 20,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "4f0e07a4-6f4f-4e6c-823b-ac03f487570b",
+				"portion": {
+				  "amount": 0.25,
+				  "unit": "kiwi"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "93a2205a-cad5-4f58-aa21-13ab65023a67",
+				"portion": {
+				  "amount": 20,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "a360a3de-24cd-454c-b6c3-3b57346e9482",
+				"portion": {
+				  "amount": 10,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "cce7e91c-b618-4ff0-9094-95676535ec92",
+				"portion": {
+				  "amount": 15,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "801b62d2-9a37-4f00-8a8f-7d57419a9726",
+				"portion": {
+				  "amount": 8,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "f6007718-8207-4f41-abb8-f74cdeffb3ce",
+				"portion": {
+				  "amount": 20,
+				  "unit": "g"
+				},
+				"hidden": false
+			  }
+			],
+			"sellingPrice": 1700
+		  }
+		]
+	  },
+	  "79d5be63-7818-4057-b526-d747502f034a": {
+		"id": "79d5be63-7818-4057-b526-d747502f034a",
+		"name": "Custom (expensive)",
+		"activeSizeId": "b18214e6-a675-4ad6-b4e4-5af83bdf34b8",
+		"sizes": [
+		  {
+			"id": "b18214e6-a675-4ad6-b4e4-5af83bdf34b8",
+			"name": "Mini",
+			"ingredients": [
+			  {
+				"id": "d90838e0-0835-4515-9048-af7898a85953",
+				"portion": {
+				  "amount": 180,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "166f05a4-b792-42bd-8911-58aa0d4455c3",
+				"portion": {
+				  "amount": 0.5,
+				  "unit": "banana"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "13fc1284-a87a-4d7c-8cfd-c13c4cc30030",
+				"portion": {
+				  "amount": 11,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "800c155e-5439-4742-80dd-75163036773f",
+				"portion": {
+				  "amount": 12,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "4f0e07a4-6f4f-4e6c-823b-ac03f487570b",
+				"portion": {
+				  "amount": 0.25,
+				  "unit": "kiwi"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "93a2205a-cad5-4f58-aa21-13ab65023a67",
+				"portion": {
+				  "amount": 20,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "8c03a758-6c2b-4dcc-b379-0b0d4104c521",
+				"portion": {
+				  "amount": 8,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "a360a3de-24cd-454c-b6c3-3b57346e9482",
+				"portion": {
+				  "amount": 3,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "801b62d2-9a37-4f00-8a8f-7d57419a9726",
+				"portion": {
+				  "amount": 8,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "f6007718-8207-4f41-abb8-f74cdeffb3ce",
+				"portion": {
+				  "amount": 8,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "cce7e91c-b618-4ff0-9094-95676535ec92",
+				"portion": {
+				  "amount": 6,
+				  "unit": "g"
+				},
+				"hidden": false
+			  }
+			],
+			"sellingPrice": 950
+		  }
+		]
+	  },
+	  "12b00d61-86f1-4fa7-be5b-d9f86a6230c2": {
+		"id": "12b00d61-86f1-4fa7-be5b-d9f86a6230c2",
+		"name": "Chikory Latte",
+		"activeSizeId": "9a93aadd-ef81-4aeb-9e80-3f5109951eb7",
+		"sizes": [
+		  {
+			"id": "9a93aadd-ef81-4aeb-9e80-3f5109951eb7",
+			"name": "Regular",
+			"ingredients": [
+			  {
+				"id": "d78c8b15-3637-491a-bd78-5e293488f053",
+				"portion": {
+				  "amount": 10,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "788191ba-ae1d-4b05-ba9e-7437c8912318",
+				"portion": {
+				  "amount": 300,
+				  "unit": "ml"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "5e039c48-bbd5-45fe-afc0-a3652c780630",
+				"portion": {
+				  "amount": 2,
+				  "unit": "tsp"
+				},
+				"hidden": false
+			  }
+			],
+			"sellingPrice": 0
+		  }
+		]
+	  },
+	  "b0c21d53-20a1-41eb-8aeb-d20e0ca98ef3": {
+		"id": "b0c21d53-20a1-41eb-8aeb-d20e0ca98ef3",
+		"name": "Protein Smoothie",
+		"activeSizeId": "671a69dd-e8f7-42a7-8c33-dd9c73b64d35",
+		"sizes": [
+		  {
+			"id": "671a69dd-e8f7-42a7-8c33-dd9c73b64d35",
+			"name": "Size 1",
+			"ingredients": [
+			  {
+				"id": "e84964bc-8d50-4288-a388-f276e269db83",
+				"portion": {
+				  "amount": 1,
+				  "unit": "scoop"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "166f05a4-b792-42bd-8911-58aa0d4455c3",
+				"portion": {
+				  "amount": 0.5,
+				  "unit": "banana"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "aa11bd9f-c1f0-408c-8ef2-a428b367fe8f",
+				"portion": {
+				  "amount": 0.5,
+				  "unit": "cup"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "bcf35d8b-0986-4ca1-97d7-f0e881e53680",
+				"portion": {
+				  "amount": 1,
+				  "unit": "tbs"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "5e039c48-bbd5-45fe-afc0-a3652c780630",
+				"portion": {
+				  "amount": 1,
+				  "unit": "tbs"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "473c8f78-832f-401f-849a-32352476bfb9",
+				"portion": {
+				  "amount": 3.5,
+				  "unit": "g"
+				},
+				"hidden": false
+			  },
+			  {
+				"id": "749a05c7-3852-4858-bd5e-ec3569f95ace",
+				"portion": {
+				  "amount": 1,
+				  "unit": "cup"
+				},
+				"hidden": false
+			  }
+			],
+			"sellingPrice": 1000
+		  }
+		]
+	  }
 	},
 	"compoundIngredients": {
-		"d90838e0-0835-4515-9048-af7898a85953": {
-			"id": "d90838e0-0835-4515-9048-af7898a85953",
-			"name": "Acai Base",
-			"category": "Compound",
-			"color": "#b6a29c",
-			"yield": {
-				"amount": 1,
-				"unit": "pint"
-			},
-			"viewedUnit": "pint",
-			"ingredients": [
-				{
-					"id": "e42fc8f1-3d4b-454a-836d-aefa21562047",
-					"portion": {
-						"amount": 0.25,
-						"unit": "pack"
-					},
-					"hidden": false
-				},
-				{
-					"id": "06abe694-884a-4730-b8b3-27ca0dbf6a7b",
-					"portion": {
-						"amount": 1.5,
-						"unit": "cup"
-					},
-					"hidden": false
-				},
-				{
-					"id": "b83b0488-0716-42f1-a83f-36060e1b61f1",
-					"portion": {
-						"amount": 1.5,
-						"unit": "cup"
-					},
-					"hidden": false
-				},
-				{
-					"id": "5e039c48-bbd5-45fe-afc0-a3652c780630",
-					"portion": {
-						"amount": 1.5,
-						"unit": "tbs"
-					},
-					"hidden": false
-				},
-				{
-					"id": "ddcf0a3e-7969-4c19-8cd1-ff1ffb89b22d",
-					"portion": {
-						"amount": 1.5,
-						"unit": "cup"
-					},
-					"hidden": false
-				}
-			]
+	  "d90838e0-0835-4515-9048-af7898a85953": {
+		"id": "d90838e0-0835-4515-9048-af7898a85953",
+		"name": "Acai Base",
+		"category": "Compound",
+		"color": "#b6a29c",
+		"yield": {
+		  "amount": 1,
+		  "unit": "pint"
 		},
-		"b7b26e24-f164-4bee-8800-18590dda80fe": {
-			"id": "b7b26e24-f164-4bee-8800-18590dda80fe",
-			"name": "Mango Base",
-			"category": "Compound",
-			"color": "#ddba87",
-			"yield": {
-				"amount": 1,
-				"unit": "pint"
+		"viewedUnit": "pint",
+		"ingredients": [
+		  {
+			"id": "e42fc8f1-3d4b-454a-836d-aefa21562047",
+			"portion": {
+			  "amount": 0.25,
+			  "unit": "pack"
 			},
-			"viewedUnit": "pint",
-			"ingredients": [
-				{
-					"id": "06abe694-884a-4730-b8b3-27ca0dbf6a7b",
-					"portion": {
-						"amount": 2,
-						"unit": "cup"
-					},
-					"hidden": false
-				},
-				{
-					"id": "5e039c48-bbd5-45fe-afc0-a3652c780630",
-					"portion": {
-						"amount": 1,
-						"unit": "tbs"
-					},
-					"hidden": false
-				},
-				{
-					"id": "ddcf0a3e-7969-4c19-8cd1-ff1ffb89b22d",
-					"portion": {
-						"amount": 2,
-						"unit": "cup"
-					},
-					"hidden": false
-				}
-			]
+			"hidden": false
+		  },
+		  {
+			"id": "06abe694-884a-4730-b8b3-27ca0dbf6a7b",
+			"portion": {
+			  "amount": 1.5,
+			  "unit": "cup"
+			},
+			"hidden": false
+		  },
+		  {
+			"id": "b83b0488-0716-42f1-a83f-36060e1b61f1",
+			"portion": {
+			  "amount": 1.5,
+			  "unit": "cup"
+			},
+			"hidden": false
+		  },
+		  {
+			"id": "5e039c48-bbd5-45fe-afc0-a3652c780630",
+			"portion": {
+			  "amount": 1.5,
+			  "unit": "tbs"
+			},
+			"hidden": false
+		  },
+		  {
+			"id": "ddcf0a3e-7969-4c19-8cd1-ff1ffb89b22d",
+			"portion": {
+			  "amount": 1.5,
+			  "unit": "cup"
+			},
+			"hidden": false
+		  }
+		]
+	  },
+	  "b7b26e24-f164-4bee-8800-18590dda80fe": {
+		"id": "b7b26e24-f164-4bee-8800-18590dda80fe",
+		"name": "Mango Base",
+		"category": "Compound",
+		"color": "#ddba87",
+		"yield": {
+		  "amount": 1,
+		  "unit": "pint"
 		},
-		"51cde09f-7b77-43cd-ae20-4fd425aaf101": {
-			"id": "51cde09f-7b77-43cd-ae20-4fd425aaf101",
-			"name": "Coconut Base",
-			"category": "Compound",
-			"color": "#cdb2b5",
-			"yield": {
-				"amount": 1,
-				"unit": "pint"
+		"viewedUnit": "pint",
+		"ingredients": [
+		  {
+			"id": "06abe694-884a-4730-b8b3-27ca0dbf6a7b",
+			"portion": {
+			  "amount": 2,
+			  "unit": "cup"
 			},
-			"viewedUnit": "pint",
-			"ingredients": [
-				{
-					"id": "5128567b-f0be-4b90-bafc-bebc286ff9fc",
-					"portion": {
-						"amount": 2,
-						"unit": "tbs"
-					},
-					"hidden": false
-				},
-				{
-					"id": "22de7026-c267-45b9-abc1-1989d8c80a0e",
-					"portion": {
-						"amount": 1,
-						"unit": "can"
-					},
-					"hidden": false
-				},
-				{
-					"id": "5e039c48-bbd5-45fe-afc0-a3652c780630",
-					"portion": {
-						"amount": 1,
-						"unit": "tbs"
-					},
-					"hidden": false
-				}
-			]
+			"hidden": false
+		  },
+		  {
+			"id": "5e039c48-bbd5-45fe-afc0-a3652c780630",
+			"portion": {
+			  "amount": 1,
+			  "unit": "tbs"
+			},
+			"hidden": false
+		  },
+		  {
+			"id": "ddcf0a3e-7969-4c19-8cd1-ff1ffb89b22d",
+			"portion": {
+			  "amount": 2,
+			  "unit": "cup"
+			},
+			"hidden": false
+		  }
+		]
+	  },
+	  "51cde09f-7b77-43cd-ae20-4fd425aaf101": {
+		"id": "51cde09f-7b77-43cd-ae20-4fd425aaf101",
+		"name": "Coconut Base",
+		"category": "Compound",
+		"color": "#cdb2b5",
+		"yield": {
+		  "amount": 1,
+		  "unit": "pint"
 		},
-		"da600e5a-ed99-4d5c-9f8f-3ad0f79579a6": {
-			"id": "da600e5a-ed99-4d5c-9f8f-3ad0f79579a6",
-			"name": "Waffle",
-			"ingredients": [
-				{
-					"id": "798f2c58-2d02-4fbd-a2c8-96f234585d6c",
-					"portion": {
-						"amount": 2,
-						"unit": "pack"
-					},
-					"hidden": false
-				},
-				{
-					"id": "788191ba-ae1d-4b05-ba9e-7437c8912318",
-					"portion": {
-						"amount": 1,
-						"unit": "cup"
-					},
-					"hidden": false
-				},
-				{
-					"id": "bb6d4d72-fe84-4c67-834b-0a841bda759d",
-					"portion": {
-						"amount": 12,
-						"unit": "g"
-					},
-					"hidden": false
-				},
-				{
-					"id": "cd61c573-b4a6-4de1-8e9f-d9cda06b2a07",
-					"portion": {
-						"amount": 20,
-						"unit": "g"
-					},
-					"hidden": false
-				},
-				{
-					"id": "5c1eded1-aaf3-4db8-b5c2-292ccb5a2893",
-					"portion": {
-						"amount": 6,
-						"unit": "g"
-					},
-					"hidden": false
-				},
-				{
-					"id": "23bb1047-74b6-4bb8-871e-ff0b1eeff36f",
-					"portion": {
-						"amount": 120,
-						"unit": "g"
-					},
-					"hidden": false
-				}
-			],
-			"yield": {
-				"amount": 4,
-				"unit": "pack"
+		"viewedUnit": "pint",
+		"ingredients": [
+		  {
+			"id": "5128567b-f0be-4b90-bafc-bebc286ff9fc",
+			"portion": {
+			  "amount": 2,
+			  "unit": "tbs"
 			},
-			"viewedUnit": "pack",
-			"category": "Compound",
-			"color": "#e29fdc"
+			"hidden": false
+		  },
+		  {
+			"id": "22de7026-c267-45b9-abc1-1989d8c80a0e",
+			"portion": {
+			  "amount": 1,
+			  "unit": "can"
+			},
+			"hidden": false
+		  },
+		  {
+			"id": "5e039c48-bbd5-45fe-afc0-a3652c780630",
+			"portion": {
+			  "amount": 1,
+			  "unit": "tbs"
+			},
+			"hidden": false
+		  }
+		]
+	  },
+	  "172fb8ca-26eb-4a35-a047-fe28f7db9b96": {
+		"id": "172fb8ca-26eb-4a35-a047-fe28f7db9b96",
+		"name": "Pink base",
+		"ingredients": [
+		  {
+			"id": "647bbc34-c948-4f92-9304-c24dac0bb84a",
+			"portion": {
+			  "amount": 3,
+			  "unit": "cup"
+			},
+			"hidden": false
+		  },
+		  {
+			"id": "749a05c7-3852-4858-bd5e-ec3569f95ace",
+			"portion": {
+			  "amount": 2,
+			  "unit": "cup"
+			},
+			"hidden": false
+		  },
+		  {
+			"id": "854596b6-11eb-41d7-97be-c572d8c3b35c",
+			"portion": {
+			  "amount": 0.5,
+			  "unit": "cup"
+			},
+			"hidden": false
+		  },
+		  {
+			"id": "5e039c48-bbd5-45fe-afc0-a3652c780630",
+			"portion": {
+			  "amount": 3,
+			  "unit": "tbs"
+			},
+			"hidden": false
+		  }
+		],
+		"yield": {
+		  "amount": 1,
+		  "unit": "pint"
 		},
-		"172fb8ca-26eb-4a35-a047-fe28f7db9b96": {
-			"id": "172fb8ca-26eb-4a35-a047-fe28f7db9b96",
-			"name": "Pink base",
-			"ingredients": [
-				{
-					"id": "647bbc34-c948-4f92-9304-c24dac0bb84a",
-					"portion": {
-						"amount": 3,
-						"unit": "cup"
-					},
-					"hidden": false
-				},
-				{
-					"id": "749a05c7-3852-4858-bd5e-ec3569f95ace",
-					"portion": {
-						"amount": 2,
-						"unit": "cup"
-					},
-					"hidden": false
-				},
-				{
-					"id": "854596b6-11eb-41d7-97be-c572d8c3b35c",
-					"portion": {
-						"amount": 0.5,
-						"unit": "cup"
-					},
-					"hidden": false
-				},
-				{
-					"id": "5e039c48-bbd5-45fe-afc0-a3652c780630",
-					"portion": {
-						"amount": 3,
-						"unit": "tbs"
-					},
-					"hidden": false
-				}
-			],
-			"yield": {
-				"amount": 1,
-				"unit": "pint"
+		"viewedUnit": "pint",
+		"category": "Compound",
+		"color": "#db70d6"
+	  },
+	  "74538d2f-b3ec-4a69-8ff0-b20eb131b6ea": {
+		"id": "74538d2f-b3ec-4a69-8ff0-b20eb131b6ea",
+		"name": "Dubai sauce",
+		"ingredients": [
+		  {
+			"id": "cd61c573-b4a6-4de1-8e9f-d9cda06b2a07",
+			"portion": {
+			  "amount": 10,
+			  "unit": "g"
 			},
-			"viewedUnit": "pint",
-			"category": "Compound",
-			"color": "#db70d6"
+			"hidden": false
+		  },
+		  {
+			"id": "c0040a6a-3e29-42c0-ae65-27a46298fcd0",
+			"portion": {
+			  "amount": 10,
+			  "unit": "g"
+			},
+			"hidden": false
+		  },
+		  {
+			"id": "3d611b0d-28a1-4ccc-8ce3-49268ed0f692",
+			"portion": {
+			  "amount": 50,
+			  "unit": "g"
+			},
+			"hidden": false
+		  },
+		  {
+			"id": "346ca52c-bff3-4622-a1c8-1eeb567bfd89",
+			"portion": {
+			  "amount": 40,
+			  "unit": "g"
+			},
+			"hidden": false
+		  }
+		],
+		"yield": {
+		  "amount": 5,
+		  "unit": "servings"
 		},
-		"74538d2f-b3ec-4a69-8ff0-b20eb131b6ea": {
-			"id": "74538d2f-b3ec-4a69-8ff0-b20eb131b6ea",
-			"name": "Dubai sauce",
-			"ingredients": [
-				{
-					"id": "cd61c573-b4a6-4de1-8e9f-d9cda06b2a07",
-					"portion": {
-						"amount": 10,
-						"unit": "g"
-					},
-					"hidden": false
-				},
-				{
-					"id": "c0040a6a-3e29-42c0-ae65-27a46298fcd0",
-					"portion": {
-						"amount": 10,
-						"unit": "g"
-					},
-					"hidden": false
-				},
-				{
-					"id": "3d611b0d-28a1-4ccc-8ce3-49268ed0f692",
-					"portion": {
-						"amount": 50,
-						"unit": "g"
-					},
-					"hidden": false
-				},
-				{
-					"id": "346ca52c-bff3-4622-a1c8-1eeb567bfd89",
-					"portion": {
-						"amount": 40,
-						"unit": "g"
-					},
-					"hidden": false
-				}
-			],
-			"yield": {
-				"amount": 5,
-				"unit": "servings"
+		"viewedUnit": "servings",
+		"category": "Compound",
+		"color": "#b2df7d"
+	  },
+	  "276109d5-9a95-4f50-9d6e-901566a5b281": {
+		"id": "276109d5-9a95-4f50-9d6e-901566a5b281",
+		"name": "Recipe 1",
+		"ingredients": [
+		  {
+			"id": "647bbc34-c948-4f92-9304-c24dac0bb84a",
+			"portion": {
+			  "amount": 100,
+			  "unit": "g"
 			},
-			"viewedUnit": "servings",
-			"category": "Compound",
-			"color": "#b2df7d"
-		}
+			"hidden": false
+		  },
+		  {
+			"id": "b2a86fe4-6ddb-4806-bf54-540471f85942",
+			"portion": {
+			  "amount": 100,
+			  "unit": "g"
+			},
+			"hidden": false
+		  },
+		  {
+			"id": "06abe694-884a-4730-b8b3-27ca0dbf6a7b",
+			"portion": {
+			  "amount": 100,
+			  "unit": "g"
+			},
+			"hidden": false
+		  },
+		  {
+			"id": "7e5708f3-bd4b-485c-8c98-07e626857b5f",
+			"portion": {
+			  "amount": 100,
+			  "unit": "g"
+			},
+			"hidden": false
+		  },
+		  {
+			"id": "b83b0488-0716-42f1-a83f-36060e1b61f1",
+			"portion": {
+			  "amount": 100,
+			  "unit": "g"
+			},
+			"hidden": false
+		  },
+		  {
+			"id": "51ae85ab-ac4a-4454-946f-1c6221ede70b",
+			"portion": {
+			  "amount": 100,
+			  "unit": "g"
+			},
+			"hidden": false
+		  },
+		  {
+			"id": "22de7026-c267-45b9-abc1-1989d8c80a0e",
+			"portion": {
+			  "amount": 1,
+			  "unit": "litre"
+			},
+			"hidden": false
+		  },
+		  {
+			"id": "f715f15c-8518-481a-aca6-651e644d1ecb",
+			"portion": {
+			  "amount": 1,
+			  "unit": "litre"
+			},
+			"hidden": false
+		  },
+		  {
+			"id": "5128567b-f0be-4b90-bafc-bebc286ff9fc",
+			"portion": {
+			  "amount": 1,
+			  "unit": "litre"
+			},
+			"hidden": false
+		  },
+		  {
+			"id": "aa166cf5-d6c9-407a-8582-aab9ff4996ae",
+			"portion": {
+			  "amount": 1,
+			  "unit": "litre"
+			},
+			"hidden": false
+		  }
+		],
+		"yield": {
+		  "amount": 1,
+		  "unit": ""
+		},
+		"viewedUnit": "",
+		"category": "Compound",
+		"color": "#d688ca"
+	  }
 	},
 	"unitConversions": [
-		{
-			"ingredientId": "06abe694-884a-4730-b8b3-27ca0dbf6a7b",
-			"inputUnit": "g",
-			"outputUnit": "cup",
-			"conversionFactor": 140
-		},
-		{
-			"ingredientId": "b83b0488-0716-42f1-a83f-36060e1b61f1",
-			"inputUnit": "g",
-			"outputUnit": "cup",
-			"conversionFactor": 160
-		},
-		{
-			"ingredientId": "5e039c48-bbd5-45fe-afc0-a3652c780630",
-			"inputUnit": "g",
-			"outputUnit": "tbs",
-			"conversionFactor": 25
-		},
-		{
-			"ingredientId": "eedf952a-f257-4bb2-a149-2b6abe0bf616",
-			"inputUnit": "g",
-			"outputUnit": "tbs",
-			"conversionFactor": 17
-		},
-		{
-			"ingredientId": "7edf22d7-32a0-40de-b12e-2981b0c54535",
-			"inputUnit": "g",
-			"outputUnit": "tbs",
-			"conversionFactor": 7
-		},
-		{
-			"ingredientId": "bb6d4d72-fe84-4c67-834b-0a841bda759d",
-			"inputUnit": "g",
-			"outputUnit": "tbs",
-			"conversionFactor": 12
-		},
-		{
-			"ingredientId": "f6007718-8207-4f41-abb8-f74cdeffb3ce",
-			"inputUnit": "g",
-			"outputUnit": "tbs",
-			"conversionFactor": 21
-		},
-		{
-			"ingredientId": "647bbc34-c948-4f92-9304-c24dac0bb84a",
-			"inputUnit": "g",
-			"outputUnit": "cup",
-			"conversionFactor": 140
-		},
-		{
-			"ingredientId": "854596b6-11eb-41d7-97be-c572d8c3b35c",
-			"inputUnit": "g",
-			"outputUnit": "cup",
-			"conversionFactor": 225
-		},
-		{
-			"ingredientId": "74538d2f-b3ec-4a69-8ff0-b20eb131b6ea",
-			"inputUnit": "servings",
-			"outputUnit": "pint",
-			"conversionFactor": 1
-		},
-		{
-			"ingredientId": "13fc1284-a87a-4d7c-8cfd-c13c4cc30030",
-			"inputUnit": "strawberry",
-			"outputUnit": "g",
-			"conversionFactor": 0.08333333333333333
-		},
-		{
-			"ingredientId": "4f0e07a4-6f4f-4e6c-823b-ac03f487570b",
-			"inputUnit": "kiwi",
-			"outputUnit": "g",
-			"conversionFactor": 1
-		},
-		{
-			"ingredientId": "b7b26e24-f164-4bee-8800-18590dda80fe",
-			"inputUnit": "g",
-			"outputUnit": "pint",
-			"conversionFactor": 555
-		},
-		{
-			"ingredientId": "d90838e0-0835-4515-9048-af7898a85953",
-			"inputUnit": "g",
-			"outputUnit": "pint",
-			"conversionFactor": 555
-		},
-		{
-			"ingredientId": "51cde09f-7b77-43cd-ae20-4fd425aaf101",
-			"inputUnit": "g",
-			"outputUnit": "pint",
-			"conversionFactor": 455
-		}
+	  {
+		"ingredientId": "06abe694-884a-4730-b8b3-27ca0dbf6a7b",
+		"inputUnit": "g",
+		"outputUnit": "cup",
+		"conversionFactor": 140
+	  },
+	  {
+		"ingredientId": "b83b0488-0716-42f1-a83f-36060e1b61f1",
+		"inputUnit": "g",
+		"outputUnit": "cup",
+		"conversionFactor": 160
+	  },
+	  {
+		"ingredientId": "5e039c48-bbd5-45fe-afc0-a3652c780630",
+		"inputUnit": "g",
+		"outputUnit": "tbs",
+		"conversionFactor": 15
+	  },
+	  {
+		"ingredientId": "eedf952a-f257-4bb2-a149-2b6abe0bf616",
+		"inputUnit": "g",
+		"outputUnit": "tbs",
+		"conversionFactor": 17
+	  },
+	  {
+		"ingredientId": "7edf22d7-32a0-40de-b12e-2981b0c54535",
+		"inputUnit": "g",
+		"outputUnit": "tbs",
+		"conversionFactor": 7
+	  },
+	  {
+		"ingredientId": "bb6d4d72-fe84-4c67-834b-0a841bda759d",
+		"inputUnit": "g",
+		"outputUnit": "tbs",
+		"conversionFactor": 12
+	  },
+	  {
+		"ingredientId": "f6007718-8207-4f41-abb8-f74cdeffb3ce",
+		"inputUnit": "g",
+		"outputUnit": "tbs",
+		"conversionFactor": 21
+	  },
+	  {
+		"ingredientId": "647bbc34-c948-4f92-9304-c24dac0bb84a",
+		"inputUnit": "g",
+		"outputUnit": "cup",
+		"conversionFactor": 140
+	  },
+	  {
+		"ingredientId": "854596b6-11eb-41d7-97be-c572d8c3b35c",
+		"inputUnit": "g",
+		"outputUnit": "cup",
+		"conversionFactor": 225
+	  },
+	  {
+		"ingredientId": "74538d2f-b3ec-4a69-8ff0-b20eb131b6ea",
+		"inputUnit": "servings",
+		"outputUnit": "pint",
+		"conversionFactor": 1
+	  },
+	  {
+		"ingredientId": "13fc1284-a87a-4d7c-8cfd-c13c4cc30030",
+		"inputUnit": "strawberry",
+		"outputUnit": "g",
+		"conversionFactor": 0.08333333333333333
+	  },
+	  {
+		"ingredientId": "4f0e07a4-6f4f-4e6c-823b-ac03f487570b",
+		"inputUnit": "kiwi",
+		"outputUnit": "g",
+		"conversionFactor": 1
+	  },
+	  {
+		"ingredientId": "b7b26e24-f164-4bee-8800-18590dda80fe",
+		"inputUnit": "g",
+		"outputUnit": "pint",
+		"conversionFactor": 555
+	  },
+	  {
+		"ingredientId": "d90838e0-0835-4515-9048-af7898a85953",
+		"inputUnit": "g",
+		"outputUnit": "pint",
+		"conversionFactor": 555
+	  },
+	  {
+		"ingredientId": "51cde09f-7b77-43cd-ae20-4fd425aaf101",
+		"inputUnit": "g",
+		"outputUnit": "pint",
+		"conversionFactor": 455
+	  },
+	  {
+		"ingredientId": "166f05a4-b792-42bd-8911-58aa0d4455c3",
+		"inputUnit": "g",
+		"outputUnit": "banana",
+		"conversionFactor": 180
+	  },
+	  {
+		"ingredientId": "bcf35d8b-0986-4ca1-97d7-f0e881e53680",
+		"inputUnit": "g",
+		"outputUnit": "tbs",
+		"conversionFactor": 15
+	  },
+	  {
+		"ingredientId": "e84964bc-8d50-4288-a388-f276e269db83",
+		"inputUnit": "scoop",
+		"outputUnit": "g",
+		"conversionFactor": 0.14285714285714285
+	  },
+	  {
+		"ingredientId": "aa11bd9f-c1f0-408c-8ef2-a428b367fe8f",
+		"inputUnit": "g",
+		"outputUnit": "cup",
+		"conversionFactor": 240
+	  }
 	],
 	"customUnitLabels": {
-		"servings": "servings",
-		"strawberry": "strawberry",
-		"banana": "banana",
-		"kiwi": "kiwi"
+	  "servings": "servings",
+	  "strawberry": "strawberry",
+	  "banana": "banana",
+	  "kiwi": "kiwi",
+	  "scoop": "scoop"
 	}
-}
+  }

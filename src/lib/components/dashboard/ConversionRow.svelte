@@ -9,33 +9,28 @@
 	let {
 		conversion,
 		ingredientName,
-		inputAmount = 1,
 		customUnitLabels,
-		onInputAmountChange,
-		onOutputAmountChange,
+		onLeftAmountChange,
+		onRightAmountChange,
 		onInputUnitChange,
 		onOutputUnitChange,
 		onDelete
 	}: {
 		conversion: UnitConversion;
 		ingredientName: string;
-		inputAmount: number;
 		customUnitLabels: Record<string, string>;
-		onInputAmountChange: (amount: number) => void;
-		onOutputAmountChange: (amount: number) => void;
+		onLeftAmountChange: (amount: number) => void;
+		onRightAmountChange: (amount: number) => void;
 		onInputUnitChange: (unit: string) => void;
 		onOutputUnitChange: (unit: string) => void;
 		onDelete: () => void;
 	} = $props();
 
-	// Schema: inputUnit × conversionFactor = outputUnit
-	// "How many inputs are in one output" - e.g., 165g = 1 cup means factor = 165
-	// Data stored as: smaller → larger (g → cup with factor 165)
-	// Display: "{factor} {inputUnit} of {ingredient} = 1 {outputUnit}"
-
-	// Display values - directly use conversion props
-	const displayFirstAmount = $derived(inputAmount * conversion.conversionFactor);
-	const displaySecondAmount = $derived(inputAmount);
+	// Schema: conversionFactor input units = 1 output unit
+	// Editor shows: (factor × outputAmount) inputUnit = outputAmount outputUnit
+	const outputAmount = $derived(conversion.outputAmount ?? 1);
+	const displayLeftAmount = $derived(conversion.conversionFactor * outputAmount);
+	const displayRightAmount = $derived(outputAmount);
 
 	// Categories for the dropdowns
 	const firstCategory = $derived(getUnitCategory(conversion.inputUnit as string));
@@ -59,16 +54,12 @@
 	<div class="conversion-editor">
 		<div class="conversion-part">
 			<TextInput
-				value={displayFirstAmount}
+				value={displayLeftAmount}
 				size="small"
 				variant="inline"
 				min={0.001}
 				step={0.001}
-				onchange={(newVal) => {
-					// User changed the smaller unit amount (first position)
-					// This updates the factor: newFactor = newVal / inputAmount
-					onOutputAmountChange(newVal as number);
-				}}
+				onchange={(newVal) => onLeftAmountChange(newVal as number)}
 				style="width:fit-content;"
 			/>
 			<select
@@ -87,16 +78,12 @@
 		</div>
 		<div class="conversion-part">
 			<TextInput
-				value={displaySecondAmount}
+				value={displayRightAmount}
 				size="small"
 				variant="inline"
 				min={0.001}
 				step={0.001}
-				onchange={(newVal) => {
-					// User changed the larger unit amount (second position)
-					// This updates the base amount for display scaling
-					onInputAmountChange(newVal as number);
-				}}
+				onchange={(newVal) => onRightAmountChange(newVal as number)}
 			/>
 			<select
 				class="unit-select"

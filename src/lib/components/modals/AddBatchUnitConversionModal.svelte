@@ -2,8 +2,15 @@
 	import type { RecipeLikeDoc, UnitConversion } from '$lib/data/schema';
 	import ModernButton from '../common/ModernButton.svelte';
 	import TextInput from '../common/TextInput.svelte';
-	import { getRecipesUsingIngredientWithUnit } from '$lib/utils/unitSelectUtils';
+	import {
+		getCompactUnitLabel,
+		getRecipesUsingIngredientWithUnit
+	} from '$lib/utils/unitSelectUtils';
 	import { isSmallerUnit } from '$lib/utils/unit';
+	import {
+		buildUnitConversionFromDisplayAmounts,
+		conversionFactorFromDisplayAmounts
+	} from '$lib/utils/conversionEditUtils';
 	import { m } from '$lib/paraglide/messages.js';
 
 	interface Props {
@@ -29,14 +36,15 @@
 		onclose
 	}: Props = $props();
 
-	// Initialize conversion factors for each missing conversion
-	let conversionFactors = $state<number[]>(missingConversions.map(() => 1));
+	let leftAmounts = $state<number[]>(missingConversions.map(() => 1));
+	let rightAmounts = $state<number[]>(missingConversions.map(() => 1));
 	let errors = $state<string[]>(missingConversions.map(() => ''));
 
 	const validateAll = (): boolean => {
 		let isValid = true;
-		const newErrors = conversionFactors.map((factor) => {
-			if (factor <= 0) {
+		const newErrors = leftAmounts.map((left, index) => {
+			const factor = conversionFactorFromDisplayAmounts(left, rightAmounts[index]);
+			if (factor === null) {
 				isValid = false;
 				return m.conversionFactorMustBePositive();
 			}
@@ -56,19 +64,17 @@
 		}
 
 		const conversions: UnitConversion[] = missingConversions.map((missing, index) => {
-			// Determine display order: smaller unit first
 			const outputIsSmaller = isSmallerUnit(missing.outputUnit, missing.inputUnit);
 			const smallerUnit = outputIsSmaller === true ? missing.outputUnit : missing.inputUnit;
 			const largerUnit = outputIsSmaller === true ? missing.inputUnit : missing.outputUnit;
 
-			// Store normalized: smaller unit first
-			// The factor represents: 1 largerUnit = factor smallerUnit
-			return {
+			return buildUnitConversionFromDisplayAmounts(
 				ingredientId,
-				inputUnit: smallerUnit,
-				outputUnit: largerUnit,
-				conversionFactor: conversionFactors[index]
-			};
+				smallerUnit,
+				largerUnit,
+				leftAmounts[index],
+				rightAmounts[index]
+			)!;
 		});
 
 		onSave(conversions);
@@ -82,9 +88,7 @@
 		}
 	};
 
-	const getUnitLabel = (unitId: string): string => {
-		return unitLabels[unitId] || unitId;
-	};
+	const getUnitLabel = (unitId: string): string => getCompactUnitLabel(unitId, unitLabels);
 
 	const getRecipesForUnit = (unitId: string): RecipeLikeDoc[] => {
 		return getRecipesUsingIngredientWithUnit(ingredientId, unitId, recipes);
@@ -114,8 +118,44 @@
 			{@const smallerUnit = outputIsSmaller === true ? missing.outputUnit : missing.inputUnit}
 			{@const largerUnit = outputIsSmaller === true ? missing.inputUnit : missing.outputUnit}
 			<div class="conversion-row">
-				<p class="conversion-question">
+				<p class="question">
 					{m.addUnitConversionQuestionShort({
+						smaller: getUnitLabel(smallerUnit),
+						largerAmount: rightAmounts[index],
+						larger: getUnitLabel(largerUnit)
+					})}
+				</p>
+				<div class="conversion-editor">
+					<div class="conversion-part">
+						<TextInput
+							bind:value={leftAmounts[index]}
+							min={0.001}
+							step={0.001}
+							size="small"
+							variant="inline"
+							autofocus={index === 0}
+						/>
+						<span class="unit-label">{getUnitLabel(smallerUnit)}</span>
+						<span class="of-text">{m.conversionOfEquals({ name: ingredientName })}</span>
+					</div>
+					<div class="conversion-part">
+						<TextInput
+							bind:value={rightAmounts[index]}
+							min={0.001}
+							step={0.001}
+							size="small"
+							variant="inline"
+						/>
+						<span class="unit-label">{getUnitLabel(largerUnit)}</span>
+					</div>
+				</div>
+				{#if errors[index]}
+					<p class="error">{errors[index]}</p>
+				{/if}
+				<p class="hint">
+					{m.conversionFactorHint({
+						leftAmount: leftAmounts[index],
+						rightAmount: rightAmounts[index],
 						smaller: getUnitLabel(smallerUnit),
 						larger: getUnitLabel(largerUnit)
 					})}
@@ -135,24 +175,6 @@
 						</div>
 					</div>
 				{/if}
-				<div class="input-row">
-					<TextInput
-						bind:value={conversionFactors[index]}
-						min={0.0001}
-						step={0.0001}
-						size="small"
-						variant="inline"
-						autofocus={index === 0}
-						error={errors[index]}
-					/>
-					<span class="hint">
-						{m.conversionFactorHint({
-							larger: getUnitLabel(largerUnit),
-							factor: conversionFactors[index],
-							smaller: getUnitLabel(smallerUnit)
-						})}
-					</span>
-				</div>
 			</div>
 		{/each}
 	</div>
@@ -190,11 +212,6 @@
 		line-height: 1.5;
 	}
 
-	.description strong {
-		color: var(--foreground);
-		font-weight: 600;
-	}
-
 	.conversions-list {
 		display: flex;
 		flex-direction: column;
@@ -213,28 +230,53 @@
 		border: 1px solid var(--border);
 	}
 
-	.conversion-question {
+	.question {
 		margin: 0;
-		font-size: 0.9rem;
 		color: var(--secondary-foreground);
+		line-height: 1.5;
+		font-size: 0.875rem;
 	}
 
-	.conversion-question strong {
-		color: var(--foreground);
-		font-weight: 600;
+	.conversion-editor {
+		display: flex;
+		gap: 10px;
 	}
 
-	.input-row {
+	.conversion-part {
 		display: flex;
 		align-items: center;
-		gap: 12px;
+		gap: 8px;
+		flex-wrap: wrap;
+	}
+
+	.conversion-part :global(.input-container) {
+		width: 4.5rem;
+		flex: none;
+	}
+
+	.unit-label {
+		font-size: 13px;
+		color: var(--foreground);
+		font-weight: 500;
+	}
+
+	.of-text {
+		color: var(--secondary-foreground);
+		font-size: 13px;
+		white-space: nowrap;
+	}
+
+	.error {
+		margin: 0;
+		font-size: 0.8rem;
+		color: var(--destructive, #ef4444);
 	}
 
 	.hint {
+		margin: 0;
 		font-size: 0.8rem;
 		color: var(--secondary-foreground);
 		font-style: italic;
-		white-space: nowrap;
 	}
 
 	.recipes-list {

@@ -8,6 +8,5 @@
 <ConversionsSection
 	costs={data.costs}
 	compoundIngredients={data.compoundIngredients}
-	bind:unitConversions={data.unitConversions}
 	customUnitLabels={data.customUnitLabels}
 />

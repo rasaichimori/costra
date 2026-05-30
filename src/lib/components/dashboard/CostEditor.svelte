@@ -262,7 +262,7 @@
 			</div>
 		</div>
 	{:else if activeTab === 'conversions'}
-		<ConversionsSection {costs} {compoundIngredients} bind:unitConversions {customUnitLabels} />
+		<ConversionsSection {costs} {compoundIngredients} {customUnitLabels} />
 	{:else if activeTab === 'settings'}
 		<SettingsSection
 			bind:costs

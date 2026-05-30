@@ -227,6 +227,11 @@ export const validateImportData = (data: unknown): string | null => {
 			if (typeof conv.conversionFactor !== 'number' || !isFinite(conv.conversionFactor)) {
 				return m.importValidationUnitConversionMustHaveConversionFactor({ index: i });
 			}
+			if (conv.outputAmount !== undefined) {
+				if (typeof conv.outputAmount !== 'number' || !isFinite(conv.outputAmount) || conv.outputAmount <= 0) {
+					return m.importValidationUnitConversionMustHaveOutputAmount({ index: i });
+				}
+			}
 		}
 	}
 

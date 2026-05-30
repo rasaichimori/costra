@@ -3,28 +3,54 @@
 	import type { CompoundIngredientDoc, IngredientDoc, UnitConversion } from '$lib/data/schema';
 	import ConversionIngredientGroup from './ConversionIngredientGroup.svelte';
 	import ConversionsEmptyState from './ConversionsEmptyState.svelte';
+	import ModernButton from '../common/ModernButton.svelte';
+	import { getDataContext } from '$lib/contexts/data.svelte';
+	import {
+		cloneUnitConversions,
+		deleteConversionAt,
+		findConversionGlobalIndex,
+		getOutputAmount,
+		unitConversionsEqual,
+		updateConversionAt,
+		updateConversionFactorFromDisplayAmounts
+	} from '$lib/utils/conversionEditUtils';
 	import { m } from '$lib/paraglide/messages.js';
 
 	let {
 		costs,
 		compoundIngredients,
-		unitConversions = $bindable([]),
 		customUnitLabels
 	}: {
 		costs: Record<string, IngredientDoc>;
 		compoundIngredients: Record<string, CompoundIngredientDoc>;
-		unitConversions: UnitConversion[];
 		customUnitLabels: Record<string, string>;
 	} = $props();
 
-	// Track input amounts for each conversion (for display purposes)
-	// Key format: "ingredientId-localIndex"
-	let inputAmounts = $state<Record<string, number>>({});
+	const data = getDataContext();
 
-	// Get input amount for a conversion (defaults to 1)
-	const getInputAmount = (ingredientId: string, localIndex: number): number => {
-		const key = `${ingredientId}-${localIndex}`;
-		return inputAmounts[key] ?? 1;
+	let draftUnitConversions = $state<UnitConversion[]>(cloneUnitConversions(data.unitConversions));
+	let hasUnsavedChanges = $state(false);
+	let lastSyncedHistoryVersion = $state(data.historyVersion);
+
+	// Resync draft after undo/redo or other persisted changes when the user has no local edits
+	$effect(() => {
+		const version = data.historyVersion;
+		if (version !== lastSyncedHistoryVersion && !hasUnsavedChanges) {
+			draftUnitConversions = cloneUnitConversions(data.unitConversions);
+			lastSyncedHistoryVersion = version;
+		}
+	});
+
+	const markDirty = (nextDraft: UnitConversion[]) => {
+		draftUnitConversions = nextDraft;
+		hasUnsavedChanges = !unitConversionsEqual(nextDraft, data.unitConversions);
+	};
+
+	const handleSave = () => {
+		data.unitConversions = cloneUnitConversions(draftUnitConversions);
+		hasUnsavedChanges = false;
+		data.saveStateNow();
+		lastSyncedHistoryVersion = data.historyVersion;
 	};
 
 	// Get ingredient/compound name by ID
@@ -45,7 +71,7 @@
 	const groupedConversions = $derived.by(() => {
 		const groups = new SvelteMap<string, UnitConversion[]>();
 
-		for (const conversion of unitConversions) {
+		for (const conversion of draftUnitConversions) {
 			const existing = groups.get(conversion.ingredientId);
 			if (existing) {
 				existing.push(conversion);
@@ -54,7 +80,6 @@
 			}
 		}
 
-		// Convert to array and sort by ingredient name
 		return Array.from(groups.entries())
 			.map(([ingredientId, conversions]) => ({
 				ingredientId,
@@ -65,81 +90,54 @@
 			.sort((a, b) => a.ingredientName.localeCompare(b.ingredientName));
 	});
 
-	// Find the global index of a conversion
-	const findGlobalIndex = (ingredientId: string, localIndex: number): number => {
-		let count = 0;
-		for (let i = 0; i < unitConversions.length; i++) {
-			if (unitConversions[i].ingredientId === ingredientId) {
-				if (count === localIndex) return i;
-				count++;
-			}
-		}
-		return -1;
-	};
-
-	// Update conversion input unit
 	const updateInputUnit = (ingredientId: string, localIndex: number, newUnit: string) => {
-		const globalIndex = findGlobalIndex(ingredientId, localIndex);
-		if (globalIndex !== -1) {
-			unitConversions[globalIndex] = {
-				...unitConversions[globalIndex],
-				inputUnit: newUnit
-			};
-			unitConversions = unitConversions;
-		}
+		const globalIndex = findConversionGlobalIndex(draftUnitConversions, ingredientId, localIndex);
+		markDirty(updateConversionAt(draftUnitConversions, globalIndex, { inputUnit: newUnit }));
 	};
 
-	// Update conversion output unit
 	const updateOutputUnit = (ingredientId: string, localIndex: number, newUnit: string) => {
-		const globalIndex = findGlobalIndex(ingredientId, localIndex);
-		if (globalIndex !== -1) {
-			unitConversions[globalIndex] = {
-				...unitConversions[globalIndex],
-				outputUnit: newUnit
-			};
-			unitConversions = unitConversions;
-		}
+		const globalIndex = findConversionGlobalIndex(draftUnitConversions, ingredientId, localIndex);
+		markDirty(updateConversionAt(draftUnitConversions, globalIndex, { outputUnit: newUnit }));
 	};
 
-	// Update the input amount (display only)
-	const updateInputAmount = (ingredientId: string, localIndex: number, newInputAmount: number) => {
-		if (newInputAmount > 0) {
-			const key = `${ingredientId}-${localIndex}`;
-			inputAmounts[key] = newInputAmount;
-			inputAmounts = inputAmounts;
-		}
+	const updateLeftAmount = (ingredientId: string, localIndex: number, newLeft: number) => {
+		const globalIndex = findConversionGlobalIndex(draftUnitConversions, ingredientId, localIndex);
+		if (globalIndex === -1) return;
+		const outputAmount = getOutputAmount(draftUnitConversions[globalIndex]);
+		markDirty(
+			updateConversionFactorFromDisplayAmounts(
+				draftUnitConversions,
+				globalIndex,
+				newLeft,
+				outputAmount
+			)
+		);
 	};
 
-	// Update output amount - recalculates conversion factor based on current input amount
-	const updateOutputAmount = (
-		ingredientId: string,
-		localIndex: number,
-		newOutputAmount: number
-	) => {
-		const globalIndex = findGlobalIndex(ingredientId, localIndex);
-		if (globalIndex !== -1 && newOutputAmount > 0) {
-			const inputAmount = getInputAmount(ingredientId, localIndex);
-			const newFactor = newOutputAmount / inputAmount;
-			unitConversions[globalIndex] = {
-				...unitConversions[globalIndex],
-				conversionFactor: newFactor
-			};
-			unitConversions = unitConversions;
-		}
+	const updateRightAmount = (ingredientId: string, localIndex: number, newRight: number) => {
+		const globalIndex = findConversionGlobalIndex(draftUnitConversions, ingredientId, localIndex);
+		if (globalIndex === -1 || newRight <= 0) return;
+		const conversion = draftUnitConversions[globalIndex];
+		const outputAmount = getOutputAmount(conversion);
+		const leftAmount = conversion.conversionFactor * outputAmount;
+		markDirty(
+			updateConversionFactorFromDisplayAmounts(
+				draftUnitConversions,
+				globalIndex,
+				leftAmount,
+				newRight
+			)
+		);
 	};
 
 	const deleteConversion = (ingredientId: string, localIndex: number) => {
-		const globalIndex = findGlobalIndex(ingredientId, localIndex);
+		const globalIndex = findConversionGlobalIndex(draftUnitConversions, ingredientId, localIndex);
 		if (globalIndex !== -1) {
-			unitConversions = unitConversions.filter((_, i) => i !== globalIndex);
-			const key = `${ingredientId}-${localIndex}`;
-			delete inputAmounts[key];
-			inputAmounts = inputAmounts;
+			markDirty(deleteConversionAt(draftUnitConversions, globalIndex));
 		}
 	};
 
-	// Stats
-	const totalConversions = $derived(unitConversions.length);
+	const totalConversions = $derived(draftUnitConversions.length);
 	const totalIngredients = $derived(groupedConversions.length);
 </script>
 
@@ -150,7 +148,20 @@
 			<span class="stats">
 				{m.conversionsStats({ count: totalConversions, ingredientCount: totalIngredients })}
 			</span>
+			{#if hasUnsavedChanges}
+				<span class="unsaved-hint">{m.conversionsUnsavedChanges()}</span>
+			{/if}
 		</div>
+		<ModernButton
+			variant="primary"
+			size="small"
+			disabled={!hasUnsavedChanges}
+			onclick={handleSave}
+			ariaLabel={m.conversionsSaveAriaLabel()}
+			title={m.conversionsSaveTitle()}
+		>
+			{m.save()}
+		</ModernButton>
 	</div>
 
 	{#if groupedConversions.length === 0}
@@ -163,11 +174,10 @@
 					color={group.color}
 					conversions={group.conversions}
 					{customUnitLabels}
-					getInputAmount={(index) => getInputAmount(group.ingredientId, index)}
-					onInputAmountChange={(index, amount) =>
-						updateInputAmount(group.ingredientId, index, amount)}
-					onOutputAmountChange={(index, amount) =>
-						updateOutputAmount(group.ingredientId, index, amount)}
+					onLeftAmountChange={(index, amount) =>
+						updateLeftAmount(group.ingredientId, index, amount)}
+					onRightAmountChange={(index, amount) =>
+						updateRightAmount(group.ingredientId, index, amount)}
 					onInputUnitChange={(index, unit) => updateInputUnit(group.ingredientId, index, unit)}
 					onOutputUnitChange={(index, unit) => updateOutputUnit(group.ingredientId, index, unit)}
 					onDelete={(index) => deleteConversion(group.ingredientId, index)}
@@ -192,7 +202,8 @@
 	.section-header {
 		display: flex;
 		justify-content: space-between;
-		align-items: center;
+		align-items: flex-start;
+		gap: 12px;
 	}
 
 	.header-info {
@@ -211,6 +222,12 @@
 	.stats {
 		color: var(--secondary-foreground);
 		font-size: 13px;
+	}
+
+	.unsaved-hint {
+		color: var(--primary);
+		font-size: 12px;
+		font-weight: 500;
 	}
 
 	.conversions-grid {

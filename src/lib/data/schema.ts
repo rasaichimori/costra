@@ -64,7 +64,9 @@ export interface UnitConversion {
 	ingredientId: string; // this could be an ingredient id or a compound id
 	inputUnit: Unit | string; // Gram
 	outputUnit: Unit | string; // KG
-	conversionFactor: number; // 1000
+	conversionFactor: number; // input units per one output unit
+	/** Output-side amount shown in the editor (defaults to 1) */
+	outputAmount?: number;
 }
 
 export type RecipeLikeDoc = RecipeDoc | CompoundIngredientDoc;

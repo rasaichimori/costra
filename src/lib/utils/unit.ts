@@ -235,6 +235,13 @@ export const isSmallerUnit = (unit1: Unit | string, unit2: Unit | string): boole
  * If the output unit is smaller, swaps the units and keeps the factor.
  */
 export const normalizeUnitConversion = (conversion: UnitConversion): UnitConversion => {
+	const outputAmount =
+		typeof conversion.outputAmount === 'number' &&
+		conversion.outputAmount > 0 &&
+		isFinite(conversion.outputAmount)
+			? conversion.outputAmount
+			: 1;
+
 	const outputIsSmaller = isSmallerUnit(conversion.outputUnit, conversion.inputUnit);
 
 	if (outputIsSmaller === true) {
@@ -243,10 +250,10 @@ export const normalizeUnitConversion = (conversion: UnitConversion): UnitConvers
 			...conversion,
 			inputUnit: conversion.outputUnit,
 			outputUnit: conversion.inputUnit,
-			conversionFactor: conversion.conversionFactor
+			conversionFactor: conversion.conversionFactor,
+			outputAmount
 		};
 	}
 
-	// Already in correct order
-	return conversion;
+	return { ...conversion, outputAmount };
 };

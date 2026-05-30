@@ -3,6 +3,11 @@
 	import ModernButton from '../common/ModernButton.svelte';
 	import TextInput from '../common/TextInput.svelte';
 	import { isSmallerUnit } from '$lib/utils/unit';
+	import {
+		buildUnitConversionFromDisplayAmounts,
+		conversionFactorFromDisplayAmounts
+	} from '$lib/utils/conversionEditUtils';
+	import { getCompactUnitLabel } from '$lib/utils/unitSelectUtils';
 	import { m } from '$lib/paraglide/messages.js';
 
 	interface Props {
@@ -25,40 +30,38 @@
 		onclose
 	}: Props = $props();
 
-	// Determine which unit is smaller for display purposes
-	const outputIsSmaller = isSmallerUnit(originalOutputUnit, originalInputUnit);
-
-	// Determine display order: smaller unit first if we can determine sizes
+	const outputIsSmaller = $derived(isSmallerUnit(originalOutputUnit, originalInputUnit));
 	const smallerUnit = $derived(outputIsSmaller === true ? originalOutputUnit : originalInputUnit);
 	const largerUnit = $derived(outputIsSmaller === true ? originalInputUnit : originalOutputUnit);
 
-	let conversionFactor = $state<number>(1);
-	let error = $state<string>('');
+	let leftAmount = $state(1);
+	let rightAmount = $state(1);
+	let error = $state('');
+
+	const getUnitLabel = (unitId: string): string => getCompactUnitLabel(unitId, unitLabels);
 
 	const handleSave = () => {
-		if (conversionFactor <= 0) {
+		const factor = conversionFactorFromDisplayAmounts(leftAmount, rightAmount);
+		if (factor === null) {
 			error = m.conversionFactorMustBePositive();
 			return;
 		}
-		if (!isFinite(conversionFactor)) {
+		if (!isFinite(factor)) {
 			error = m.conversionFactorMustBeValidNumber();
 			return;
 		}
 
-		// Store normalized: smaller unit first
-		// If outputIsSmaller is true, we're displaying smaller → larger, so store it that way
-		// The factor represents: 1 largerUnit = factor smallerUnit
-		// So: smallerUnit × factor = largerUnit, meaning inputUnit × factor = outputUnit
-		const finalInputUnit = smallerUnit;
-		const finalOutputUnit = largerUnit;
-		const finalFactor = conversionFactor;
-
-		const conversion: UnitConversion = {
+		const conversion = buildUnitConversionFromDisplayAmounts(
 			ingredientId,
-			inputUnit: finalInputUnit,
-			outputUnit: finalOutputUnit,
-			conversionFactor: finalFactor
-		};
+			smallerUnit,
+			largerUnit,
+			leftAmount,
+			rightAmount
+		);
+		if (!conversion) {
+			error = m.conversionFactorMustBePositive();
+			return;
+		}
 
 		onSave(conversion);
 	};
@@ -74,32 +77,51 @@
 
 <div class="conversion-modal">
 	<h3>{m.addUnitConversionTitle()}</h3>
-	<p class="description">
+	<p class="question">
 		{m.addUnitConversionQuestion({
-			smaller: unitLabels[smallerUnit] || smallerUnit,
-			larger: unitLabels[largerUnit] || largerUnit,
+			smaller: getUnitLabel(smallerUnit),
+			largerAmount: rightAmount,
+			larger: getUnitLabel(largerUnit),
 			ingredient: ingredientName
 		})}
 	</p>
-	<div class="input-group">
-		<TextInput
-			bind:value={conversionFactor}
-			min={0.0001}
-			step={0.0001}
-			label={m.conversionFactorLabel()}
-			size="medium"
-			autofocus={true}
-			onkeydown={handleKeydown}
-			{error}
-		/>
-		<p class="hint">
-			{m.conversionFactorHint({
-				larger: unitLabels[largerUnit] || largerUnit,
-				factor: conversionFactor,
-				smaller: unitLabels[smallerUnit] || smallerUnit
-			})}
-		</p>
+	<div class="conversion-editor">
+		<div class="conversion-part">
+			<TextInput
+				bind:value={leftAmount}
+				min={0.001}
+				step={0.001}
+				size="small"
+				variant="inline"
+				autofocus={true}
+				onkeydown={handleKeydown}
+			/>
+			<span class="unit-label">{getUnitLabel(smallerUnit)}</span>
+			<span class="of-text">{m.conversionOfEquals({ name: ingredientName })}</span>
+		</div>
+		<div class="conversion-part">
+			<TextInput
+				bind:value={rightAmount}
+				min={0.001}
+				step={0.001}
+				size="small"
+				variant="inline"
+				onkeydown={handleKeydown}
+			/>
+			<span class="unit-label">{getUnitLabel(largerUnit)}</span>
+		</div>
 	</div>
+	{#if error}
+		<p class="error">{error}</p>
+	{/if}
+	<p class="hint">
+		{m.conversionFactorHint({
+			leftAmount,
+			rightAmount,
+			smaller: getUnitLabel(smallerUnit),
+			larger: getUnitLabel(largerUnit)
+		})}
+	</p>
 	<div class="actions">
 		<ModernButton variant="secondary" onclick={() => onclose?.()}>{m.cancel()}</ModernButton>
 		<ModernButton variant="primary" onclick={handleSave}>{m.save()}</ModernButton>
@@ -126,21 +148,46 @@
 		color: var(--foreground);
 	}
 
-	.description {
+	.question {
 		margin: 0;
 		color: var(--secondary-foreground);
 		line-height: 1.5;
+		font-size: 0.9375rem;
 	}
 
-	.description strong {
-		color: var(--foreground);
-		font-weight: 600;
-	}
-
-	.input-group {
+	.conversion-editor {
 		display: flex;
-		flex-direction: column;
+		gap: 12px;
+	}
+
+	.conversion-part {
+		display: flex;
+		align-items: center;
 		gap: 8px;
+		flex-wrap: wrap;
+	}
+
+	.conversion-part :global(.input-container) {
+		width: 4.5rem;
+		flex: none;
+	}
+
+	.unit-label {
+		font-size: 13px;
+		color: var(--foreground);
+		font-weight: 500;
+	}
+
+	.of-text {
+		color: var(--secondary-foreground);
+		font-size: 13px;
+		white-space: nowrap;
+	}
+
+	.error {
+		margin: 0;
+		font-size: 0.875rem;
+		color: var(--destructive, #ef4444);
 	}
 
 	.hint {

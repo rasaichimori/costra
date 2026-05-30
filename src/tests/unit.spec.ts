@@ -246,7 +246,8 @@ describe('normalizeUnitConversion', () => {
 			ingredientId: 'flour',
 			inputUnit: 'g',
 			outputUnit: 'cup',
-			conversionFactor: 125
+			conversionFactor: 125,
+			outputAmount: 1
 		});
 	});
 
@@ -262,7 +263,8 @@ describe('normalizeUnitConversion', () => {
 			ingredientId: 'flour',
 			inputUnit: 'g',
 			outputUnit: 'cup',
-			conversionFactor: 125
+			conversionFactor: 125,
+			outputAmount: 1
 		});
 	});
 
@@ -273,6 +275,6 @@ describe('normalizeUnitConversion', () => {
 			outputUnit: 'sprig',
 			conversionFactor: 12
 		};
-		expect(normalizeUnitConversion(conversion)).toEqual(conversion);
+		expect(normalizeUnitConversion(conversion)).toEqual({ ...conversion, outputAmount: 1 });
 	});
 });

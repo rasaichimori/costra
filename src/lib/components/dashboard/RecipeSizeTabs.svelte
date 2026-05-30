@@ -271,6 +271,7 @@
 
 <style>
 	.size-tabs-bar {
+		isolation: isolate;
 		width: 0px;
 		min-width: 100%;
 		max-width: 100%;
