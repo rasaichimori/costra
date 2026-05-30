@@ -4,9 +4,12 @@
 	import ModernButton from '../common/ModernButton.svelte';
 	import {
 		createRecipeSize,
+		disableRecipeSizes,
+		enableRecipeSizes,
 		getActiveSize,
 		getNextRecipeSizeNumber,
-		reorderRecipeSizes
+		reorderRecipeSizes,
+		shouldShowSizeTabs
 	} from '$lib/utils/recipeUtils';
 	import { getCurrencyContext } from '$lib/contexts/currency.svelte';
 	import { m } from '$lib/paraglide/messages.js';
@@ -31,6 +34,7 @@
 
 	const activeSize = $derived(getActiveSize(recipe));
 	const hasMultipleSizes = $derived(recipe.sizes.length > 1);
+	const showSizeTabs = $derived(shouldShowSizeTabs(recipe));
 
 	let isEditingActiveSize = $state(false);
 	let draggingSizeId = $state<string | null>(null);
@@ -172,10 +176,19 @@
 	};
 
 	const deleteSize = (sizeId: string) => {
-		if (!hasMultipleSizes) return;
+		if (!hasMultipleSizes) {
+			disableRecipeSizes(recipe);
+			editingSizeId = undefined;
+			isEditingActiveSize = false;
+			return;
+		}
 
 		const remainingSizes = recipe.sizes.filter((size) => size.id !== sizeId);
 		recipe.sizes = remainingSizes;
+
+		if (remainingSizes.length === 1) {
+			enableRecipeSizes(recipe);
+		}
 
 		if (recipe.activeSizeId === sizeId) {
 			onActiveSizeChange?.();
@@ -192,49 +205,53 @@
 		editingSizeId = undefined;
 		isEditingActiveSize = false;
 	};
+
+	const revealSizeTabs = () => {
+		enableRecipeSizes(recipe);
+	};
 </script>
 
-<div class="size-tabs-bar" class:is-dragging={draggingSizeId !== null}>
-	<div class="size-tabs" role="tablist" aria-label={m.recipeSizeTabsAriaLabel()}>
-		{#each recipe.sizes as size (size.id)}
-			{#if size.id === draggingSizeId && dragDimensions}
+{#if showSizeTabs}
+	<div class="size-tabs-bar" class:is-dragging={draggingSizeId !== null}>
+		<div class="size-tabs" role="tablist" aria-label={m.recipeSizeTabsAriaLabel()}>
+			{#each recipe.sizes as size (size.id)}
+				{#if size.id === draggingSizeId && dragDimensions}
+					<div
+						bind:this={placeholderEls[size.id]}
+						class="size-tab-placeholder"
+						style:width="{dragDimensions.width}px"
+						style:height="{dragDimensions.height}px"
+						aria-hidden="true"
+					></div>
+				{/if}
 				<div
-					bind:this={placeholderEls[size.id]}
-					class="size-tab-placeholder"
-					style:width="{dragDimensions.width}px"
-					style:height="{dragDimensions.height}px"
-					aria-hidden="true"
-				></div>
-			{/if}
-			<div
-				bind:this={sizeTabEls[size.id]}
-				class="size-tab"
-				class:active={size.id === activeSize.id}
-				class:dragging={size.id === draggingSizeId}
-				class:reorderable={hasMultipleSizes}
-				role="tab"
-				aria-selected={size.id === activeSize.id}
-				style={size.id === draggingSizeId && dragPosition
-					? `left: ${dragPosition.left}px; top: ${dragPosition.top}px; width: ${dragPosition.width}px;`
-					: undefined}
-				onpointerdown={(e) => handleTabPointerDown(e, size.id)}
-			>
-				{#if size.id === activeSize.id}
-					<div class="active-tab-content">
-						<EditableTextField
-							bind:value={size.name}
-							bind:isEditing={isEditingActiveSize}
-							placeholder={m.recipeSizeNamePlaceholder()}
-							editAriaLabel={m.editRecipeSizeNameAriaLabel()}
-							editTitle={m.editRecipeSizeNameAriaLabel()}
-							onSave={finishEditingSizeName}
-							onCancel={finishEditingSizeName}
-						/>
-						<span class="tab-cost">
-							{currencyContext.currency}{(sizeCosts[size.id] ?? 0).toFixed(0)}
-						</span>
-					</div>
-					{#if hasMultipleSizes}
+					bind:this={sizeTabEls[size.id]}
+					class="size-tab"
+					class:active={size.id === activeSize.id}
+					class:dragging={size.id === draggingSizeId}
+					class:reorderable={hasMultipleSizes}
+					role="tab"
+					aria-selected={size.id === activeSize.id}
+					style={size.id === draggingSizeId && dragPosition
+						? `left: ${dragPosition.left}px; top: ${dragPosition.top}px; width: ${dragPosition.width}px;`
+						: undefined}
+					onpointerdown={(e) => handleTabPointerDown(e, size.id)}
+				>
+					{#if size.id === activeSize.id}
+						<div class="active-tab-content">
+							<EditableTextField
+								bind:value={size.name}
+								bind:isEditing={isEditingActiveSize}
+								placeholder={m.recipeSizeNamePlaceholder()}
+								editAriaLabel={m.editRecipeSizeNameAriaLabel()}
+								editTitle={m.editRecipeSizeNameAriaLabel()}
+								onSave={finishEditingSizeName}
+								onCancel={finishEditingSizeName}
+							/>
+							<span class="tab-cost">
+								{currencyContext.currency}{(sizeCosts[size.id] ?? 0).toFixed(0)}
+							</span>
+						</div>
 						<ModernButton
 							variant="icon"
 							size="small"
@@ -244,30 +261,43 @@
 						>
 							<i class="fa-solid fa-trash"></i>
 						</ModernButton>
+					{:else}
+						<div class="tab-content">
+							<span class="tab-label">{size.name}</span>
+							<span class="tab-cost">
+								{currencyContext.currency}{(sizeCosts[size.id] ?? 0).toFixed(0)}
+							</span>
+						</div>
 					{/if}
-				{:else}
-					<div class="tab-content">
-						<span class="tab-label">{size.name}</span>
-						<span class="tab-cost">
-							{currencyContext.currency}{(sizeCosts[size.id] ?? 0).toFixed(0)}
-						</span>
-					</div>
-				{/if}
+				</div>
+			{/each}
+			<div class="add-size-btn">
+				<ModernButton
+					variant="icon"
+					size="small"
+					ariaLabel={m.addRecipeSizeAriaLabel()}
+					title={m.addRecipeSizeTitle()}
+					onclick={addSize}
+				>
+					<i class="fa-solid fa-plus"></i>
+				</ModernButton>
 			</div>
-		{/each}
-		<div class="add-size-btn">
-			<ModernButton
-				variant="icon"
-				size="small"
-				ariaLabel={m.addRecipeSizeAriaLabel()}
-				title={m.addRecipeSizeTitle()}
-				onclick={addSize}
-			>
-				<i class="fa-solid fa-plus"></i>
-			</ModernButton>
 		</div>
 	</div>
-</div>
+{:else}
+	<div class="add-sizes-bar">
+		<ModernButton
+			variant="secondary"
+			size="small"
+			ariaLabel={m.addRecipeSizesAriaLabel()}
+			title={m.addRecipeSizesTitle()}
+			onclick={revealSizeTabs}
+		>
+			<i class="fa-solid fa-layer-group"></i>
+			{m.addRecipeSizes()}
+		</ModernButton>
+	</div>
+{/if}
 
 <style>
 	.size-tabs-bar {
@@ -301,6 +331,18 @@
 		flex-shrink: 0;
 		align-self: center;
 		padding: 0 4px 6px;
+	}
+
+	.add-sizes-bar {
+		display: flex;
+		align-items: center;
+		background: var(--muted, #f5f5f5);
+		border-radius: 8px 8px 0 0;
+		padding: 8px 12px;
+	}
+
+	.add-sizes-bar :global(.btn) {
+		gap: 6px;
 	}
 
 	.size-tab {

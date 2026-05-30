@@ -11,6 +11,17 @@ import type {
 
 export const DEFAULT_SIZE_NAME = 'Regular';
 
+export const shouldShowSizeTabs = (recipe: RecipeDoc): boolean =>
+	recipe.sizesEnabled === true || recipe.sizes.length > 1;
+
+export const enableRecipeSizes = (recipe: RecipeDoc): void => {
+	recipe.sizesEnabled = true;
+};
+
+export const disableRecipeSizes = (recipe: RecipeDoc): void => {
+	recipe.sizesEnabled = false;
+};
+
 export const getRecipeLikeIngredients = (doc: RecipeLikeDoc): RecipeIngredientEntry[] => {
 	if ('sizes' in doc) {
 		return doc.sizes.flatMap((size) => size.ingredients);
@@ -92,18 +103,31 @@ export const normalizeRecipeDoc = (recipe: RecipeDoc | LegacyRecipeDoc): RecipeD
 
 	if (!isLegacyRecipeDoc(recipe)) {
 		if (recipe.sizes.length === 0) {
-			const size = createRecipeSize(DEFAULT_SIZE_NAME, [], crypto.randomUUID(), legacyRecipeSellingPrice);
-			return { id: recipe.id, name: recipe.name, sizes: [size], activeSizeId: size.id };
+			const size = createRecipeSize(
+				DEFAULT_SIZE_NAME,
+				[],
+				crypto.randomUUID(),
+				legacyRecipeSellingPrice
+			);
+			return {
+				id: recipe.id,
+				name: recipe.name,
+				sizes: [size],
+				activeSizeId: size.id,
+				sizesEnabled: false
+			};
 		}
 
 		const activeSizeId = recipe.sizes.some((size) => size.id === recipe.activeSizeId)
 			? recipe.activeSizeId
 			: recipe.sizes[0].id;
+		const sizesEnabled = recipe.sizesEnabled ?? recipe.sizes.length > 1;
 
 		return {
 			id: recipe.id,
 			name: recipe.name,
 			activeSizeId,
+			sizesEnabled,
 			sizes: recipe.sizes.map((size) => normalizeRecipeSize(size, legacyRecipeSellingPrice))
 		};
 	}
@@ -113,7 +137,8 @@ export const normalizeRecipeDoc = (recipe: RecipeDoc | LegacyRecipeDoc): RecipeD
 		id: recipe.id,
 		name: recipe.name,
 		sizes: [size],
-		activeSizeId: size.id
+		activeSizeId: size.id,
+		sizesEnabled: false
 	};
 };
 
@@ -188,7 +213,8 @@ export const createDuplicateRecipe = (
 		id: newId,
 		name: duplicateName,
 		sizes,
-		activeSizeId: sizes[0].id
+		activeSizeId: sizes[0].id,
+		sizesEnabled: recipe.sizesEnabled ?? recipe.sizes.length > 1
 	};
 };
 

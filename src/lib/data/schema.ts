@@ -39,6 +39,8 @@ export interface RecipeDoc {
 	sizes: RecipeSize[];
 	/** Which size tab is selected in the recipe editor */
 	activeSizeId: string;
+	/** When false, hide size tabs until the user opts in via "Add sizes" */
+	sizesEnabled?: boolean;
 }
 
 /** Recipes and compounds that expose an ingredient list for cost calculation */

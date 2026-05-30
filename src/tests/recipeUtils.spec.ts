@@ -6,12 +6,15 @@ import {
 	calculateFoodCostPercent,
 	DEFAULT_SIZE_NAME,
 	duplicateUnitConversionsForIngredient,
+	disableRecipeSizes,
+	enableRecipeSizes,
 	getActiveSize,
 	getNextRecipeSizeNumber,
 	insertRecordAfter,
 	normalizeRecipeDoc,
 	reorderRecipeSizes,
-	recipeSizeToCostInput
+	recipeSizeToCostInput,
+	shouldShowSizeTabs
 } from '$lib/utils/recipeUtils';
 import { describe, expect, it } from 'vitest';
 
@@ -121,6 +124,44 @@ describe('normalizeRecipeDoc', () => {
 	});
 });
 
+describe('shouldShowSizeTabs', () => {
+	it('returns false for a single-size recipe without sizesEnabled', () => {
+		const recipe = createRecipe('cake', 'Cake');
+		expect(shouldShowSizeTabs(recipe)).toBe(false);
+	});
+
+	it('returns true after enabling sizes on a single-size recipe', () => {
+		const recipe = createRecipe('cake', 'Cake');
+		enableRecipeSizes(recipe);
+		expect(shouldShowSizeTabs(recipe)).toBe(true);
+	});
+
+	it('returns false after disabling sizes on a single-size recipe', () => {
+		const recipe = createRecipe('cake', 'Cake');
+		enableRecipeSizes(recipe);
+		disableRecipeSizes(recipe);
+		expect(shouldShowSizeTabs(recipe)).toBe(false);
+		expect(recipe.sizes).toHaveLength(1);
+	});
+
+	it('returns true for multi-size recipes', () => {
+		const recipe = createRecipe('cake', 'Cake');
+		recipe.sizes.push(createRecipeSize('Large'));
+		expect(shouldShowSizeTabs(recipe)).toBe(true);
+	});
+
+	it('normalizes sizesEnabled from multi-size recipes', () => {
+		const recipe = createRecipe('cake', 'Cake');
+		recipe.sizes.push(createRecipeSize('Large'));
+		expect(normalizeRecipeDoc(recipe).sizesEnabled).toBe(true);
+	});
+
+	it('normalizes sizesEnabled to false for single-size recipes', () => {
+		const recipe = createRecipe('cake', 'Cake');
+		expect(normalizeRecipeDoc(recipe).sizesEnabled).toBe(false);
+	});
+});
+
 describe('calculateFoodCostPercent', () => {
 	it('returns food cost percentage from selling price and total cost', () => {
 		expect(calculateFoodCostPercent(18, 6.23)).toBeCloseTo(34.6, 1);
@@ -203,7 +244,9 @@ describe('createDuplicateRecipe', () => {
 	it('copies sellingPrice for each size', () => {
 		const original = createRecipe('cake', 'Vanilla Cake');
 		original.sizes[0].sellingPrice = 1500;
-		original.sizes.push(createRecipeSize('Large', original.sizes[0].ingredients, crypto.randomUUID(), 2200));
+		original.sizes.push(
+			createRecipeSize('Large', original.sizes[0].ingredients, crypto.randomUUID(), 2200)
+		);
 
 		const duplicate = createDuplicateRecipe(original, 'cake-copy', 'Vanilla Cake - copy');
 

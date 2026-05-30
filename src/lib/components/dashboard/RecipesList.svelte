@@ -63,7 +63,8 @@
 			id: newId,
 			name: m.defaultRecipeName({ number: nextNumber }),
 			sizes: [defaultSize],
-			activeSizeId: defaultSize.id
+			activeSizeId: defaultSize.id,
+			sizesEnabled: false
 		};
 		recipes[newId] = newRecipe;
 
