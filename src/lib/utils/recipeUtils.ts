@@ -30,6 +30,19 @@ export const getRecipeLikeIngredients = (doc: RecipeLikeDoc): RecipeIngredientEn
 	return doc.ingredients;
 };
 
+export const reorderRecord = <T>(
+	record: Record<string, T>,
+	fromIndex: number,
+	toIndex: number
+): Record<string, T> => {
+	if (fromIndex === toIndex) return record;
+
+	const entries = Object.entries(record);
+	const [moved] = entries.splice(fromIndex, 1);
+	entries.splice(toIndex, 0, moved);
+	return Object.fromEntries(entries) as Record<string, T>;
+};
+
 export const insertRecordAfter = <T>(
 	record: Record<string, T>,
 	afterKey: string,
@@ -198,10 +211,9 @@ export const getActiveIngredients = (recipe: RecipeDoc): RecipeIngredientEntry[]
 export const recipeToCostInput = (recipe: RecipeDoc): RecipeWithIngredients =>
 	recipeSizeToCostInput(recipe.id, getActiveSize(recipe));
 
-export const getNextRecipeSizeNumber = (recipe: RecipeDoc): number => {
-	const pattern = /^Size (\d+)$/;
-	const existingNumbers = recipe.sizes
-		.map((size) => size.name.match(pattern)?.[1])
+export const getNextSequentialNumber = (names: string[], pattern: RegExp): number => {
+	const existingNumbers = names
+		.map((name) => name.match(pattern)?.[1])
 		.filter(Boolean)
 		.map(Number)
 		.sort((a, b) => a - b);
@@ -217,6 +229,12 @@ export const getNextRecipeSizeNumber = (recipe: RecipeDoc): number => {
 
 	return nextNumber;
 };
+
+export const getNextRecipeSizeNumber = (recipe: RecipeDoc): number =>
+	getNextSequentialNumber(
+		recipe.sizes.map((size) => size.name),
+		/^Size (\d+)$/
+	);
 
 export const createDuplicateRecipe = (
 	recipe: RecipeDoc,

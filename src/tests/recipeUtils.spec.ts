@@ -11,8 +11,10 @@ import {
 	enableRecipeSizes,
 	getActiveSize,
 	getNextRecipeSizeNumber,
+	getNextSequentialNumber,
 	insertRecordAfter,
 	normalizeRecipeDoc,
+	reorderRecord,
 	reorderRecipeSizes,
 	recipeSizeToCostInput,
 	shouldShowSizeTabs
@@ -69,6 +71,20 @@ describe('insertRecordAfter', () => {
 		const result = insertRecordAfter(record, 'missing', 'copy', 99);
 
 		expect(Object.keys(result)).toEqual(['a', 'b', 'copy']);
+	});
+});
+
+describe('reorderRecord', () => {
+	it('moves an entry from one index to another', () => {
+		const record = { a: 1, b: 2, c: 3 };
+		const result = reorderRecord(record, 2, 0);
+
+		expect(Object.keys(result)).toEqual(['c', 'a', 'b']);
+	});
+
+	it('returns the same record when indices match', () => {
+		const record = { a: 1, b: 2, c: 3 };
+		expect(reorderRecord(record, 1, 1)).toBe(record);
 	});
 });
 
@@ -234,6 +250,26 @@ describe('getActiveSize', () => {
 		recipe.activeSizeId = secondSize.id;
 
 		expect(getActiveSize(recipe).id).toBe(secondSize.id);
+	});
+});
+
+describe('getNextSequentialNumber', () => {
+	const pattern = /^Recipe (\d+)$/;
+
+	it('returns 1 when no names match the pattern', () => {
+		expect(getNextSequentialNumber(['Cake', 'Bread'], pattern)).toBe(1);
+	});
+
+	it('returns the next number after a contiguous run', () => {
+		expect(getNextSequentialNumber(['Recipe 1', 'Recipe 2'], pattern)).toBe(3);
+	});
+
+	it('fills the first gap in the sequence', () => {
+		expect(getNextSequentialNumber(['Recipe 1', 'Recipe 3'], pattern)).toBe(2);
+	});
+
+	it('ignores names that do not match the pattern', () => {
+		expect(getNextSequentialNumber(['Recipe 1', 'My Recipe', 'Recipe 2'], pattern)).toBe(3);
 	});
 });
 

@@ -11,9 +11,12 @@
 		getAllCosts,
 		getTotalRecipeCost
 	} from '$lib/utils/costCalculatorUtils';
-	import { createRecipeSize, recipeSizeToCostInput } from '$lib/utils/recipeUtils';
-	import RecipeListItem from './RecipeListItem.svelte';
-	import SidebarAddButton from './SidebarAddButton.svelte';
+	import {
+		createRecipeSize,
+		getNextSequentialNumber,
+		recipeSizeToCostInput
+	} from '$lib/utils/recipeUtils';
+	import ReorderableList from './ReorderableList.svelte';
 	import { m } from '$lib/paraglide/messages.js';
 
 	interface Props {
@@ -36,28 +39,26 @@
 
 	const allCosts = $derived(getAllCosts(costs, compounds, unitConversions));
 
+	const getSizeCost = (recipeId: string, size: RecipeSize) => {
+		const recipeCosts = calculateRecipeCosts(
+			recipeSizeToCostInput(recipeId, size),
+			allCosts,
+			unitConversions
+		);
+		return getTotalRecipeCost(recipeCosts);
+	};
+
+	const getLabel = (recipe: RecipeDoc) => recipe.name;
+	const getCost = (recipe: RecipeDoc) => getSizeCost(recipe.id, recipe.sizes[0]);
+	const getUnit = (recipe: RecipeDoc) => recipe.sizes[0].name;
+
 	const addRecipe = () => {
 		const newId = crypto.randomUUID();
+		const nextNumber = getNextSequentialNumber(
+			Object.values(recipes).map((recipe) => recipe.name),
+			/^Recipe (\d+)$/
+		);
 
-		// Find the next sequential number for ingredient name
-		const existingRecipes = Object.values(recipes);
-		const recipePattern = /^Recipe (\d+)$/;
-		const existingNumbers = existingRecipes
-			.map((recipe) => recipe.name.match(recipePattern)?.[1])
-			.filter(Boolean)
-			.map(Number)
-			.sort((a, b) => a - b);
-
-		let nextNumber = 1;
-		for (const num of existingNumbers) {
-			if (num === nextNumber) {
-				nextNumber++;
-			} else {
-				break;
-			}
-		}
-
-		// Create new ingredient with placeholder values
 		const defaultSize = createRecipeSize(m.defaultRecipeSizeName({ number: 1 }));
 		const newRecipe: RecipeDoc = {
 			id: newId,
@@ -71,65 +72,15 @@
 		selectedRecipeId = newId;
 		setIsEditingName(true);
 	};
-
-	const getSizeCost = (recipeId: string, size: RecipeSize) => {
-		const recipeCosts = calculateRecipeCosts(
-			recipeSizeToCostInput(recipeId, size),
-			allCosts,
-			unitConversions
-		);
-		return getTotalRecipeCost(recipeCosts);
-	};
 </script>
 
-<div class="recipes-list">
-	{#each Object.entries(recipes) as [id, recipe] (id)}
-		{@const firstSize = recipe.sizes[0]}
-		<RecipeListItem
-			label={recipe.name}
-			selected={id === selectedRecipeId}
-			cost={getSizeCost(recipe.id, firstSize)}
-			unit={firstSize.name}
-			onclick={() => {
-				selectedRecipeId = id;
-				setIsEditingName(false);
-			}}
-		/>
-	{/each}
-	<SidebarAddButton onclick={addRecipe}>{m.createNewRecipe()}</SidebarAddButton>
-</div>
-
-<style>
-	.recipes-list {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-		background: var(--muted);
-		border: 1px solid var(--border);
-		padding: 1rem;
-		border-radius: 12px;
-		max-height: 80vh;
-		overflow-y: auto;
-		width: 220px;
-		min-width: 180px;
-		box-shadow: var(--shadow-light);
-		flex-shrink: 0;
-	}
-
-	@media (max-width: 900px) {
-		.recipes-list {
-			width: 100%;
-			max-height: none;
-			flex-direction: row;
-			flex-wrap: wrap;
-			align-items: center;
-		}
-	}
-
-	@media (max-width: 480px) {
-		.recipes-list {
-			padding: 0.75rem;
-			gap: 0.4rem;
-		}
-	}
-</style>
+<ReorderableList
+	bind:items={recipes}
+	bind:selectedId={selectedRecipeId}
+	{getLabel}
+	{getCost}
+	{getUnit}
+	onSelect={() => setIsEditingName(false)}
+	onAdd={addRecipe}
+	addLabel={m.createNewRecipe()}
+/>
