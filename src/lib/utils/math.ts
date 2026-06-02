@@ -1,6 +1,10 @@
 export const clamp = (value: number, min: number, max: number): number =>
 	Math.max(min, Math.min(max, value));
 
+/** Rounds to at most `maxDecimals` places; trailing zero fractional digits are dropped. */
+export const roundToMaxDecimalPlaces = (value: number, maxDecimals: number): number =>
+	Number.parseFloat(value.toFixed(maxDecimals));
+
 export const mod = (n: number, m: number) => {
 	return ((n % m) + m) % m;
 };

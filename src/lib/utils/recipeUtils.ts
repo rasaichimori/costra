@@ -1,3 +1,4 @@
+import { roundToMaxDecimalPlaces } from './math';
 import type {
 	CompoundIngredientDoc,
 	LegacyRecipeDoc,
@@ -82,6 +83,11 @@ export const normalizeRecipeSize = (size: RecipeSize, fallbackSellingPrice = 0):
 export const isLegacyRecipeDoc = (recipe: RecipeDoc | LegacyRecipeDoc): recipe is LegacyRecipeDoc =>
 	'ingredients' in recipe && !('sizes' in recipe);
 
+export const FOOD_COST_PERCENT_MAX_DECIMALS = 2;
+
+export const roundFoodCostPercent = (percent: number): number =>
+	roundToMaxDecimalPlaces(percent, FOOD_COST_PERCENT_MAX_DECIMALS);
+
 export const calculateFoodCostPercent = (
 	sellingPrice: number,
 	totalCost: number
@@ -90,7 +96,22 @@ export const calculateFoodCostPercent = (
 		return null;
 	}
 
-	return (totalCost / sellingPrice) * 100;
+	return roundFoodCostPercent((totalCost / sellingPrice) * 100);
+};
+
+export const calculateSellingPriceFromFoodCostPercent = (
+	foodCostPercent: number,
+	totalCost: number
+): number | null => {
+	if (!isFinite(foodCostPercent) || foodCostPercent <= 0) {
+		return null;
+	}
+
+	if (!isFinite(totalCost) || totalCost < 0) {
+		return null;
+	}
+
+	return (totalCost * 100) / foodCostPercent;
 };
 
 export const normalizeRecipeDoc = (recipe: RecipeDoc | LegacyRecipeDoc): RecipeDoc => {

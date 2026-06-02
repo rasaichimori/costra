@@ -106,6 +106,7 @@
 	"totalCostLabel": "Total Cost:",
 	"yieldLabel": "yield:",
 	"sellingPriceLabel": "Selling Price:",
+	"foodCostPercentLabel": "Food Cost %:",
 	"deleteCompound": "Delete Ingredient",
 	"deleteCompoundAriaLabel": "Delete ingredient",
 	"deleteCompoundTitle": "Delete ingredient",

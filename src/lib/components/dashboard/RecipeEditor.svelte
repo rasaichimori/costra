@@ -21,7 +21,9 @@
 		getActiveSize,
 		recipeSizeToCostInput,
 		recipeToCostInput,
-		calculateFoodCostPercent
+		calculateFoodCostPercent,
+		calculateSellingPriceFromFoodCostPercent,
+		roundFoodCostPercent
 	} from '$lib/utils/recipeUtils';
 	import { m } from '$lib/paraglide/messages.js';
 	import TextInput from '../common/TextInput.svelte';
@@ -50,9 +52,11 @@
 
 	let editingSizeId = $state<string | undefined>(undefined);
 	let sellingPriceInput = $state<{ blur: () => void } | undefined>(undefined);
+	let foodCostPercentInput = $state<{ blur: () => void } | undefined>(undefined);
 
-	const blurSellingPrice = () => {
+	const blurPriceInputs = () => {
 		sellingPriceInput?.blur();
+		foodCostPercentInput?.blur();
 	};
 
 	const activeSize = $derived(getActiveSize(recipe));
@@ -84,6 +88,13 @@
 		const sizeIndex = recipe.sizes.findIndex((size) => size.id === sizeId);
 		if (sizeIndex === -1) return;
 		recipe.sizes[sizeIndex].sellingPrice = sellingPrice;
+	};
+
+	const setSizeSellingPriceFromFoodCostPercent = (sizeId: string, percent: number) => {
+		const roundedPercent = roundFoodCostPercent(percent);
+		const sellingPrice = calculateSellingPriceFromFoodCostPercent(roundedPercent, totalCost);
+		if (sellingPrice === null) return;
+		setSizeSellingPrice(sizeId, Math.round(sellingPrice));
 	};
 	const currencyContext = getCurrencyContext();
 </script>
@@ -142,8 +153,24 @@
 					</div>
 					<div class="food-cost-row">
 						<span class="label-spacer" aria-hidden="true"></span>
-						<div class="food-cost-percent">
-							{foodCostPercent !== null ? `${foodCostPercent.toFixed(1)}%` : '—'}
+						<div class="food-cost-input-group">
+							{#key activeSize.id}
+								<TextInput
+									bind:this={foodCostPercentInput}
+									value={foodCostPercent ?? 0}
+									oninput={(percent) =>
+										setSizeSellingPriceFromFoodCostPercent(activeSize.id, percent)}
+									onchange={(percent) =>
+										setSizeSellingPriceFromFoodCostPercent(activeSize.id, percent)}
+									size="small"
+									variant="inline"
+									min={0.01}
+									step={0.01}
+									spinner={true}
+									ariaLabel={m.foodCostPercentLabel()}
+								/>
+							{/key}
+							<span class="percent-suffix" aria-hidden="true">%</span>
 						</div>
 					</div>
 				</div>
@@ -167,7 +194,7 @@
 					bind:recipe
 					bind:editingSizeId
 					{sizeCosts}
-					onActiveSizeChange={blurSellingPrice}
+					onActiveSizeChange={blurPriceInputs}
 				/>
 			{/key}
 			<div class="breakdown-content">
@@ -297,13 +324,22 @@
 		flex: none;
 	}
 
-	.food-cost-percent {
+	.food-cost-input-group {
+		display: flex;
+		align-items: center;
+		gap: 2px;
+	}
+
+	.food-cost-input-group :global(.input-container) {
+		width: 56px;
+		flex: none;
+	}
+
+	.percent-suffix {
 		font-weight: 600;
 		color: var(--foreground);
-		min-width: 40px;
 		font-size: 12px;
-		font-variant-numeric: tabular-nums;
-		white-space: nowrap;
+		flex: none;
 	}
 
 	.cost-total {

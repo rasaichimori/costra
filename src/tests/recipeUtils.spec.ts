@@ -4,6 +4,7 @@ import {
 	createDuplicateRecipe,
 	createRecipeSize,
 	calculateFoodCostPercent,
+	calculateSellingPriceFromFoodCostPercent,
 	DEFAULT_SIZE_NAME,
 	duplicateUnitConversionsForIngredient,
 	disableRecipeSizes,
@@ -163,13 +164,38 @@ describe('shouldShowSizeTabs', () => {
 });
 
 describe('calculateFoodCostPercent', () => {
-	it('returns food cost percentage from selling price and total cost', () => {
-		expect(calculateFoodCostPercent(18, 6.23)).toBeCloseTo(34.6, 1);
+	it('returns food cost percentage rounded to two decimal places', () => {
+		expect(calculateFoodCostPercent(18, 6.23)).toBe(34.61);
+	});
+
+	it('drops trailing zero decimals in the rounded value', () => {
+		expect(calculateFoodCostPercent(10, 5)).toBe(50);
 	});
 
 	it('returns null when selling price is zero or negative', () => {
 		expect(calculateFoodCostPercent(0, 10)).toBeNull();
 		expect(calculateFoodCostPercent(-5, 10)).toBeNull();
+	});
+});
+
+describe('calculateSellingPriceFromFoodCostPercent', () => {
+	it('returns selling price from food cost percentage and total cost', () => {
+		expect(calculateSellingPriceFromFoodCostPercent(34.6, 6.23)).toBeCloseTo(18, 0);
+	});
+
+	it('round-trips with calculateFoodCostPercent when selling price is rounded', () => {
+		const sellingPrice = 18;
+		const totalCost = 6.23;
+		const percent = calculateFoodCostPercent(sellingPrice, totalCost);
+		expect(percent).toBe(34.61);
+		const derivedPrice = calculateSellingPriceFromFoodCostPercent(percent!, totalCost);
+		expect(derivedPrice).not.toBeNull();
+		expect(Math.round(derivedPrice!)).toBe(sellingPrice);
+	});
+
+	it('returns null when food cost percent is zero or negative', () => {
+		expect(calculateSellingPriceFromFoodCostPercent(0, 10)).toBeNull();
+		expect(calculateSellingPriceFromFoodCostPercent(-5, 10)).toBeNull();
 	});
 });
 
