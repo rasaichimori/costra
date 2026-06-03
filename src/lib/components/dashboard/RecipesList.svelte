@@ -50,7 +50,8 @@
 
 	const getLabel = (recipe: RecipeDoc) => recipe.name;
 	const getCost = (recipe: RecipeDoc) => getSizeCost(recipe.id, recipe.sizes[0]);
-	const getUnit = (recipe: RecipeDoc) => recipe.sizes[0].name;
+	const getUnit = (recipe: RecipeDoc) =>
+		recipe.sizes.length > 1 ? recipe.sizes[0].name : undefined;
 
 	const addRecipe = () => {
 		const newId = crypto.randomUUID();
