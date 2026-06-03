@@ -52,6 +52,20 @@ export const buildUnitLabels = (
 /**
  * Build unit option groups for the unit select popup
  */
+/** Whether a unit option matches a search term (full label or unit id / abbreviation). */
+export const unitOptionMatchesSearch = (option: UnitOption, searchTerm: string): boolean => {
+	const term = searchTerm.trim().toLowerCase();
+	if (term === '') return true;
+	return option.label.toLowerCase().includes(term) || option.id.toLowerCase().includes(term);
+};
+
+/** Whether a unit option exactly matches a search term (label or id), case-insensitive. */
+export const unitOptionMatchesSearchExactly = (option: UnitOption, searchTerm: string): boolean => {
+	const term = searchTerm.trim().toLowerCase();
+	if (term === '') return false;
+	return option.label.toLowerCase() === term || option.id.toLowerCase() === term;
+};
+
 export const buildUnitGroups = (customUnitLabels: Record<string, string>): UnitOptionGroup[] => {
 	const volumeOptions: UnitOption[] = volumeUnits.map((unit) => ({
 		label: volumeUnitLabels[unit],

@@ -11,7 +11,9 @@ import {
 	findAllMissingConversionsFromImport,
 	findMissingConversions,
 	getPortionUnitsForIngredient,
-	getRecipesUsingIngredientWithUnit
+	getRecipesUsingIngredientWithUnit,
+	unitOptionMatchesSearch,
+	unitOptionMatchesSearchExactly
 } from '$lib/utils/unitSelectUtils';
 import { createRecipeSize, DEFAULT_SIZE_NAME } from '$lib/utils/recipeUtils';
 import { describe, expect, it } from 'vitest';
@@ -87,6 +89,55 @@ describe('getCompactUnitLabel', () => {
 	it('falls back to unit id for unknown units', () => {
 		const unitLabels = buildUnitLabels({});
 		expect(getCompactUnitLabel('unknown', unitLabels)).toBe('unknown');
+	});
+});
+
+describe('unitOptionMatchesSearch', () => {
+	const gram = { id: 'g', label: 'Gram' };
+	const tablespoon = { id: 'tbs', label: 'Tablespoon' };
+	const custom = { id: 'bunch', label: 'Bunch' };
+
+	it('matches by full label', () => {
+		expect(unitOptionMatchesSearch(gram, 'gram')).toBe(true);
+		expect(unitOptionMatchesSearch(tablespoon, 'table')).toBe(true);
+	});
+
+	it('matches by unit id abbreviation', () => {
+		expect(unitOptionMatchesSearch(gram, 'g')).toBe(true);
+		expect(unitOptionMatchesSearch(tablespoon, 'tbs')).toBe(true);
+		expect(unitOptionMatchesSearch(tablespoon, 'tb')).toBe(true);
+	});
+
+	it('matches custom units by id or label', () => {
+		expect(unitOptionMatchesSearch(custom, 'bunch')).toBe(true);
+		expect(unitOptionMatchesSearch(custom, 'Bun')).toBe(true);
+	});
+
+	it('returns true for empty search term', () => {
+		expect(unitOptionMatchesSearch(gram, '')).toBe(true);
+		expect(unitOptionMatchesSearch(gram, '   ')).toBe(true);
+	});
+
+	it('returns false when neither label nor id matches', () => {
+		expect(unitOptionMatchesSearch(gram, 'kg')).toBe(false);
+		expect(unitOptionMatchesSearch(gram, 'ounce')).toBe(false);
+	});
+});
+
+describe('unitOptionMatchesSearchExactly', () => {
+	const gram = { id: 'g', label: 'Gram' };
+
+	it('matches exact label or id', () => {
+		expect(unitOptionMatchesSearchExactly(gram, 'Gram')).toBe(true);
+		expect(unitOptionMatchesSearchExactly(gram, 'g')).toBe(true);
+	});
+
+	it('does not match partial terms', () => {
+		expect(unitOptionMatchesSearchExactly(gram, 'gr')).toBe(false);
+	});
+
+	it('returns false for empty search term', () => {
+		expect(unitOptionMatchesSearchExactly(gram, '')).toBe(false);
 	});
 });
 

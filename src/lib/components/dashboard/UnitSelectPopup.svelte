@@ -1,5 +1,9 @@
 <script lang="ts">
 	import type { UnitOption, UnitOptionGroup } from '$lib/utils/unit';
+	import {
+		unitOptionMatchesSearch,
+		unitOptionMatchesSearchExactly
+	} from '$lib/utils/unitSelectUtils';
 	import ModernButton from '../common/ModernButton.svelte';
 	import TextInput from '../common/TextInput.svelte';
 	import { m } from '$lib/paraglide/messages.js';
@@ -28,7 +32,7 @@
 				return {
 					label: group.label,
 					options: group.options.filter((unitOption) => {
-						const matchesSearch = unitOption.label.toLowerCase().includes(searchTerm.toLowerCase());
+						const matchesSearch = unitOptionMatchesSearch(unitOption, searchTerm);
 						let matchesFilter = false;
 						if (selectedFilters.length === 0) {
 							matchesFilter = true;
@@ -80,7 +84,7 @@
 	</div>
 	{#if searchTerm !== '' && !unitGroups
 			.flatMap((group) => group.options)
-			.some((option) => option.label.toLowerCase() === searchTerm.toLowerCase())}
+			.some((option) => unitOptionMatchesSearchExactly(option, searchTerm))}
 		<button
 			class="option add-new-option"
 			onclick={() => {
