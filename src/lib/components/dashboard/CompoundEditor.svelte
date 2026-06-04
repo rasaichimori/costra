@@ -167,6 +167,7 @@
 	<div class="recipe-section">
 		<div class="recipe-breakdown">
 			<RecipeIngredientsSection
+				ingredientListKey={recipe.id}
 				bind:ingredients={recipe.ingredients}
 				ingredientDocs={costs}
 				{recipeCosts}

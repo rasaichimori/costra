@@ -199,6 +199,7 @@
 			{/key}
 			<div class="breakdown-content">
 				<RecipeIngredientsSection
+					ingredientListKey={`${recipe.id}:${activeSize.id}`}
 					bind:ingredients={activeSize.ingredients}
 					ingredientDocs={allCosts}
 					{recipeCosts}

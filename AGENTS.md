@@ -173,6 +173,45 @@ Then run `npm run check` so Paraglide recompiles and TypeScript catches typos in
 
 ---
 
+# Text input & selection context
+
+Stale amount/price fields when switching recipes, sizes, or compounds usually come from **focused inputs keeping local display state** while Svelte **reuses** list rows keyed only by entity id (e.g. `ingredient.id`).
+
+## Required patterns
+
+### Blur on outside click
+
+`TextInput` registers a capture-phase `pointerdown` listener while focused and **blurs** when the event target is outside `.input-container`. That commits parsed numeric values before the click handler runs (e.g. selecting another recipe).
+
+- **Do not remove** this behavior from `TextInput` without an equivalent.
+- **Prefer `TextInput`** for inline numeric/string fields instead of raw `<input>` with duplicate state.
+- **New components** with their own display state must blur on outside interaction or delegate to `TextInput`.
+
+### List keys include parent context
+
+```svelte
+<!-- ❌ Reuses row when another recipe has the same ingredient id -->
+{#each ingredients as ingredient, idx (ingredient.id)}
+
+<!-- ✅ Remounts row when recipe or size changes -->
+{#each ingredients as ingredient, idx (`${recipeId}:${sizeId}:${ingredient.id}`)}
+```
+
+Pass a stable `ingredientListKey` (or similar) from the editor: `` `${recipe.id}:${activeSize.id}` `` for recipes, `recipe.id` for compounds.
+
+### Selection changes
+
+When programmatically changing selection (recipe, compound, size tab), call `.blur()` on any editor inputs that might still be focused, or rely on outside-click blur if the user clicked another control.
+
+Use `{#key parentId}` on editors or tabs when a full remount is simpler (see selling price inputs in `RecipeEditor.svelte`).
+
+## Regression checks
+
+- Switch between two recipes (or compounds) that share an ingredient id; the amount field must show each recipe’s value.
+- Edit an amount, click another recipe without pressing Enter; the original recipe must store the committed value, and the new recipe must show its own amount.
+
+---
+
 # Schema & seed data
 
 Types live in `src/lib/data/schema.ts`. When you **add, remove, or rename fields** on persisted documents (`IngredientDoc`, `RecipeDoc`, `RecipeSize`, `CompoundIngredientDoc`, etc.):
@@ -198,3 +237,4 @@ A schema change is **not complete** until seed JSON/TS fixtures match `schema.ts
 - [ ] `npm run test:e2e` passes (when touching UI flows, import/export, dashboard, or settings)
 - [ ] `npm run check` and `npm run lint` pass
 - [ ] Schema changes: `mockData.ts` and `current-data.json` updated; normalization handles legacy data if needed
+- [ ] Reused `{#each}` rows keyed by parent + row id; `TextInput` blur-on-outside unchanged or equivalent for new inline editors

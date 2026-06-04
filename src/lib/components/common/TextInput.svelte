@@ -1,5 +1,5 @@
 <script lang="ts" generics="T extends string | number">
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import { parseFraction } from '$lib/utils/math';
 	import { m } from '$lib/paraglide/messages.js';
 	interface Props<T> {
@@ -56,6 +56,32 @@
 
 	let inputRef: HTMLInputElement;
 	let displayValue = $state<string>('');
+	let lastExternalNumericValue = $state<number | undefined>(undefined);
+	let outsidePointerHandler: ((event: PointerEvent) => void) | null = null;
+
+	const removeOutsidePointerListener = () => {
+		if (outsidePointerHandler) {
+			document.removeEventListener('pointerdown', outsidePointerHandler, true);
+			outsidePointerHandler = null;
+		}
+	};
+
+	const handleFocus = (event: FocusEvent) => {
+		removeOutsidePointerListener();
+		outsidePointerHandler = (pointerEvent: PointerEvent) => {
+			const target = pointerEvent.target;
+			if (!(target instanceof Node) || !inputRef) {
+				return;
+			}
+			const container = inputRef.closest('.input-container');
+			if (container?.contains(target)) {
+				return;
+			}
+			inputRef.blur();
+		};
+		document.addEventListener('pointerdown', outsidePointerHandler, true);
+		onfocus?.(event);
+	};
 
 	const isNumeric = $derived(typeof value === 'number');
 	const hasText = $derived(
@@ -63,27 +89,43 @@
 			(isNumeric && displayValue.length > 0)
 	);
 
-	// Sync displayValue with value prop changes (important for undo/redo)
-	$effect(() => {
-		if (isNumeric && typeof value === 'number') {
-			// Only update if the input is not focused (user is not actively typing)
-			// and the displayValue doesn't match the current value
-			const isFocused = inputRef === document.activeElement;
-			const expectedDisplay = value.toString();
-			const currentDisplayMatches =
-				displayValue === expectedDisplay || isIncompleteDecimal(displayValue);
-
-			if (!isFocused && !currentDisplayMatches) {
-				displayValue = expectedDisplay;
-			}
-		}
-	});
-
 	const isIncompleteDecimal = (inputStr: string): boolean => {
 		const trimmed = inputStr.trim();
 		// Check if it ends with a decimal point (e.g., "0.", "123.")
 		return trimmed.endsWith('.') && /^-?\d+\.$/.test(trimmed);
 	};
+
+	const parseAndValidate = (inputStr: string): number => {
+		const parsed = parseFraction(inputStr);
+		let validated = parsed;
+		if (min !== undefined) {
+			validated = Math.max(validated, min);
+		}
+		if (max !== undefined) {
+			validated = Math.min(validated, max);
+		}
+		return validated;
+	};
+
+	// Sync displayValue when value changes from outside (undo/redo, recipe switch, etc.)
+	$effect(() => {
+		if (isNumeric && typeof value === 'number') {
+			if (value === lastExternalNumericValue) {
+				return;
+			}
+			const isFocused = inputRef === document.activeElement;
+			const expectedDisplay = value.toString();
+			const currentDisplayMatches =
+				displayValue === expectedDisplay || isIncompleteDecimal(displayValue);
+			const parsedDisplay = parseAndValidate(displayValue);
+			const isUserEditWhileFocused = isFocused && parsedDisplay === value;
+
+			if (!currentDisplayMatches && (!isFocused || !isUserEditWhileFocused)) {
+				displayValue = expectedDisplay;
+			}
+			lastExternalNumericValue = value;
+		}
+	});
 
 	const clearValue = () => {
 		if (typeof value === 'string') {
@@ -107,21 +149,11 @@
 		}
 		// Initialize displayValue from value prop
 		if (isNumeric) {
-			displayValue = (value as number).toString();
+			const initial = value as number;
+			displayValue = initial.toString();
+			lastExternalNumericValue = initial;
 		}
 	});
-
-	const parseAndValidate = (inputStr: string): number => {
-		const parsed = parseFraction(inputStr);
-		let validated = parsed;
-		if (min !== undefined) {
-			validated = Math.max(validated, min);
-		}
-		if (max !== undefined) {
-			validated = Math.min(validated, max);
-		}
-		return validated;
-	};
 
 	const handleInput = (e: Event) => {
 		const target = e.target as HTMLInputElement;
@@ -159,6 +191,7 @@
 	};
 
 	const handleBlur = (e: FocusEvent) => {
+		removeOutsidePointerListener();
 		if (isNumeric) {
 			// On blur, ensure display value matches the parsed numeric value
 			const parsed = parseAndValidate(displayValue);
@@ -167,6 +200,10 @@
 		}
 		onblur?.(e);
 	};
+
+	onDestroy(() => {
+		removeOutsidePointerListener();
+	});
 
 	const inputValue = $derived(isNumeric ? displayValue : (value as string));
 
@@ -205,7 +242,7 @@
 			onchange={handleChange}
 			onblur={handleBlur}
 			{onkeydown}
-			{onfocus}
+			onfocus={handleFocus}
 		/>
 
 		{#if clearable && hasText}

@@ -103,6 +103,27 @@ test.describe('dashboard workflows', () => {
 		expect(copyIndex).toBe(mixIndex + 1);
 	});
 
+	test('shows correct portion amount when switching recipes that share an ingredient', async ({
+		page
+	}) => {
+		await gotoDashboard(page);
+		const recipePanel = page.locator('.recipes').first();
+
+		await recipePanel.getByRole('button', { name: 'Vanilla Cake' }).click();
+		const flourAmount = recipePanel
+			.locator('.ingredient-cost-item')
+			.filter({ hasText: /Flour/i })
+			.locator('.amount-input-group input');
+		await expect(flourAmount).toHaveValue('250');
+
+		await recipePanel.getByRole('button', { name: 'Duplicate recipe' }).click();
+		await flourAmount.fill('999');
+		await flourAmount.blur();
+
+		await recipePanel.getByRole('button', { name: 'Vanilla Cake', exact: true }).click();
+		await expect(flourAmount).toHaveValue('250');
+	});
+
 	test('undoes an ingredient price change', async ({ page }) => {
 		await gotoDashboard(page);
 		await page.getByRole('button', { name: 'Vanilla Cake' }).click();

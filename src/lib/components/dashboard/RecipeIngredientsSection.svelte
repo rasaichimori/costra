@@ -10,6 +10,8 @@
 	import { m } from '$lib/paraglide/messages.js';
 
 	interface Props {
+		/** Scopes list item keys so reused ingredient ids remount when recipe/size changes */
+		ingredientListKey: string;
 		ingredients: RecipeIngredientEntry[];
 		ingredientDocs: Record<string, IngredientDoc>;
 		recipeCosts: Record<string, number>;
@@ -23,6 +25,7 @@
 	}
 
 	let {
+		ingredientListKey,
 		ingredients = $bindable(),
 		ingredientDocs,
 		recipeCosts,
@@ -49,7 +52,7 @@
 	<h3>{m.ingredientBreakdownTitle()}</h3>
 	{#if ingredients.length > 0}
 		<div class="ingredient-list" role="list">
-			{#each ingredients as ingredient, idx (ingredient.id)}
+			{#each ingredients as ingredient, idx (`${ingredientListKey}:${ingredient.id}`)}
 				<RecipeIngredientListItem
 					bind:ingredient={ingredients[idx]}
 					ingredientDoc={ingredientDocs[ingredient.id]}

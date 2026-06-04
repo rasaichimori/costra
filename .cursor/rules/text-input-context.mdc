@@ -1,0 +1,15 @@
+---
+description: Prevent stale focused inputs when UI context changes; see AGENTS.md
+alwaysApply: true
+---
+
+# Text input & selection context (required)
+
+Read the **Text input & selection context** section in `AGENTS.md` for full guidance. Non-negotiables:
+
+1. **Blur on outside interaction** — `TextInput` blurs on `pointerdown` outside its container (capture phase) so values commit before recipe/tab/list selection changes. Do not remove this without a replacement. New inline editors should use `TextInput` or the same pattern.
+2. **Scope `{#each}` keys** — When list rows can repeat across changing parents (recipe, size, compound), key by **parent + row id** (e.g. `` `${recipeId}:${sizeId}:${ingredient.id}` ``), not row id alone.
+3. **Context switches** — Before changing `selectedRecipeId`, active size, or similar selection state, blur known focused price/amount inputs (see `RecipeEditor` `blurPriceInputs`) if the change is triggered programmatically.
+4. **Stateful numeric inputs** — If an input keeps internal display state separate from props, sync on external `value` changes and prefer `{#key}` when parent context changes.
+
+A dashboard/editor change that reuses rows across recipes is **not complete** without correct list keys and blur behavior.
