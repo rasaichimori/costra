@@ -19,7 +19,7 @@
 	);
 </script>
 
-<div class="dropdown-options">
+<div class="dropdown-options" data-preserve-input-focus>
 	{#if newOption && newOption.value !== undefined && !options.some((option) => option.label === newOption.label) && newOption.label !== ''}
 		<button
 			class="option add-new-option"

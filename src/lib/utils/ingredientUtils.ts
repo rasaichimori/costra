@@ -1,6 +1,18 @@
 import type { RecipeLikeDoc } from '$lib/data/schema';
 import { getPortionUnitsForIngredient } from '$lib/utils/unitSelectUtils';
 
+/**
+ * Name a new ingredient so it remains visible under the current search.
+ * A blank search keeps the sequential default name.
+ */
+export const nameForNewIngredient = (searchTerm: string, fallbackName: string): string => {
+	const query = searchTerm.trim();
+	if (query.length === 0) {
+		return fallbackName;
+	}
+	return query;
+};
+
 /** Sentinel unit id until the user picks a real unit. */
 export const UNSET_UNIT = '';
 

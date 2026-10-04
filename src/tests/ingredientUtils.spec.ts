@@ -3,6 +3,7 @@ import {
 	isInitialUnitSelection,
 	isIngredientUsedWithCommittedUnits,
 	isUnsetUnit,
+	nameForNewIngredient,
 	NEW_INGREDIENT_PLACEHOLDER_UNIT,
 	shouldPromptForUnitConversion,
 	UNSET_UNIT
@@ -79,5 +80,13 @@ describe('ingredientUtils', () => {
 				recipes: recipeWithIngredient('flour', 'g')
 			})
 		).toBe(false);
+	});
+
+	it('names a new ingredient after the search query so it stays in the filtered list', () => {
+		expect(nameForNewIngredient('  pistachio  ', 'Ingredient 4')).toBe('pistachio');
+	});
+
+	it('uses the default name when the ingredient search is blank', () => {
+		expect(nameForNewIngredient('   ', 'Ingredient 4')).toBe('Ingredient 4');
 	});
 });

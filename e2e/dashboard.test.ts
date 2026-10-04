@@ -124,6 +124,24 @@ test.describe('dashboard workflows', () => {
 		await expect(flourAmount).toHaveValue('250');
 	});
 
+	test('names a new ingredient after the search so the row stays visible and focused', async ({
+		page
+	}) => {
+		await gotoDashboard(page);
+
+		const ingredientSection = page.locator('.ingredient-cost-section');
+		await ingredientSection.getByPlaceholder('Search ingredients...').fill('pistachio');
+		await ingredientSection.getByRole('button', { name: 'Add Ingredient' }).click();
+
+		const nameInput = ingredientSection.getByRole('textbox', { name: 'Edit ingredient name' });
+		await expect(nameInput).toBeVisible();
+		await expect(nameInput).toHaveValue('pistachio');
+		await expect(nameInput).toBeFocused();
+
+		await page.keyboard.type(' paste');
+		await expect(nameInput).toHaveValue('pistachio paste');
+	});
+
 	test('undoes an ingredient price change', async ({ page }) => {
 		await gotoDashboard(page);
 		await page.getByRole('button', { name: 'Vanilla Cake' }).click();

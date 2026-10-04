@@ -59,6 +59,7 @@
 			variant="inline"
 			{placeholder}
 			ariaLabel={editAriaLabel}
+			autofocus={true}
 			onkeydown={handleKeydown}
 		/>
 		<ModernButton

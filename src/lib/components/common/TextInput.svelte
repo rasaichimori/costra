@@ -77,6 +77,11 @@
 			if (container?.contains(target)) {
 				return;
 			}
+			// Portaled menus (category dropdown) sit outside this container.
+			// Blurring here runs before their click, which unmounts the option.
+			if (target instanceof Element && target.closest('[data-preserve-input-focus]')) {
+				return;
+			}
 			inputRef.blur();
 		};
 		document.addEventListener('pointerdown', outsidePointerHandler, true);
@@ -146,6 +151,8 @@
 	onMount(() => {
 		if (autofocus && inputRef) {
 			inputRef.focus();
+			const end = inputRef.value.length;
+			inputRef.setSelectionRange(end, end);
 		}
 		// Initialize displayValue from value prop
 		if (isNumeric) {

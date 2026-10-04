@@ -19,7 +19,10 @@
 	import { getCurrencyContext } from '$lib/contexts/currency.svelte';
 	import { randomLightColorHex } from '$lib/utils/color';
 	import ProductUnitSelectButton from './ProductUnitSelectButton.svelte';
-	import { NEW_INGREDIENT_PLACEHOLDER_UNIT } from '$lib/utils/ingredientUtils';
+	import {
+		nameForNewIngredient,
+		NEW_INGREDIENT_PLACEHOLDER_UNIT
+	} from '$lib/utils/ingredientUtils';
 	import { m } from '$lib/paraglide/messages.js';
 
 	let {
@@ -159,7 +162,7 @@
 		// Use the first selected filter as the category if any filters are selected
 		const newIngredient: IngredientDoc = {
 			id: newId,
-			name: m.defaultIngredientName({ number: nextNumber }),
+			name: nameForNewIngredient(searchTerm, m.defaultIngredientName({ number: nextNumber })),
 			category: selectedFilters.length > 0 ? selectedFilters[0] : '',
 			product: {
 				cost: 10,
